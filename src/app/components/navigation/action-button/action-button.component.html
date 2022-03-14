@@ -1,0 +1,4 @@
+<button *ngFor="let item of ActionButton" id="{{ item.id }}" class="btn btn-transparan btn-sm mx-1" type="button"
+    (click)="handleClickActionButton(item)">
+    <i class="{{ item.icon }}"></i>&nbsp; {{ item.caption }}
+</button>

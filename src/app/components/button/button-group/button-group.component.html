@@ -1,0 +1,5 @@
+<ng-container *ngFor="let item of Datasource">
+    <button class="btn {{ item.class }} btn-sm mx-1" type="button" (click)="onClickButtonGroup(item.id)">
+        <i class="fas {{ item.icon }} fa-sm"></i>&nbsp; {{ item.caption }}
+    </button>
+</ng-container>

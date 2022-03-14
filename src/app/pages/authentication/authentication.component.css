@@ -1,0 +1,46 @@
+section#authentication {
+  height: 100vh;
+  max-height: 100vh;
+  background-color: var(--hijau-muda);
+}
+
+div#divImage {
+  background: linear-gradient(
+        to bottom right,
+        var(--hijau-muda) 50%,
+        transparent 50%
+      )
+      no-repeat bottom,
+    /* bottom part */ linear-gradient(0deg, var(--hijau-muda), var(--hijau-tua))
+      no-repeat top;
+}
+
+img#imgLogin {
+  height: 20rem;
+}
+
+div#divFormImage {
+  padding-left: 2rem;
+}
+
+div#divFormText {
+  padding-right: 5rem;
+  padding-left: 5rem;
+}
+
+p#formDescription {
+  font-size: 14px;
+}
+
+img.imgBotox {
+  height: 5rem;
+  background-color: var(--hijau-muda);
+  border-radius: 50%;
+  padding: 8px;
+}
+
+div#divFormCard {
+  height: 50%;
+  padding-right: 5rem !important;
+  padding-left: 5rem !important;
+}

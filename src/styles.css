@@ -1,0 +1,142 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "../node_modules/@syncfusion/ej2-base/styles/bootstrap5.css";
+@import "../node_modules/@syncfusion/ej2-buttons/styles/bootstrap5.css";
+@import "../node_modules/@syncfusion/ej2-dropdowns/styles/bootstrap5.css";
+@import "../node_modules/@syncfusion/ej2-inputs/styles/bootstrap5.css";
+@import "../node_modules/@syncfusion/ej2-popups/styles/bootstrap5.css";
+@import "../node_modules/@syncfusion/ej2-lists/styles/bootstrap5.css";
+@import "../node_modules/@syncfusion/ej2-angular-dropdowns/styles/bootstrap5.css";
+
+@import "../node_modules/@syncfusion/ej2-splitbuttons/styles/bootstrap5.css";
+@import "../node_modules/@syncfusion/ej2-calendars/styles/bootstrap5.css";
+@import "../node_modules/@syncfusion/ej2-angular-calendars/styles/bootstrap5.css";
+
+@import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
+@import "../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
+
+:root {
+  --putih: #ffffff;
+  --hijau-tua: #00474b;
+  --hijau-muda: #3f6264;
+  --oranye: #f6d167;
+  --hitam: #030303;
+  --abu: #e8ecf1;
+}
+
+html,
+body {
+  font-family: "Inter", sans-serif !important;
+  background-color: var(--putih) !important;
+}
+
+.h-15 {
+  height: 15% !important;
+}
+
+.h-70 {
+  height: 70% !important;
+}
+
+a {
+  text-decoration: none !important;
+  color: var(--hitam);
+}
+
+.row {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+.cursor-disabled {
+  cursor: not-allowed !important;
+}
+
+.btn:active,
+.btn:focus {
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.btn-transparan {
+  background-color: transparent !important;
+  color: var(--hijau-tua);
+}
+
+.border-radius-20 {
+  border-radius: 20px !important;
+}
+
+.border-radius-20-top {
+  border-top-left-radius: 20px !important;
+  border-top-right-radius: 20px !important;
+}
+
+.border-radius-20-bottom-right {
+  border-bottom-right-radius: 20px !important;
+}
+
+/** COLOR HIJAU TUA **/
+.btn-hijau-tua {
+  background-color: var(--hijau-tua) !important;
+  color: var(--putih) !important;
+}
+
+.bg-hijau-tua {
+  background-color: var(--hijau-tua) !important;
+}
+
+.text-hijau-tua {
+  color: var(--hijau-tua) !important;
+}
+
+/** COLOR HIJAU TUA **/
+.btn-hijau-muda {
+  background-color: var(--hijau-muda) !important;
+  color: var(--putih) !important;
+}
+
+.bg-hijau-muda {
+  background-color: var(--hijau-muda) !important;
+}
+
+.text-hijau-muda {
+  color: var(--hijau-muda) !important;
+}
+
+/** COLOR ORANGE **/
+.btn-orange {
+  background-color: var(--oranye) !important;
+  color: var(--hitam) !important;
+}
+
+.bg-orange {
+  background-color: var(--oranye) !important;
+}
+
+.text-orange {
+  color: var(--oranye) !important;
+}
+
+/** COLOR ABU **/
+.btn-abu {
+  background-color: var(--abu) !important;
+}
+
+.bg-abu {
+  background-color: var(--abu) !important;
+}
+
+.text-abu {
+  color: var(--abu) !important;
+}
+
+.ag-header-cell {
+  background-color: var(--abu);
+}
