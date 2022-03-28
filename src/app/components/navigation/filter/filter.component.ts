@@ -15,7 +15,7 @@ interface Field {
 }
 
 export interface FilterModel {
-    filterBy: string;
+    filterBy?: string;
     columnName: string;
     filter: 'like' | 'equal' | 'between';
     searchText: string;

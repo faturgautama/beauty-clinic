@@ -1,0 +1,90 @@
+<app-base-layout>
+    <div class="row h-100">
+        <!-- Action Button -->
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-end mb-2">
+            <app-action-button [ActionButton]="ActionButton" (onClickActionButton)="handleClickActionButton($event)">
+            </app-action-button>
+        </div>
+
+        <!-- Offcanvas Filter -->
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="height: calc(100vh - 12rem);">
+            <app-filter #FilterComp [FilterAttribute]="FilterAttribute" (onSearchFilter)="handleSearchFilter($event)">
+            </app-filter>
+
+            <app-grid #GridComp [GridAttributes]="GridAttributes" (onSelectionChange)="handleSelectionChanged($event)">
+            </app-grid>
+        </div>
+
+        <!-- Modal Add Tarif -->
+        <ng-template #ModalAddTarif>
+            <div class="modal-header py-2 bg-abu">
+                <h4 class="modal-title pull-left">
+                    {{ FormSetupTarifState == 'insert' ? 'Insert Tarif' : 'Update Tarif' }}
+                </h4>
+                <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+                    <span aria-hidden="true" class="visually-hidden">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="FormSetupTarif">
+                    <!-- Nama Tarif -->
+                    <div class="row mb-3">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <app-form-label [Caption]="'Nama Tarif'"></app-form-label>
+                            <input class="form-control form-select-sm" type="text" formControlName="nama_setup_tarif">
+                            <app-form-validator [Show]="nama_setup_tarif.touched && nama_setup_tarif.invalid"
+                                [Caption]="'Nama Tarif Tidak Boleh Kosong'">
+                            </app-form-validator>
+                        </div>
+                    </div>
+
+                    <!-- Nominal Tarif -->
+                    <div class="row mb-3">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <app-form-label [Caption]="'Nominal Tarif'"></app-form-label>
+                            <ejs-numerictextbox [format]="'N2'" [showClearButton]="false" [showSpinButton]="false"
+                                formControlName="nominal_tarif">
+                            </ejs-numerictextbox>
+                            <app-form-validator [Show]="nominal_tarif.touched && nominal_tarif.invalid"
+                                [Caption]="'Nominal Tarif Tidak Boleh Kosong'">
+                            </app-form-validator>
+                        </div>
+                    </div>
+
+                    <!-- Tarif Paket -->
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <app-form-label [Caption]="'Apakah Tarif Paket ?'"></app-form-label>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="is_paket" id="is_paket_true"
+                                    [value]="true" formControlName="is_paket">
+                                <label class="form-check-label" for="is_paket_true">Ya</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="is_paket" id="is_paket_false"
+                                    [value]="false" formControlName="is_paket" [checked]="true">
+                                <label class="form-check-label" for="is_paket_false">Tidak</label>
+                            </div>
+                            <app-form-validator [Show]="is_paket.touched && is_paket.invalid"
+                                [Caption]="'Apakah nama_setup_tarifPaket Tidak Boleh Kosong'">
+                            </app-form-validator>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer py-2">
+                <button type="button" class="btn btn-secondary btn-sm" (click)="modalRef?.hide()">
+                    Close
+                </button>
+                <button *ngIf="FormSetupTarifState == 'insert'" type="button" class="btn btn-primary btn-sm"
+                    (click)="onSubmitForm(FormSetupTarif.value)">
+                    Submit
+                </button>
+                <button *ngIf="FormSetupTarifState == 'update'" type="button" class="btn btn-warning btn-sm"
+                    (click)="onUpdateForm(FormSetupTarif.value)">
+                    Update
+                </button>
+            </div>
+        </ng-template>
+    </div>
+</app-base-layout>

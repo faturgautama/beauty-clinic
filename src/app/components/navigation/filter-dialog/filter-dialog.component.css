@@ -1,0 +1,26 @@
+.textId {
+  color: var(--hijau-tua);
+}
+
+.textCaption {
+  color: var(--hijau-muda);
+}
+
+.resultFilterDialog.active {
+  background-color: var(--hijau-tua);
+}
+
+.resultFilterDialog.active > .row > .col-lg-12 > p.textId,
+.resultFilterDialog.active > .row > .col-lg-12 > p.textCaption {
+  color: white !important;
+}
+
+.resultFilterDialog:hover {
+  background-color: var(--hijau-tua);
+  transition: all 0.25s;
+}
+
+.resultFilterDialog:hover > .row > .col-lg-12 > p.textId,
+.resultFilterDialog:hover > .row > .col-lg-12 > p.textCaption {
+  color: white !important;
+}

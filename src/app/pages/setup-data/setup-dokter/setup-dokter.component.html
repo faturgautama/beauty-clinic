@@ -1,0 +1,167 @@
+<app-base-layout>
+    <app-tab #TabRef (onClickActionButton)="handleClickActionButton($event)">
+        <!-- Data Dokter -->
+        <app-tab-item>
+            <app-tab-header [id]="'data_dokter'" [ActionButton]="onSetActionButton('data_dokter')">
+                Data Dokter
+            </app-tab-header>
+            <app-tab-body>
+                <div class="row h-100">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <!-- Offcanvas Filter -->
+                        <app-filter #FilterComp [FilterAttribute]="FilterAttribute"
+                            (onSearchFilter)="handleSearchFilter($event)">
+                        </app-filter>
+
+                        <app-grid #GridComp [GridAttributes]="GridAttributes"></app-grid>
+                    </div>
+                </div>
+            </app-tab-body>
+        </app-tab-item>
+
+        <!-- Input Dokter -->
+        <app-tab-item>
+            <app-tab-header [id]="'input_dokter'" [ActionButton]="onSetActionButton('input_dokter')">
+                Input Dokter
+            </app-tab-header>
+            <app-tab-body>
+                <form [formGroup]="FormPendaftaranDokter">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" formGroupName="person">
+                            <!-- Jenis Identitas -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                                <app-form-label [Caption]="'Jenis Identitas'"></app-form-label>
+                                <ejs-dropdownlist #JenisIdentitasComp [dataSource]="JenisIdentitasDatasource"
+                                    [fields]="JenisIdentitasField" formControlName="id_jenis_identitas">
+                                </ejs-dropdownlist>
+                                <app-form-validator [Show]="id_jenis_identitas.touched && id_jenis_identitas.invalid"
+                                    [Caption]="'No. Identitas Tidak Boleh Kosong'">
+                                </app-form-validator>
+                            </div>
+
+                            <!-- No Identitas -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                                <app-form-label [Caption]="'No. Identitas'"></app-form-label>
+                                <input class="form-control form-select-sm" type="text" formControlName="no_identitas">
+                                <app-form-validator [Show]="no_identitas.touched && no_identitas.invalid"
+                                    [Caption]="'No. Identitas Tidak Boleh Kosong'">
+                                </app-form-validator>
+                            </div>
+
+                            <!-- Nama Depan -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                                <app-form-label [Caption]="'Nama Depan'"></app-form-label>
+                                <input class="form-control form-select-sm" type="text" formControlName="nama_depan">
+                                <app-form-validator [Show]="nama_depan.touched && nama_depan.invalid"
+                                    [Caption]="'Nama Belakang Tidak Boleh Kosong'">
+                                </app-form-validator>
+                            </div>
+
+                            <!-- Nama Belakang -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                                <app-form-label [Caption]="'Nama Belakang'"></app-form-label>
+                                <input class="form-control form-select-sm" type="text" formControlName="nama_belakang">
+                                <app-form-validator [Show]="nama_belakang.touched && nama_belakang.invalid"
+                                    [Caption]="'Nama Belakang Tidak Boleh Kosong'">
+                                </app-form-validator>
+                            </div>
+
+                            <!-- Gender -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                                <app-form-label [Caption]="'Gender'"></app-form-label>
+                                <ejs-dropdownlist [dataSource]="GenderDatasource" [fields]="GenderField"
+                                    formControlName="gender">
+                                </ejs-dropdownlist>
+                                <app-form-validator [Show]="gender.touched && gender.invalid"
+                                    [Caption]="'Gender Tidak Boleh Kosong'">
+                                </app-form-validator>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" formGroupName="person">
+                            <!-- Tempat Lahir -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                                <app-form-label [Caption]="'Tempat Lahir'"></app-form-label>
+                                <input class="form-control form-select-sm" type="text" formControlName="tempat_lahir">
+                                <app-form-validator [Show]="tempat_lahir.touched && tempat_lahir.invalid"
+                                    [Caption]="'Tempat Lahir Tidak Boleh Kosong'">
+                                </app-form-validator>
+                            </div>
+
+                            <!-- Tanggal Lahir -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                                <app-form-label [Caption]="'Tgl. Lahir'"></app-form-label>
+                                <ejs-datepicker [format]="'dd/MM/yyyy'" formControlName="tanggal_lahir">
+                                </ejs-datepicker>
+                                <app-form-validator [Show]="tanggal_lahir.touched && tanggal_lahir.invalid"
+                                    [Caption]="'Tgl. Lahir Tidak Boleh Kosong'">
+                                </app-form-validator>
+                            </div>
+
+                            <!-- Alamat Lengkap -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                                <app-form-label [Caption]="'Alamat Lengkap'"></app-form-label>
+                                <textarea class="form-control" formControlName="alamat_lengkap"
+                                    style="height: 105px; resize: none;">
+                                </textarea>
+                                <app-form-validator [Show]="alamat_lengkap.touched && alamat_lengkap.invalid"
+                                    [Caption]="'Alamat Lengkap Tidak Boleh Kosong'">
+                                </app-form-validator>
+                            </div>
+
+                            <!-- No. Handphone -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-2">
+                                <app-form-label [Caption]="'No. Handphone'"></app-form-label>
+                                <input type="text" class="form-control form-select-sm" formControlName="no_hp"
+                                    aria-describedby="phone">
+                                <app-form-validator [Show]="no_hp.touched && no_hp.invalid"
+                                    [Caption]="'No. Handphone Tidak Boleh Kosong'">
+                                </app-form-validator>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" formGroupName="dokter">
+                            <!-- No. SIP -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                                <app-form-label [Caption]="'No. Surat Ijin Praktek'"></app-form-label>
+                                <input class="form-control form-select-sm" type="text"
+                                    formControlName="no_surat_ijin_praktek">
+                                <app-form-validator
+                                    [Show]="no_surat_ijin_praktek.touched && no_surat_ijin_praktek.invalid"
+                                    [Caption]="'No. SIP Tidak Boleh Kosong'">
+                                </app-form-validator>
+                            </div>
+
+                            <!-- Tanggal Exp SIP -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                                <app-form-label [Caption]="'Tgl. Exp Surat Ijin Praktek'"></app-form-label>
+                                <ejs-datepicker [format]="'dd/MM/yyyy'" formControlName="tgl_exp_surat_ijin_praktek">
+                                </ejs-datepicker>
+                                <app-form-validator
+                                    [Show]="tgl_exp_surat_ijin_praktek.touched && tgl_exp_surat_ijin_praktek.invalid"
+                                    [Caption]="'Tgl Exp SIP Tidak Boleh Kosong'">
+                                </app-form-validator>
+                            </div>
+
+                            <!-- No. STR -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                                <app-form-label [Caption]="'No. STR'"></app-form-label>
+                                <input class="form-control form-select-sm" type="text" formControlName="no_str">
+                                <app-form-validator [Show]="no_str.touched && no_str.invalid"
+                                    [Caption]="'No. STR Tidak Boleh Kosong'">
+                                </app-form-validator>
+                            </div>
+
+                            <!-- Tanggal Exp STR -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                                <app-form-label [Caption]="'Tgl. Exp STR'"></app-form-label>
+                                <ejs-datepicker [format]="'dd/MM/yyyy'" formControlName="tgl_exp_str"></ejs-datepicker>
+                                <app-form-validator [Show]="tgl_exp_str.touched && tgl_exp_str.invalid"
+                                    [Caption]="'Tgl Exp STR Tidak Boleh Kosong'">
+                                </app-form-validator>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-tab-body>
+        </app-tab-item>
+    </app-tab>
+</app-base-layout>

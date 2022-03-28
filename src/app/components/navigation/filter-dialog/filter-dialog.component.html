@@ -1,0 +1,65 @@
+<!-- Modal Add Tarif -->
+<ng-template #FilterDialog>
+    <div class="modal-header py-2 bg-abu">
+        <h4 class="modal-title pull-left">
+            {{ FilterDialogProp.title }}
+        </h4>
+        <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+            <span aria-hidden="true" class="visually-hidden">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <!-- Search Text -->
+        <div class="row mb-3">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 px-0">
+                <div class="input-group mb-0">
+                    <span class="input-group-text">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <input #filterDialogSearchInput type="text" class="form-control noBoxShadow"
+                        (keyup.enter)="onSearch(filterDialogSearchInput.value)">
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="Result.length > 0" class="row" style="height: 20rem; overflow-y: auto;">
+            <ul class="list-group px-0" data-aos="fade-right">
+                <li *ngFor="let item of Result; let i = index" id="result{{i}}"
+                    class="list-group-item border-0 px-2 cursor-pointer mb-2 shadow-sm resultFilterDialog rounded"
+                    (click)="onClickResult(i)">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 px-0">
+                            <p class="textId fw-bold mb-0">
+                                {{ item[FilterDialogProp.searchResultAttribute.id] | titlecase }}
+                            </p>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 px-0">
+                            <p class="textCaption mb-0">
+                                {{ item[FilterDialogProp.searchResultAttribute.text] }}
+                            </p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div *ngIf="Result.length < 1" class="row align-items-center" style="height: 20rem; overflow-y: auto;">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+                <img src="../../../../assets/image/undraw_searching_re_3ra9.svg" alt="" style="height: 15rem;">
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center">
+                <p class="text-hijau-muda mb-0">
+                    We couldn't find anything for you
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer py-2">
+        <button type="button" class="btn btn-secondary btn-sm" (click)="modalRef?.hide()">
+            Close
+        </button>
+        <button class="btn btn-primary btn-sm" (click)="onChoosenResult(this.ChoosenResult)">
+            OK!
+        </button>
+    </div>
+</ng-template>

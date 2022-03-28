@@ -7,8 +7,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
 import { DatePickerModule, DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { AgGridModule } from 'ag-grid-angular';
-
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { NumericTextBoxModule } from '@syncfusion/ej2-angular-inputs';
 import { AppRoutingModule } from './app-routing.module';
+import { JwtInterceptor } from './helper/jwt.interceptor';
+
 import { AppComponent } from './app.component';
 import { BaseLayoutComponent } from './components/layout/base-layout/base-layout.component';
 import { DokterLayoutComponent } from './components/layout/dokter-layout/dokter-layout.component';
@@ -24,13 +27,19 @@ import { TabComponent } from './components/navigation/tab/tab.component';
 import { TabItemComponent } from './components/navigation/tab/tab-item/tab-item.component';
 import { TabHeaderComponent } from './components/navigation/tab/tab-item/tab-header/tab-header.component';
 import { TabBodyComponent } from './components/navigation/tab/tab-item/tab-body/tab-body.component';
+import { FormValidatorComponent } from './components/typograph/form-validator/form-validator.component';
+import { NavbarComponent } from './components/layout/navbar/navbar.component';
+import { SidebarComponent } from './components/layout/sidebar/sidebar.component';
 
 import { AuthenticationComponent } from './pages/authentication/authentication.component';
 import { BerandaComponent } from './pages/beranda/beranda.component';
-import { NavbarComponent } from './components/layout/navbar/navbar.component';
-import { SidebarComponent } from './components/layout/sidebar/sidebar.component';
 import { PendaftaranPasienComponent } from './pages/pendaftaran-pasien/pendaftaran-pasien.component';
-import { FormValidatorComponent } from './components/typograph/form-validator/form-validator.component';
+import { SetupDokterComponent } from './pages/setup-data/setup-dokter/setup-dokter.component';
+import { SetupTarifComponent } from './pages/setup-data/setup-tarif/setup-tarif.component';
+import { SetupObatComponent } from './pages/setup-data/setup-obat/setup-obat.component';
+import { GridButtonComponent } from './components/grid/grid-button/grid-button.component';
+import { PelayananPasienComponent } from './pages/pelayanan-pasien/pelayanan-pasien.component';
+import { FilterDialogComponent } from './components/navigation/filter-dialog/filter-dialog.component';
 
 @NgModule({
     declarations: [
@@ -55,6 +64,12 @@ import { FormValidatorComponent } from './components/typograph/form-validator/fo
         BerandaComponent,
         PendaftaranPasienComponent,
         FormValidatorComponent,
+        SetupDokterComponent,
+        SetupTarifComponent,
+        SetupObatComponent,
+        GridButtonComponent,
+        PelayananPasienComponent,
+        FilterDialogComponent,
     ],
     imports: [
         CommonModule,
@@ -66,10 +81,14 @@ import { FormValidatorComponent } from './components/typograph/form-validator/fo
         ReactiveFormsModule,
         DropDownListModule,
         DatePickerModule,
+        NumericTextBoxModule,
         DateRangePickerModule,
         AgGridModule,
+        ModalModule.forRoot(),
     ],
-    providers: [],
+    providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,17 +1,21 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GridAttribute, GridComponent } from 'src/app/components/grid/grid.component';
 import { ActionButtonModel } from 'src/app/components/navigation/action-button/action-button.component';
 import { FilterComponent, FilterModel, OffcanvasFilterModel } from 'src/app/components/navigation/filter/filter.component';
 import { TabComponent } from 'src/app/components/navigation/tab/tab.component';
 import { UtilityService } from 'src/app/services/utility/utility.service';
+import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
+import { IJenisIdentitasModel, IPendaftaranPasienBaruModel } from 'src/app/model/pendaftaran-pasien.model';
+import { PendaftaranPasienService } from 'src/app/services/pendaftaran-pasien/pendaftaran-pasien.service';
+import { GridButtonComponent } from 'src/app/components/grid/grid-button/grid-button.component';
 
 @Component({
     selector: 'app-pendaftaran-pasien',
     templateUrl: './pendaftaran-pasien.component.html',
     styleUrls: ['./pendaftaran-pasien.component.css']
 })
-export class PendaftaranPasienComponent implements OnInit {
+export class PendaftaranPasienComponent implements OnInit, AfterViewInit {
 
     @ViewChild('TabRef', { static: true }) TabRef!: TabComponent;
 
@@ -19,23 +23,33 @@ export class PendaftaranPasienComponent implements OnInit {
 
     FormPendaftaranPasien!: FormGroup;
 
+    @ViewChild('JenisIdentitasComp') JenisIdentitasComp!: DropDownListComponent;
+    JenisIdentitasDatasource: IJenisIdentitasModel[] = [];
+    JenisIdentitasField: Object = { text: 'jenis_identitas', value: 'id_jenis_identitas' };
+
     @ViewChild('FilterComp') FilterComp!: FilterComponent;
     FilterAttribute!: OffcanvasFilterModel;
 
     @ViewChild('GridComp') GridComp!: GridComponent;
     GridAttributes!: GridAttribute;
+    FrameworkComponents: any;
 
     GenderDatasource = [
         { text: 'Laki - Laki', value: 'L' },
-        { text: 'Wanita', value: 'W' },
+        { text: 'Wanita', value: 'P' },
     ];
 
     GenderField: Object = { text: 'text', value: 'value' };
 
     constructor(
         private formBuilder: FormBuilder,
-        private utilityService: UtilityService
-    ) { }
+        private utilityService: UtilityService,
+        private pendaftaranPasienService: PendaftaranPasienService
+    ) {
+        this.FrameworkComponents = {
+            buttonRenderer: GridButtonComponent
+        }
+    }
 
     ngOnInit(): void {
         this.onSetFormPendaftaranPasienAttributes();
@@ -51,17 +65,17 @@ export class PendaftaranPasienComponent implements OnInit {
             filter: [
                 {
                     text: 'Nama Pasien',
-                    value: 'p.nama_pasien',
+                    value: 'per.nama_depan',
                     filter: 'like'
                 },
                 {
-                    text: 'Tgl. Register',
-                    value: 'p.tgl_register',
+                    text: 'Tgl. Lahir',
+                    value: 'per.tgl_lahir',
                     filter: 'between'
                 },
                 {
-                    text: 'No. Register',
-                    value: 'p.no_register',
+                    text: 'No. Identitas',
+                    value: 'per.no_identitas',
                     filter: 'like'
                 },
             ]
@@ -69,41 +83,34 @@ export class PendaftaranPasienComponent implements OnInit {
 
         this.GridAttributes = {
             column: [
-                { field: 'id_pasien', headerName: 'ID PASIEN', hide: true },
-                { field: 'no_register', headerName: 'NO. REGISTER', },
-                { field: 'tgl_register', headerName: 'TGL. REGISTER', cellRenderer: (data: any) => { return this.utilityService.onFormatDate(data, 'Do/MM/yyyy') } },
-                { field: 'no_identitas', headerName: 'NO. IDENTITAS', },
-                { field: 'nama_pasien', headerName: 'NAMA PASIEN', },
-                { field: 'tgl_lahir', headerName: 'TGL. LAHIR', },
+                { field: 'id_person', headerName: 'ID PASIEN', hide: true },
+                { field: 'no_identitas', headerName: 'NO. IDENTIAS', },
+                { field: 'no_rekam_medis', headerName: 'NO. REKAM MEDIS', },
+                { field: 'full_name', headerName: 'NAMA PASIEN', },
+                { field: 'tgl_lahir', headerName: 'TGL. LAHIR', cellRenderer: (data: any) => { return this.utilityService.onFormatDate(data, 'Do/MM/yyyy') } },
                 { field: 'gender', headerName: 'GENDER', },
-                { field: 'alamat', headerName: 'ALAMAT', },
-                { field: 'no_handphone', headerName: 'NO. HANDPHONE', },
+                { field: 'alamat_lengkap', headerName: 'ALAMAT', },
+                { field: 'no_hp', headerName: 'NO. HANDPHONE', },
+                // {
+                //     headerName: 'EDIT', cellRenderer: 'buttonRenderer', cellRendererParams: {
+                //         onClick: this.handleDoEditPasien.bind(this),
+                //         Caption: 'fa-edit',
+                //         Class: 'btn-warning text-white'
+                //     },
+                //     cellClass: 'text-center',
+                //     headerClass: 'text-center'
+                // },
             ],
-            dataSource: [
-                {
-                    id_pasien: 1,
-                    no_register: 'A01',
-                    tgl_register: new Date(),
-                    no_identitas: '3374100408912123',
-                    nama_pasien: 'John Doe',
-                    tgl_lahir: '04/08/1997',
-                    gender: 'Laki - Laki',
-                    alamat: 'Jalan Raya Semarang No. 1',
-                    no_handphone: '085156781165',
-                },
-                {
-                    id_pasien: 2,
-                    no_register: 'A02',
-                    tgl_register: new Date(),
-                    no_identitas: '3374100408912123',
-                    nama_pasien: 'Jane Doe',
-                    tgl_lahir: '04/08/1997',
-                    gender: 'Wanita',
-                    alamat: 'Jalan Raya Semarang No. 2',
-                    no_handphone: '085156781165',
-                }
-            ]
+            dataSource: []
         };
+    }
+
+    ngAfterViewInit(): void {
+        setTimeout(() => {
+            this.handleSearchFilter([]);
+
+            this.onGetAllJenisIdentitas();
+        }, 1);
     }
 
     onSetActionButton(tabId: string): ActionButtonModel[] {
@@ -114,17 +121,31 @@ export class PendaftaranPasienComponent implements OnInit {
 
     onSetFormPendaftaranPasienAttributes(): void {
         this.FormPendaftaranPasien = this.formBuilder.group({
-            no_identitas: ['', [Validators.required]],
-            nama_pasien: ['', [Validators.required]],
-            tgl_lahir: ['', [Validators.required]],
-            gender: ['', [Validators.required]],
-            alamat: ['', [Validators.required]],
-            no_handphone: ['', [Validators.required]],
-        })
+            person: this.formBuilder.group({
+                id_jenis_identitas: [0, [Validators.required]],
+                no_identitas: ['', [Validators.required]],
+                nama_depan: ['', [Validators.required]],
+                nama_belakang: ['', [Validators.required]],
+                gender: ['', [Validators.required]],
+                tempat_lahir: ['', [Validators.required]],
+                tanggal_lahir: ['', [Validators.required]],
+                alamat_lengkap: ['', [Validators.required]],
+                no_hp: ['', [Validators.required]],
+            }),
+            pasien: this.formBuilder.group({
+                keterangan: ['', []]
+            })
+        });
     }
 
-    handleSelectedTab(tabId: string): void {
-        // console.log(tabId);
+    handleSelectedTab(tabId: string, data?: IPendaftaranPasienBaruModel): void {
+        if (tabId == "pendaftaran_pasien") {
+            setTimeout(() => {
+                if (data) {
+                    this.FormPendaftaranPasien.setValue(data);
+                }
+            }, 500);
+        }
     }
 
     handleClickActionButton(args: ActionButtonModel): void {
@@ -144,38 +165,61 @@ export class PendaftaranPasienComponent implements OnInit {
     }
 
     handleSearchFilter(args: FilterModel[]): void {
-        console.log(args);
+        this.pendaftaranPasienService.onGetAllPersonPasienByDynamicFilter(args)
+            .subscribe((result) => {
+                this.GridAttributes.dataSource = result.data;
+            });
     }
 
-    handleSubmitFormPendaftaranPasien(args: any): void {
-        const index = this.GridAttributes.dataSource.length;
+    onGetAllJenisIdentitas(): void {
+        this.pendaftaranPasienService.onGetAllJenisIdentitas()
+            .subscribe((result) => {
+                this.JenisIdentitasDatasource = result.data;
+            })
+    }
 
-        args.id_pasien = index + 1;
-        args.no_register = `A0${index + 1}`;
-        args.tgl_register = new Date();
-
-        this.GridComp.onAddData(args);
-
-        this.utilityService.onShowCustomAlert('success', 'Success', 'Pendaftaran Pasien Berhasil')
-            .then(() => {
-                this.TabRef.onNavigateTab(0, 'data_pasien');
+    handleSubmitFormPendaftaranPasien(args: IPendaftaranPasienBaruModel): void {
+        this.pendaftaranPasienService.onSavePendaftaranPasienBaru(args)
+            .subscribe((result) => {
+                if (result.responseResult) {
+                    this.utilityService.onShowCustomAlert('success', 'Success', 'Pendaftaran Pasien Berhasil')
+                        .then(() => {
+                            this.TabRef.onNavigateTab(0, 'data_pasien');
+                            this.handleSearchFilter([]);
+                        });
+                }
             });
     }
 
     handleResetFormPendaftaranPasien(): void {
         this.FormPendaftaranPasien.reset();
         this.no_identitas.setValue('');
-        this.nama_pasien.setValue('');
-        this.tgl_lahir.setValue('');
+        this.nama_depan.setValue('');
+        this.nama_belakang.setValue('');
         this.gender.setValue('');
-        this.alamat.setValue('');
-        this.no_handphone.setValue('');
+        this.tempat_lahir.setValue('');
+        this.tanggal_lahir.setValue('');
+        this.alamat_lengkap.setValue('');
+        this.no_hp.setValue('');
     }
 
-    get no_identitas(): AbstractControl { return this.FormPendaftaranPasien.get('no_identitas') as AbstractControl }
-    get nama_pasien(): AbstractControl { return this.FormPendaftaranPasien.get('nama_pasien') as AbstractControl }
-    get tgl_lahir(): AbstractControl { return this.FormPendaftaranPasien.get('tgl_lahir') as AbstractControl }
-    get gender(): AbstractControl { return this.FormPendaftaranPasien.get('gender') as AbstractControl }
-    get alamat(): AbstractControl { return this.FormPendaftaranPasien.get('alamat') as AbstractControl }
-    get no_handphone(): AbstractControl { return this.FormPendaftaranPasien.get('no_handphone') as AbstractControl }
+    handleDoEditPasien(args: any): void {
+        console.log(args);
+
+        const btnpendaftaran_pasien = document.getElementById('btnpendaftaran_pasien') as HTMLElement;
+        btnpendaftaran_pasien.click();
+
+        this.FormPendaftaranPasien.setValue(args.rowData);
+    }
+
+    get id_jenis_identitas(): AbstractControl { return this.FormPendaftaranPasien.get('person.id_jenis_identitas') as AbstractControl }
+    get no_identitas(): AbstractControl { return this.FormPendaftaranPasien.get('person.no_identitas') as AbstractControl }
+    get nama_depan(): AbstractControl { return this.FormPendaftaranPasien.get('person.nama_depan') as AbstractControl }
+    get nama_belakang(): AbstractControl { return this.FormPendaftaranPasien.get('person.nama_belakang') as AbstractControl }
+    get gender(): AbstractControl { return this.FormPendaftaranPasien.get('person.gender') as AbstractControl }
+    get tempat_lahir(): AbstractControl { return this.FormPendaftaranPasien.get('person.tempat_lahir') as AbstractControl }
+    get tanggal_lahir(): AbstractControl { return this.FormPendaftaranPasien.get('person.tanggal_lahir') as AbstractControl }
+    get alamat_lengkap(): AbstractControl { return this.FormPendaftaranPasien.get('person.alamat_lengkap') as AbstractControl }
+    get no_hp(): AbstractControl { return this.FormPendaftaranPasien.get('person.no_hp') as AbstractControl }
+    get keterangan(): AbstractControl { return this.FormPendaftaranPasien.get('pasien.keterangan') as AbstractControl }
 }

@@ -1,85 +1,84 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-
-interface SidebarMenuModel {
-    id: number;
-    caption: string;
-    icon: string;
-    url: string;
-}
+import { ILoginResponseModel, SidebarMenuModel } from 'src/app/model/authentication.model';
+import { AuthenticationService } from 'src/app/services/authentication/authentication.service';
 
 @Component({
     selector: 'app-sidebar',
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.css']
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, AfterViewInit {
+
+    UserData!: ILoginResponseModel;
 
     ShowSidebar = true;
 
-    SidebarMenu: SidebarMenuModel[];
+    SidebarMenu: SidebarMenuModel[] = [];
+
+    ShowChild = false;
+
+    @Output('onClickSidebarMenu') onClickSidebarMenu = new EventEmitter<any>();
 
     constructor(
-        private router: Router
-    ) {
-        this.SidebarMenu = [
-            {
-                id: 1,
-                caption: 'Setup Data',
-                icon: 'fa-cog',
-                url: ''
-            },
-            {
-                id: 2,
-                caption: 'Pendaftaran Pasien',
-                icon: 'fa-user',
-                url: '/pendaftaran-pasien'
-            },
-            {
-                id: 3,
-                caption: 'Pelayanan Pasien',
-                icon: 'fa-hospital-user',
-                url: ''
-            },
-            {
-                id: 4,
-                caption: 'Tindakan',
-                icon: 'fa-procedures',
-                url: ''
-            },
-            {
-                id: 5,
-                caption: 'Farmasi',
-                icon: 'fa-file-prescription',
-                url: ''
-            },
-            {
-                id: 6,
-                caption: 'Billing',
-                icon: 'fa-money-check-alt',
-                url: ''
-            },
-        ]
-    }
+        private router: Router,
+        private authenticationService: AuthenticationService
+    ) { }
 
     ngOnInit(): void {
+        this.onGetSidebarMenu();
+    }
+
+    ngAfterViewInit(): void {
+        setTimeout(() => {
+            this.UserData = JSON.parse(localStorage.getItem('UserData') as any);
+        }, 1);
+    }
+
+    onBackToBeranda(): void {
+        this.router.navigateByUrl('home')
+    }
+
+    onLogout(): void {
+        this.authenticationService.onLogout();
+    }
+
+    onGetSidebarMenu(): void {
+        const UserData: ILoginResponseModel = JSON.parse(localStorage.getItem('UserData') as any);
+
+        const SidebarMenu = UserData.menuJson.sidebarMenu;
+
+        this.SidebarMenu = SidebarMenu;
     }
 
     onClickSidebarMenuItem(sidebarMenu: SidebarMenuModel): void {
-        let currentElem = document.getElementById(`paragraph${sidebarMenu.id}`);
+        this.onClickSidebarMenu.emit(sidebarMenu.url);
+        // this.router.navigateByUrl(sidebarMenu.url);
+    }
 
-        this.SidebarMenu.forEach((item) => {
-            if (item.id != sidebarMenu.id) {
-                let elem = document.getElementById(`paragraph${item.id}`);
+    onShowSidebarChildMenu(sidebarMenu: SidebarMenuModel, showChild: boolean): void {
 
-                if (elem?.classList.contains('active')) {
-                    elem.classList.remove('active');
-                };
+        this.ShowChild = !showChild;
 
-                currentElem?.classList.add('active');
-            }
-        });
+        const icon = document.getElementById(`${sidebarMenu.id_menu_sidebar}Icon`) as HTMLElement;
+        const elem = document.getElementById(`${sidebarMenu.id_menu_sidebar}ChildMenuDiv`) as HTMLElement;
 
-        this.router.navigateByUrl(sidebarMenu.url);
+        if (this.ShowChild) {
+            // ** Icon
+            icon.classList.remove('fa-chevron-right');
+            icon.classList.add('fa-chevron-down');
+
+            // ** Child
+            elem.classList.remove('hideChild');
+            elem.classList.add('showChild');
+        } else {
+            // ** Icon
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-chevron-right');
+
+            // ** Child
+            elem.classList.add('hideChild');
+            elem.classList.remove('showChild');
+        }
     }
 }

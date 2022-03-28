@@ -1,17 +1,18 @@
 <div class="row">
-    <div [class]="SidebarClass">
-        <app-sidebar #SidebarComponent></app-sidebar>
+    <div *ngIf="ShowSidebar" [class]="'col-2 px-0 grow'">
+        <app-sidebar #SidebarComponent (onClickSidebarMenu)="onClickSidebarMenu($event)"></app-sidebar>
     </div>
 
-    <div [class]="ContentClass">
+    <div [class]="ShowSidebar ? 'col-10 px-0 shrink' : 'col-12 px-0 grow'">
         <section id="base_layout" class="bg-abu">
             <app-navbar (handleClickNavbarBrand)="onClickNavbarBrand(ShowSidebar)"></app-navbar>
 
             <section id="content">
                 <div class="row h-100">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 h-100">
-                        <div class="card border-0 shadow-sm h-100" style="border-radius: 0.5rem;">
-                            <div class="card-body h-100">
+                        <div class="card border-0 shadow-sm h-100" style="border-radius: 0.5rem;" data-aos="fade-right"
+                            data-aos-delay="250">
+                            <div class="card-body h-100" style="overflow-y: auto;">
                                 <ng-content></ng-content>
                             </div>
                         </div>

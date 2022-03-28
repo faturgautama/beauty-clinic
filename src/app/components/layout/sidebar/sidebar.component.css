@@ -22,13 +22,22 @@ img.imgUser {
   padding: 10px;
 }
 
-p.sidebarMenuItem:hover {
+.sidebarParent:hover {
   font-weight: 500;
   transition: transform 250ms, opacity 400ms;
   transform: translateY(-5px);
 }
 
-p.sidebarMenuItem.active {
+.sidebarParent.active {
   font-weight: 600;
   color: var(--hijau-tua);
+}
+
+.showChild {
+  display: flex;
+  border-radius: 5px;
+}
+
+.hideChild {
+  display: none !important;
 }

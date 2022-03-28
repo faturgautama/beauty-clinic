@@ -8,27 +8,27 @@ section#content {
   height: calc(100vh - 3.5rem);
 }
 
-.col-lg-0.col-md-0.col-sm-0.col-xs-0.shrink {
+.col-0.shrink {
   width: 0;
   flex-shrink: 1;
   opacity: 0;
-  transition: all 300ms ease-in-out;
+  transition: all 0ms ease-in-out;
 }
 
-.col-lg-2.col-md-2.col-sm-2.col-xs-2.grow {
+.col-2.grow {
   flex-grow: 1;
   opacity: 1;
-  transition: all 300ms ease-in-out;
+  transition: all 0ms ease-in-out;
 }
 
-.col-lg-10.col-md-10.col-sm-10.col-xs-10.shrink {
+.col-10.shrink {
   flex-shrink: 1;
   opacity: 1;
-  transition: all 300ms ease-in-out;
+  transition: all 0ms ease-in-out;
 }
 
-.col-lg-12.col-md-12.col-sm-12.col-xs-12.grow {
+.col-12.grow {
   flex-grow: 1;
   opacity: 1;
-  transition: all 300ms ease-in-out;
+  transition: all 0ms ease-in-out;
 }

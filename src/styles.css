@@ -7,13 +7,14 @@
 @import "../node_modules/@syncfusion/ej2-popups/styles/bootstrap5.css";
 @import "../node_modules/@syncfusion/ej2-lists/styles/bootstrap5.css";
 @import "../node_modules/@syncfusion/ej2-angular-dropdowns/styles/bootstrap5.css";
-
 @import "../node_modules/@syncfusion/ej2-splitbuttons/styles/bootstrap5.css";
 @import "../node_modules/@syncfusion/ej2-calendars/styles/bootstrap5.css";
 @import "../node_modules/@syncfusion/ej2-angular-calendars/styles/bootstrap5.css";
 
 @import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
 @import "../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
+
+@import "../node_modules/bs-stepper/dist/css/bs-stepper.min.css";
 
 :root {
   --putih: #ffffff;
@@ -139,4 +140,14 @@ a {
 
 .ag-header-cell {
   background-color: var(--abu);
+}
+
+.ag-header-cell.text-center,
+.ag-header-cell-label {
+  justify-content: center;
+}
+
+.noBoxShadow:focus,
+.noBoxShadow:active {
+  box-shadow: none !important;
 }

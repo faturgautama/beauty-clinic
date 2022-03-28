@@ -1,0 +1,83 @@
+<app-base-layout>
+    <app-tab #TabRef (onClickActionButton)="handleClickActionButton($event)">
+        <app-tab-item>
+            <app-tab-header [id]="'data_admisi'" [ActionButton]="onSetActionButton('data_admisi')">
+                Data Pelayanan Pasien
+            </app-tab-header>
+            <app-tab-body>
+                <div class="row h-100">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <!-- Offcanvas Filter -->
+                        <app-filter #FilterComp [FilterAttribute]="FilterAttribute"
+                            (onSearchFilter)="handleSearchFilter($event)">
+                        </app-filter>
+
+                        <app-grid #GridComp [GridAttributes]="GridAttributes">
+                        </app-grid>
+                    </div>
+                </div>
+            </app-tab-body>
+        </app-tab-item>
+
+        <app-tab-item>
+            <app-tab-header [id]="'admisi_pasien'" [ActionButton]="onSetActionButton('admisi_pasien')">
+                Input Pelayanan Pasien
+            </app-tab-header>
+            <app-tab-body>
+                <form [formGroup]="FormAdmisiPasien">
+                    <div class="row h-100">
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+
+                        </div>
+                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                            <!-- Nama Pasien -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                                <app-form-label [Caption]="'Nama Pasien'"></app-form-label>
+                                <div class="input-group input-group-sm mb-0">
+                                    <input id="full_name" type="text" class="form-control" readonly>
+                                    <span class="input-group-text bg-hijau-tua border-0 cursor-pointer"
+                                        style="border-top-right-radius: 0.2rem; border-bottom-right-radius: 0.2rem;  "
+                                        id="SearchPasien" (click)="FilterDialogPasien.onOpenFilterDialog()">
+                                        <i class="fas fa-search fa-xs text-white"></i>
+                                    </span>
+
+                                    <app-filter-dialog #FilterDialogPasien [FilterDialogProp]="FilterDialogProp"
+                                        (onChooseResult)="handleChooseFilterDialog($event)">
+                                    </app-filter-dialog>
+                                </div>
+                            </div>
+
+                            <!-- No. Rekam Medis -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                                <app-form-label [Caption]="'No. Rekam Medis'"></app-form-label>
+                                <input formControlName="no_rekam_medis" type="text" class="form-control form-select-sm"
+                                    readonly>
+                            </div>
+
+                            <!-- Jenis Member -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                                <app-form-label [Caption]="'Jenis Member'"></app-form-label>
+                                <input id="jenis_member" type="text" class="form-control form-select-sm" readonly>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                            <!-- Dokter -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                                <app-form-label [Caption]="'Dokter'"></app-form-label>
+                                <ejs-dropdownlist #DropdownDokterComp formControlName="id_dokter"
+                                    [dataSource]="DropdownDokterDatasource" [fields]="DropdownDokterField">
+                                </ejs-dropdownlist>
+                            </div>
+
+                            <!-- Keluhan -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                                <app-form-label [Caption]="'Keluhan'"></app-form-label>
+                                <textarea formControlName="keluhan" rows="4" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-tab-body>
+        </app-tab-item>
+    </app-tab>
+</app-base-layout>
