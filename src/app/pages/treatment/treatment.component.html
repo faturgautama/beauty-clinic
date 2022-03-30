@@ -1,0 +1,146 @@
+<app-base-layout>
+    <div class="row mb-3">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-end">
+            <app-action-button [ActionButton]="ActionButton" (onClickActionButton)="handleClickActionButton($event)">
+            </app-action-button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 ps-0">
+            <div class="card shadow-sm">
+                <div class=" card-header bg-abu">
+                    <h4 class="modal-title">Pasien Information</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 mb-3">
+                            <div class="card border-0 shadow-sm" style="height: 10.3rem;">
+                                <div class="card-body bg-abu"></div>
+                            </div>
+                        </div>
+
+                        <!-- Nama Pasien -->
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                            <app-form-label [Caption]="'Nama Pasien'"></app-form-label>
+                            <div class="input-group input-group-sm mb-0">
+                                <input id="nama_pasien" type="text" class="form-control" readonly>
+                                <span class="input-group-text bg-hijau-tua border-0 cursor-pointer"
+                                    style="border-top-right-radius: 0.2rem; border-bottom-right-radius: 0.2rem;  "
+                                    id="SearchPasien" (click)="FilterDialogPasien.onOpenFilterDialog()">
+                                    <i class="fas fa-search fa-xs text-white"></i>
+                                </span>
+
+                                <app-filter-dialog #FilterDialogPasien [FilterDialogProp]="FilterDialogProp"
+                                    (onChooseResult)="handleChooseFilterDialogPasien($event)">
+                                </app-filter-dialog>
+                            </div>
+                        </div>
+
+                        <!-- No. Rekam Medis -->
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                            <app-form-label [Caption]="'No. Rekam Medis'"></app-form-label>
+                            <input id="no_rekam_medis" type="text" class="form-control form-select-sm" readonly>
+                        </div>
+
+                        <!-- Usia -->
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <app-form-label [Caption]="'Usia'"></app-form-label>
+                            <input id="umur" type="text" class="form-control form-select-sm" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 pe-0">
+            <div class="card shadow-sm">
+                <div class="card-header bg-abu">
+                    <h4 class="modal-title">
+                        Add Treatment
+                    </h4>
+                </div>
+                <div class="card-body" style="height: calc(100vh - 15rem); overflow-y: auto;">
+                    <div class="row">
+                        <div *ngFor="let item of ListTreatment; let i = index;"
+                            class="col-lg-12 col-md-12 col-sm-12 col-xs-12 px-0 mb-2 cursor-pointer"
+                            (click)="handleClickListTreatment(item, i)">
+                            <div [id]="'cardListTreatment' + i" class="card border-0 shadow-sm">
+                                <div class="card-body p-2">
+                                    <h5 class="text-hijau-tua mb-1 fw-bold">
+                                        {{ item.nama_setup_tarif | titlecase }}
+                                    </h5>
+                                    <p class="text-hijau-tua mb-1">
+                                        {{ item.nominal_tarif }}
+                                    </p>
+                                    <p class="text-hitam mb-0">
+                                        Dokter {{ item.nama_dokter | titlecase }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Insert Update Tarif -->
+    <ng-template #ModalInsertUpdateTarif>
+        <div class="modal-header py-2 bg-abu">
+            <h4 class="modal-title pull-left">
+                Add Treatment
+            </h4>
+            <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+                <span aria-hidden="true" class="visually-hidden">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="FormInsertUpdateTarif">
+                <!-- Nama Tarif -->
+                <div class="row mb-3">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <app-form-label [Caption]="'Nama Tarif'"></app-form-label>
+                        <ejs-dropdownlist [dataSource]="DropdownTarifDatasource" [fields]="DropdownTarifField"
+                            (change)="handleChangeDropdownTarif($event)" formControlName="id_setup_tarif">
+                        </ejs-dropdownlist>
+                        <app-form-validator [Show]="id_setup_tarif.touched && id_setup_tarif.invalid"
+                            [Caption]="'Nama Tarif Tidak Boleh Kosong'">
+                        </app-form-validator>
+                    </div>
+                </div>
+
+                <!-- Nominal Tarif -->
+                <div class="row mb-3">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <app-form-label [Caption]="'Nominal Tarif'"></app-form-label>
+                        <input class="form-control form-select-sm" type="text" formControlName="nominal_tarif" readonly>
+                        <app-form-validator [Show]="nominal_tarif.touched && nominal_tarif.invalid"
+                            [Caption]="'Nominal Tarif Tidak Boleh Kosong'">
+                        </app-form-validator>
+                    </div>
+                </div>
+
+                <!-- Nama Dokter -->
+                <div class="row mb-3">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <app-form-label [Caption]="'Nama Dokter'"></app-form-label>
+                        <ejs-dropdownlist [dataSource]="DropdownDokterDatasource" [fields]="DropdownDokterField"
+                            (change)="handleChangeDropdownDokter($event)" formControlName="id_dokter">
+                        </ejs-dropdownlist>
+                        <app-form-validator [Show]="id_dokter.touched && id_dokter.invalid"
+                            [Caption]="'Nama Dokter Tidak Boleh Kosong'">
+                        </app-form-validator>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer py-2">
+            <button type="button" class="btn btn-secondary btn-sm" (click)="modalRef?.hide()">
+                Close
+            </button>
+            <button type="button" class="btn btn-primary btn-sm"
+                (click)="onSaveInsertUpdateTarif(FormInsertUpdateTarif.value)">
+                Add
+            </button>
+        </div>
+    </ng-template>
+</app-base-layout>

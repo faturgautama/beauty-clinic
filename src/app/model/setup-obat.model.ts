@@ -6,7 +6,9 @@ export interface ISetupObatModel {
     deskripsi_obat: string
     keterangan_pemakaian: string
     harga_jual: number
-    prosentase_ppn: number
+    kandungan_obat: string
+    id_cara_pakai: number
+    is_skin_care: boolean
     user_created: number
     time_created: string
     user_edited: number
@@ -31,7 +33,9 @@ export interface IInsertSetupObatModel {
     deskripsi_obat: string
     keterangan_pemakaian: string
     harga_jual: number
-    prosentase_ppn: number
+    kandungan_obat: string
+    id_cara_pakai: number
+    is_skin_care: boolean
 }
 
 export interface IUpdateSetupObatModel {
@@ -40,5 +44,7 @@ export interface IUpdateSetupObatModel {
     deskripsi_obat: string
     keterangan_pemakaian: string
     harga_jual: number
-    prosentase_ppn: number
+    kandungan_obat: string
+    id_cara_pakai: number
+    is_skin_care: boolean
 }

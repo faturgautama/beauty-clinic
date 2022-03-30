@@ -1,0 +1,68 @@
+<app-base-layout>
+    <div class="row h-100">
+        <!-- Action Button -->
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-end mb-2">
+            <app-action-button [ActionButton]="ActionButton" (onClickActionButton)="handleClickActionButton($event)">
+            </app-action-button>
+        </div>
+
+        <!-- Offcanvas Filter -->
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="height: calc(100vh - 12rem);">
+            <app-filter #FilterComp [FilterAttribute]="FilterAttribute" (onSearchFilter)="handleSearchFilter($event)">
+            </app-filter>
+
+            <app-grid #GridComp [GridAttributes]="GridAttributes" (onSelectionChange)="handleSelectionChanged($event)">
+            </app-grid>
+        </div>
+
+        <!-- Modal Add Marketing -->
+        <ng-template #ModalAddMarketing>
+            <div class="modal-header py-2 bg-abu">
+                <h4 class="modal-title pull-left">
+                    {{ FormSetupMarketingState == 'insert' ? 'Insert Marketing' : 'Update Marketing' }}
+                </h4>
+                <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+                    <span aria-hidden="true" class="visually-hidden">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="FormSetupMarketing">
+                    <!-- Nama Marketing -->
+                    <div class="row mb-3">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <app-form-label [Caption]="'Nama Marketing'"></app-form-label>
+                            <input class="form-control form-select-sm" type="text" formControlName="nama_marketing">
+                            <app-form-validator [Show]="nama_marketing.touched && nama_marketing.invalid"
+                                [Caption]="'Nama Marketing Tidak Boleh Kosong'">
+                            </app-form-validator>
+                        </div>
+                    </div>
+
+                    <!-- No. Handphone -->
+                    <div class="row mb-3">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <app-form-label [Caption]="'No. Handphone'"></app-form-label>
+                            <input class="form-control form-select-sm" type="text" formControlName="no_hp">
+                            <app-form-validator [Show]="no_hp.touched && no_hp.invalid"
+                                [Caption]="'No. Handphone Tidak Boleh Kosong'">
+                            </app-form-validator>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer py-2">
+                <button type="button" class="btn btn-secondary btn-sm" (click)="modalRef?.hide()">
+                    Close
+                </button>
+                <button *ngIf="FormSetupMarketingState == 'insert'" type="button" class="btn btn-primary btn-sm"
+                    (click)="onSubmitForm(FormSetupMarketing.value)">
+                    Submit
+                </button>
+                <button *ngIf="FormSetupMarketingState == 'update'" type="button" class="btn btn-warning btn-sm"
+                    (click)="onUpdateForm(FormSetupMarketing.value)">
+                    Update
+                </button>
+            </div>
+        </ng-template>
+    </div>
+</app-base-layout>

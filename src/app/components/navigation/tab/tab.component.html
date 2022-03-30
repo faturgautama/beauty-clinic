@@ -26,7 +26,7 @@
     </div>
 </div> -->
 
-<div class="tab-body" style="height: calc(100vh - 12rem);">
+<div class="tab-body" style="height: calc(100vh - 12rem); overflow-y: auto;">
     <ng-container *ngIf="activeTab && activeTab.bodyComponent">
         <ng-container *ngTemplateOutlet="activeTab.bodyComponent.tabBody">
         </ng-container>

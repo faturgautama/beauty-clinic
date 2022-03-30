@@ -1,0 +1,193 @@
+<app-base-layout>
+    <div class="row">
+        <!-- Total -->
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 px-0">
+            <div class="card shadow-sm">
+                <div class="card-header bg-abu">
+                    <h4 class="modal-title">
+                        Billing Information
+                    </h4>
+                </div>
+                <div class="card-body px-2">
+                    <div class="row">
+                        <!-- Pencarian Pasien -->
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                            <app-form-label [Caption]="'Nama Pasien'"></app-form-label>
+                            <div class="input-group input-group-sm mb-0">
+                                <input id="full_name" type="text" class="form-control" readonly>
+                                <span class="input-group-text bg-hijau-tua border-0 cursor-pointer"
+                                    style="border-top-right-radius: 0.2rem; border-bottom-right-radius: 0.2rem;  "
+                                    id="SearchPasien" (click)="FilterDialogPasien.onOpenFilterDialog()">
+                                    <i class="fas fa-search fa-xs text-white"></i>
+                                </span>
+
+                                <app-filter-dialog #FilterDialogPasien [FilterDialogProp]="FilterDialogProp"
+                                    (onChooseResult)="handleChooseFilterDialog($event)">
+                                </app-filter-dialog>
+                            </div>
+                        </div>
+
+                        <!-- Nama Sales -->
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-2 pb-3 border-bottom">
+                            <app-form-label [Caption]="'Nama Sales'"></app-form-label>
+                            <ejs-dropdownlist></ejs-dropdownlist>
+                        </div>
+
+                        <!-- Total -->
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 my-3">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 px-0">
+                                    <app-form-label [Caption]="'Total'"></app-form-label>
+                                </div>
+                                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-0">
+                                    <p class="text-hijau-tua mb-1 formLabel text-end">
+                                        {{ 900000 | currency: 'Rp.' }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Voucher -->
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 px-0">
+                                    <app-form-label [Caption]="'Voucher'"></app-form-label>
+                                </div>
+                                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-0">
+                                    <div class="input-group input-group-sm mb-0">
+                                        <input id="full_name" type="text" class="form-control" readonly>
+                                        <span class="input-group-text bg-hijau-tua border-0 cursor-pointer"
+                                            style="border-top-right-radius: 0.2rem; border-bottom-right-radius: 0.2rem;  "
+                                            id="SearchPasien" (click)="FilterDialogPasien.onOpenFilterDialog()">
+                                            <i class="fas fa-search fa-xs text-white"></i>
+                                        </span>
+
+                                        <app-filter-dialog #FilterDialogPasien [FilterDialogProp]="FilterDialogProp"
+                                            (onChooseResult)="handleChooseFilterDialog($event)">
+                                        </app-filter-dialog>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Grand Total -->
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-5">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 px-0">
+                                    <app-form-label [Caption]="'Grand Total'"></app-form-label>
+                                </div>
+                                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-0">
+                                    <p class="text-hijau-tua mb-1 formLabel text-end">
+                                        {{ 900000 | currency: 'Rp.' }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Button Pay -->
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-grid gap-2 mt-5">
+                            <button class="btn btn-hijau-tua" type="button" data-bs-toggle="offcanvas"
+                                data-bs-target="#offcanvasPayment">
+                                Pay Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detail Treatment dan Resep -->
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-3">
+            <app-tab>
+                <!-- Detail Treatment -->
+                <app-tab-item>
+                    <app-tab-header [id]="'detail_treatment'">
+                        Treatment
+                    </app-tab-header>
+                    <app-tab-body>
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <ul class="list-group">
+                                    <li *ngFor="let item of DetailDatasource.treatment"
+                                        class="list-group-item shadow-sm border-0 mb-3 rounded">
+                                        <p class="text-hijau-tua mb-2 fw-bold">
+                                            {{ item.nama_tarif }}
+                                        </p>
+                                        <p class="text-hijau-muda mb-0">
+                                            {{ item.nominal | currency: 'Rp. ' }}
+                                        </p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </app-tab-body>
+                </app-tab-item>
+
+                <!-- Detail Skincare -->
+                <app-tab-item>
+                    <app-tab-header [id]="'detail_skincare'">
+                        Skincare
+                    </app-tab-header>
+                    <app-tab-body>
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <ul class="list-group">
+                                    <li *ngFor="let item of DetailDatasource.skincare"
+                                        class="list-group-item shadow-sm border-0 mb-3 rounded">
+                                        <p class="text-hijau-tua mb-2 fw-bold">
+                                            {{ item.nama_skincare }}
+                                        </p>
+                                        <p class="text-hijau-muda mb-0">
+                                            {{ item.nominal | currency: 'Rp. ' }}
+                                        </p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </app-tab-body>
+                </app-tab-item>
+
+                <!-- Detail Resep -->
+                <app-tab-item>
+                    <app-tab-header [id]="'detail_resep'">
+                        Resep
+                    </app-tab-header>
+                    <app-tab-body>
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <ul class="list-group">
+                                    <li *ngFor="let item of DetailDatasource.resep"
+                                        class="list-group-item shadow-sm border-0 mb-3 rounded">
+                                        <p class="text-hijau-tua mb-2 fw-bold">
+                                            {{ item.nama_obat }}
+                                        </p>
+                                        <p class="text-hijau-muda mb-0">
+                                            {{ item.nominal | currency: 'Rp. ' }}
+                                        </p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </app-tab-body>
+                </app-tab-item>
+            </app-tab>
+        </div>
+    </div>
+
+    <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasPayment" aria-labelledby="offcanvasPaymentLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasPaymentLabel">Payment Method</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body small">
+            <div class="row">
+                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</app-base-layout>

@@ -27,62 +27,101 @@
             </div>
             <div class="modal-body">
                 <form [formGroup]="FormSetupObat">
-                    <!-- Nama Obat -->
-                    <div class="row mb-3">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <app-form-label [Caption]="'Nama Obat'"></app-form-label>
-                            <input class="form-control" type="text" formControlName="nama_obat">
-                            <app-form-validator [Show]="nama_obat.touched && nama_obat.invalid"
-                                [Caption]="'Nama Obat Tidak Boleh Kosong'">
-                            </app-form-validator>
-                        </div>
-                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 px-0">
+                            <!-- Nama Obat -->
+                            <div class="row mb-3">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <app-form-label [Caption]="'Nama Obat'"></app-form-label>
+                                    <input class="form-control form-select-sm" type="text" formControlName="nama_obat">
+                                    <app-form-validator [Show]="nama_obat.touched && nama_obat.invalid"
+                                        [Caption]="'Nama Obat Tidak Boleh Kosong'">
+                                    </app-form-validator>
+                                </div>
+                            </div>
 
-                    <!-- Deskripsi Obat -->
-                    <div class="row mb-3">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <app-form-label [Caption]="'Deskripsi Obat'"></app-form-label>
-                            <input class="form-control" type="text" formControlName="deskripsi_obat">
-                            <app-form-validator [Show]="deskripsi_obat.touched && deskripsi_obat.invalid"
-                                [Caption]="'Deskripsi Obat Tidak Boleh Kosong'">
-                            </app-form-validator>
-                        </div>
-                    </div>
+                            <!-- Deskripsi Obat -->
+                            <div class="row mb-3">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <app-form-label [Caption]="'Deskripsi Obat'"></app-form-label>
+                                    <input class="form-control form-select-sm" type="text"
+                                        formControlName="deskripsi_obat">
+                                    <app-form-validator [Show]="deskripsi_obat.touched && deskripsi_obat.invalid"
+                                        [Caption]="'Deskripsi Obat Tidak Boleh Kosong'">
+                                    </app-form-validator>
+                                </div>
+                            </div>
 
-                    <!-- Keterangan Pemakaian -->
-                    <div class="row mb-3">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <app-form-label [Caption]="'Keterangan Pemakaian'"></app-form-label>
-                            <input class="form-control" type="text" formControlName="keterangan_pemakaian">
-                            <app-form-validator [Show]="keterangan_pemakaian.touched && keterangan_pemakaian.invalid"
-                                [Caption]="'Keterangan Pemakaian Tidak Boleh Kosong'">
-                            </app-form-validator>
-                        </div>
-                    </div>
+                            <!-- Keterangan Pemakaian -->
+                            <div class="row mb-3">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <app-form-label [Caption]="'Keterangan Pemakaian'"></app-form-label>
+                                    <textarea class="form-control" type="text" formControlName="keterangan_pemakaian"
+                                        rows="3">
+                                    </textarea>
+                                    <app-form-validator
+                                        [Show]="keterangan_pemakaian.touched && keterangan_pemakaian.invalid"
+                                        [Caption]="'Keterangan Pemakaian Tidak Boleh Kosong'">
+                                    </app-form-validator>
+                                </div>
+                            </div>
 
-                    <!-- Harga Jual -->
-                    <div class="row mb-3">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <app-form-label [Caption]="'Harga Jual'"></app-form-label>
-                            <ejs-numerictextbox [format]="'N2'" [showClearButton]="false" [showSpinButton]="false"
-                                formControlName="harga_jual">
-                            </ejs-numerictextbox>
-                            <app-form-validator [Show]="harga_jual.touched && harga_jual.invalid"
-                                [Caption]="'Harga Jual Tidak Boleh Kosong'">
-                            </app-form-validator>
+                            <!-- Is Skincare -->
+                            <div class="row mb-3">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <app-form-label [Caption]="'Apakah Skincare ?'"></app-form-label>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="is_skin_care"
+                                            formControlName="is_skin_care" id="is_skin_care_true" [value]="true">
+                                        <label class="form-check-label" for="is_skin_care_true">Iya</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="is_skin_care"
+                                            formControlName="is_skin_care" id="is_skin_care_false" [value]="false">
+                                        <label class="form-check-label" for="is_skin_care_false">Tidak</label>
+                                    </div>
+                                    <app-form-validator [Show]="is_skin_care.touched && is_skin_care.invalid"
+                                        [Caption]="'Apakah Skincare Tidak Boleh Kosong'">
+                                    </app-form-validator>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 px-0">
+                            <!-- Harga Jual -->
+                            <div class="row mb-3">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <app-form-label [Caption]="'Harga Jual'"></app-form-label>
+                                    <ejs-numerictextbox [format]="'N2'" [showClearButton]="false"
+                                        [showSpinButton]="false" formControlName="harga_jual">
+                                    </ejs-numerictextbox>
+                                    <app-form-validator [Show]="harga_jual.touched && harga_jual.invalid"
+                                        [Caption]="'Harga Jual Tidak Boleh Kosong'">
+                                    </app-form-validator>
+                                </div>
+                            </div>
 
-                    <!-- Harga Jual -->
-                    <div class="row mb-3">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <app-form-label [Caption]="'Prosentase PPn'"></app-form-label>
-                            <ejs-numerictextbox [format]="'N2'" [showClearButton]="false" [showSpinButton]="false"
-                                formControlName="prosentase_ppn">
-                            </ejs-numerictextbox>
-                            <app-form-validator [Show]="prosentase_ppn.touched && prosentase_ppn.invalid"
-                                [Caption]="'Prosentase PPn Tidak Boleh Kosong'">
-                            </app-form-validator>
+                            <!-- Cara Pakai Obat -->
+                            <div class="row mb-3">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <app-form-label [Caption]="'Cara Pakai Obat'"></app-form-label>
+                                    <ejs-dropdownlist #DropdownCaraPakaiComp [dataSource]="DropdownCaraPakaiDatasource"
+                                        [fields]="DropdownCaraPakaiField" formControlName="id_cara_pakai">
+                                    </ejs-dropdownlist>
+                                    <app-form-validator [Show]="id_cara_pakai.touched && id_cara_pakai.invalid"
+                                        [Caption]="'Cara Pakai Tidak Boleh Kosong'">
+                                    </app-form-validator>
+                                </div>
+                            </div>
+
+                            <!-- Kandungan Obat -->
+                            <div class="row mb-3">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <app-form-label [Caption]="'Kandungan Obat'"></app-form-label>
+                                    <textarea class="form-control" type="text" formControlName="kandungan_obat"
+                                        rows="3">
+                                    </textarea>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </form>

@@ -40,6 +40,11 @@ import { SetupObatComponent } from './pages/setup-data/setup-obat/setup-obat.com
 import { GridButtonComponent } from './components/grid/grid-button/grid-button.component';
 import { PelayananPasienComponent } from './pages/pelayanan-pasien/pelayanan-pasien.component';
 import { FilterDialogComponent } from './components/navigation/filter-dialog/filter-dialog.component';
+import { BillingComponent } from './pages/billing/billing.component';
+import { CashComponent } from './pages/billing/payment-method/cash/cash.component';
+import { QrisComponent } from './pages/billing/payment-method/qris/qris.component';
+import { SetupMarketingComponent } from './pages/setup-data/setup-marketing/setup-marketing.component';
+import { TreatmentComponent } from './pages/treatment/treatment.component';
 
 @NgModule({
     declarations: [
@@ -70,6 +75,11 @@ import { FilterDialogComponent } from './components/navigation/filter-dialog/fil
         GridButtonComponent,
         PelayananPasienComponent,
         FilterDialogComponent,
+        BillingComponent,
+        CashComponent,
+        QrisComponent,
+        SetupMarketingComponent,
+        TreatmentComponent,
     ],
     imports: [
         CommonModule,

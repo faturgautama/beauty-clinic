@@ -5,4 +5,4 @@ export const GET_OBAT_BY_ID = `${environment.webApi}/admisi/SetupObat/GetById/`;
 export const POST_SAVE_OBAT = `${environment.webApi}/admisi/SetupObat/Insert`;
 export const PUT_UPDATE_OBAT = `${environment.webApi}/admisi/SetupObat/Update`;
 export const PUT_UPDATE_STATUS_OBAT = `${environment.webApi}/admisi/SetupObat/UpdateStatusActive`;
-export const DELETE_OBAT = `${environment.webApi}/admisi/SetupObat/Delete`;
+export const DELETE_OBAT = `${environment.webApi}/admisi/SetupObat/Delete/`;

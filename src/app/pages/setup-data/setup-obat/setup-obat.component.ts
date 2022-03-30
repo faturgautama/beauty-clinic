@@ -1,11 +1,14 @@
 import { formatCurrency, formatNumber } from '@angular/common';
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { GridComponent, GridAttribute } from 'src/app/components/grid/grid.component';
 import { ActionButtonModel } from 'src/app/components/navigation/action-button/action-button.component';
 import { FilterComponent, FilterModel, OffcanvasFilterModel } from 'src/app/components/navigation/filter/filter.component';
-import { IInsertSetupObatModel, IUpdateSetupObatModel } from 'src/app/model/setup-obat.model';
+import { ISetupCaraPakaiObatModel } from 'src/app/model/setup-cara-pakai-obat.model';
+import { IInsertSetupObatModel, ISetupObatModel, IUpdateSetupObatModel } from 'src/app/model/setup-obat.model';
+import { SetupCaraPakaiObatService } from 'src/app/services/setup-cara-pakai-obat/setup-cara-pakai-obat.service';
 import { SetupObatService } from 'src/app/services/setup-obat/setup-obat.service';
 import { UtilityService } from 'src/app/services/utility/utility.service';
 
@@ -32,17 +35,23 @@ export class SetupObatComponent implements OnInit {
 
     @ViewChild('ModalAddObat') ModalAddObat!: TemplateRef<any>;
 
+    @ViewChild('DropdownCaraPakaiComp') DropdownCaraPakaiComp!: DropDownListComponent;
+    DropdownCaraPakaiDatasource: ISetupCaraPakaiObatModel[] = [];
+    DropdownCaraPakaiField: Object = { text: 'cara_pakai_obat', value: 'id_cara_pakai_obat' };
+
     constructor(
         private formBuilder: FormBuilder,
         private bsModalService: BsModalService,
         private utilityService: UtilityService,
-        private setupObatService: SetupObatService
+        private setupObatService: SetupObatService,
+        public setupCaraPakaiService: SetupCaraPakaiObatService
     ) { }
 
     ngOnInit(): void {
         this.ActionButton = [
             { id: 'add', caption: 'Add', icon: 'fas fa-plus' },
             { id: 'edit', caption: 'Edit', icon: 'fas fa-edit' },
+            { id: 'delete', caption: 'Delete', icon: 'fas fa-trash' },
             { id: 'filter', caption: 'Filter', icon: 'fas fa-filter' }
         ];
 
@@ -74,12 +83,18 @@ export class SetupObatComponent implements OnInit {
                         return formatCurrency(args.value, 'EN', 'Rp. ');
                     },
                 },
+                { field: 'kandungan_obat', headerName: 'KANDUNGAN OBAT', minWidth: 200 },
+                { field: 'id_cara_pakai', headerName: 'CARA PAKAI', minWidth: 100 },
                 {
-                    field: 'prosentase_ppn', headerName: 'PROSENTASE PPN', minWidth: 100, headerClass: 'text-center', cellClass: 'text-end',
+                    field: 'is_skin_care', headerName: 'IS SKINCARE', headerClass: 'text-center', cellClass: 'text-center',
                     cellRenderer: (args: any) => {
-                        return formatNumber(args.value, 'EN');
+                        if (args.value) {
+                            return '<span><i class="fas fa-check fa-xs"></i></span>'
+                        } else {
+                            return '<span><i class="fas fa-times fa-xs"></i></span>'
+                        }
                     },
-                },
+                }
             ],
             dataSource: []
         };
@@ -90,10 +105,17 @@ export class SetupObatComponent implements OnInit {
             deskripsi_obat: ["", [Validators.required]],
             keterangan_pemakaian: ["", [Validators.required]],
             harga_jual: [0, [Validators.required]],
-            prosentase_ppn: [0, [Validators.required]],
+            kandungan_obat: ["", []],
+            id_cara_pakai: [0, [Validators.required]],
+            is_skin_care: [false, [Validators.required]],
         });
 
         this.handleSearchFilter([]);
+
+        this.setupCaraPakaiService.onGetAll()
+            .subscribe((result) => {
+                this.DropdownCaraPakaiDatasource = result.data;
+            });
     }
 
     handleClickActionButton(args: ActionButtonModel): void {
@@ -110,7 +132,16 @@ export class SetupObatComponent implements OnInit {
                 this.deskripsi_obat.setValue(this.GridSelectedData.deskripsi_obat);
                 this.keterangan_pemakaian.setValue(this.GridSelectedData.keterangan_pemakaian);
                 this.harga_jual.setValue(this.GridSelectedData.harga_jual);
-                this.prosentase_ppn.setValue(this.GridSelectedData.prosentase_ppn);
+                this.kandungan_obat.setValue(this.GridSelectedData.kandungan_obat);
+                this.id_cara_pakai.setValue(this.GridSelectedData.id_cara_pakai);
+                this.is_skin_care.setValue(this.GridSelectedData.is_skin_care);
+                break;
+            case 'delete':
+                if (this.GridSelectedData) {
+                    this.onDelete(this.GridSelectedData);
+                } else {
+                    this.utilityService.onShowCustomAlert('warning', 'Warning', 'Tidak Ada Data yg Dipilih')
+                }
                 break;
             case 'filter':
                 this.FilterComp.handleOpenFilter();
@@ -133,7 +164,8 @@ export class SetupObatComponent implements OnInit {
 
     onOpenModalInsertUpdate(): void {
         this.modalRef = this.bsModalService.show(this.ModalAddObat, {
-            backdrop: 'static'
+            backdrop: 'static',
+            class: 'modal-lg'
         });
 
         this.onResetForm();
@@ -145,7 +177,9 @@ export class SetupObatComponent implements OnInit {
             deskripsi_obat: FormSetupObat.deskripsi_obat,
             keterangan_pemakaian: FormSetupObat.keterangan_pemakaian,
             harga_jual: FormSetupObat.harga_jual,
-            prosentase_ppn: FormSetupObat.prosentase_ppn
+            kandungan_obat: FormSetupObat.kandungan_obat,
+            id_cara_pakai: FormSetupObat.id_cara_pakai,
+            is_skin_care: FormSetupObat.is_skin_care,
         };
 
         this.setupObatService.onPostSave(parameter)
@@ -174,6 +208,19 @@ export class SetupObatComponent implements OnInit {
             })
     }
 
+    onDelete(data: ISetupObatModel): void {
+        this.setupObatService.onDelete(data.id_obat)
+            .subscribe((result) => {
+                if (result.responseResult) {
+                    this.utilityService.onShowCustomAlert('success', 'Success', 'Setup Obat Berhasil Dihapus')
+                        .then(() => {
+                            this.modalRef?.hide();
+                            this.handleSearchFilter([]);
+                        });
+                };
+            })
+    }
+
     onResetForm(): void {
         this.FormSetupObat.reset();
         this.id_obat.setValue(0);
@@ -181,7 +228,9 @@ export class SetupObatComponent implements OnInit {
         this.deskripsi_obat.setValue("");
         this.keterangan_pemakaian.setValue("");
         this.harga_jual.setValue(0);
-        this.prosentase_ppn.setValue(0);
+        this.kandungan_obat.setValue("");
+        this.id_cara_pakai.setValue(0);
+        this.is_skin_care.setValue(false);
     }
 
     get id_obat(): AbstractControl { return this.FormSetupObat.get('id_obat') as AbstractControl };
@@ -189,5 +238,7 @@ export class SetupObatComponent implements OnInit {
     get deskripsi_obat(): AbstractControl { return this.FormSetupObat.get('deskripsi_obat') as AbstractControl };
     get keterangan_pemakaian(): AbstractControl { return this.FormSetupObat.get('keterangan_pemakaian') as AbstractControl };
     get harga_jual(): AbstractControl { return this.FormSetupObat.get('harga_jual') as AbstractControl };
-    get prosentase_ppn(): AbstractControl { return this.FormSetupObat.get('prosentase_ppn') as AbstractControl };
+    get kandungan_obat(): AbstractControl { return this.FormSetupObat.get('kandungan_obat') as AbstractControl };
+    get id_cara_pakai(): AbstractControl { return this.FormSetupObat.get('id_cara_pakai') as AbstractControl };
+    get is_skin_care(): AbstractControl { return this.FormSetupObat.get('is_skin_care') as AbstractControl };
 }
