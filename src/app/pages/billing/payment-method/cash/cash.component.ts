@@ -1,15 +1,59 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'app-cash',
-  templateUrl: './cash.component.html',
-  styleUrls: ['./cash.component.css']
+    selector: 'app-cash',
+    templateUrl: './cash.component.html',
+    styleUrls: ['./cash.component.css']
 })
 export class CashComponent implements OnInit {
 
-  constructor() { }
+    SisaKurangBayar = 0;
 
-  ngOnInit(): void {
-  }
+    FormPaymentMethod!: FormGroup;
 
+    @Output('onSendPaymentCash') onSendPaymentCash = new EventEmitter<any>();
+
+    constructor(
+        private formBuilder: FormBuilder
+    ) {
+        this.FormPaymentMethod = this.formBuilder.group({
+            id_payment_method: [1, []],
+            payment_method: ['CASH'],
+            id_payment_method_detail: [0, []],
+            jumlah_bayar: [0, []],
+            id_voucher: [0, []],
+            id_bank_payment: [0, []],
+            id_edc_payment: [0, []],
+            trace_number: ["", []],
+            jenis_kartu: ["", []],
+            card_holder: ["", []],
+            nomor_kartu: ["", []],
+        });
+    }
+
+    ngOnInit(): void {
+    }
+
+    onSubmitPayment(FormPaymentMethod: any): void {
+        if (this.SisaKurangBayar > 0) {
+            this.onSendPaymentCash.emit(FormPaymentMethod);
+            this.onResetForm();
+        }
+    }
+
+    onResetForm(): void {
+        this.jumlah_bayar.setValue(0);
+    }
+
+    get id_payment_method(): AbstractControl { return this.FormPaymentMethod.get('id_payment_method') as AbstractControl }
+    get id_payment_method_detail(): AbstractControl { return this.FormPaymentMethod.get('id_payment_method_detail') as AbstractControl }
+    get jumlah_bayar(): AbstractControl { return this.FormPaymentMethod.get('jumlah_bayar') as AbstractControl }
+    get id_voucher(): AbstractControl { return this.FormPaymentMethod.get('id_voucher') as AbstractControl }
+    get id_bank_payment(): AbstractControl { return this.FormPaymentMethod.get('id_bank_payment') as AbstractControl }
+    get id_edc_payment(): AbstractControl { return this.FormPaymentMethod.get('id_edc_payment') as AbstractControl }
+    get trace_number(): AbstractControl { return this.FormPaymentMethod.get('trace_number') as AbstractControl }
+    get jenis_kartu(): AbstractControl { return this.FormPaymentMethod.get('jenis_kartu') as AbstractControl }
+    get card_holder(): AbstractControl { return this.FormPaymentMethod.get('card_holder') as AbstractControl }
+    get nomor_kartu(): AbstractControl { return this.FormPaymentMethod.get('nomor_kartu') as AbstractControl }
 }

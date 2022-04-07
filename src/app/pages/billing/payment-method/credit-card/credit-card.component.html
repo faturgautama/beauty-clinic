@@ -1,0 +1,92 @@
+<div class="row" [formGroup]="FormPaymentMethod">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 px-0">
+        <!-- Kurang Bayar -->
+        <div class="row mb-2 align-items-center">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 px-0">
+                <app-form-label [Caption]="'Kurang Bayar'"></app-form-label>
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-0">
+                <p class="text-hijau-tua mb-1 formLabel">
+                    {{ SisaKurangBayar > 0 ? ( SisaKurangBayar | currency: 'Rp.') : 0 }}
+                </p>
+            </div>
+        </div>
+
+        <!-- Bank Payment -->
+        <div class="row mb-2 align-items-center">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 px-0">
+                <app-form-label [Caption]="'Nama Bank'"></app-form-label>
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-0">
+                <ejs-dropdownlist [dataSource]="DropdownBankDatasource" [fields]="DropdownBankField"
+                    formControlName="id_bank_payment">
+                </ejs-dropdownlist>
+            </div>
+        </div>
+
+        <!-- EDC Payment -->
+        <div class="row mb-2 align-items-center">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 px-0">
+                <app-form-label [Caption]="'Nama EDC'"></app-form-label>
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-0">
+                <ejs-dropdownlist [dataSource]="DropdownEdcDatasource" [fields]="DropdownEdcField"
+                    formControlName="id_edc_payment">
+                </ejs-dropdownlist>
+            </div>
+        </div>
+
+        <!-- Jenis Kartu -->
+        <div class="row mb-2 align-items-center">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 px-0">
+                <app-form-label [Caption]="'Jenis Kartu'"></app-form-label>
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-0">
+                <input type="text" class="form-control form-select-sm" formControlName="jenis_kartu">
+            </div>
+        </div>
+
+        <!-- Card Holder -->
+        <div class="row mb-2 align-items-center">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 px-0">
+                <app-form-label [Caption]="'Card Holder'"></app-form-label>
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-0">
+                <input type="text" class="form-control form-select-sm" formControlName="card_holder">
+            </div>
+        </div>
+
+        <!-- No. Kartu -->
+        <div class="row mb-2 align-items-center">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 px-0">
+                <app-form-label [Caption]="'No. Kartu'"></app-form-label>
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-0">
+                <input type="text" class="form-control form-select-sm" formControlName="nomor_kartu">
+            </div>
+        </div>
+
+        <!-- Trace Number -->
+        <div class="row mb-2 align-items-center">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 px-0">
+                <app-form-label [Caption]="'Trace Number'"></app-form-label>
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-0">
+                <input type="text" class="form-control form-select-sm" formControlName="trace_number">
+            </div>
+        </div>
+
+        <!-- Jumlah Bayar -->
+        <div class="row mb-0 align-items-center">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 px-0">
+                <app-form-label [Caption]="'Jumlah Bayar'"></app-form-label>
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-0">
+                <ejs-numerictextbox [format]="'N2'" formControlName="jumlah_bayar" [showClearButton]="false"
+                    [showSpinButton]="false" (keyup.enter)="onSubmitPayment(FormPaymentMethod.value)"
+                    [enabled]="SisaKurangBayar > 0">
+                </ejs-numerictextbox>
+            </div>
+        </div>
+    </div>
+</div>

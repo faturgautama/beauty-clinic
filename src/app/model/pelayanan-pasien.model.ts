@@ -18,6 +18,7 @@ export class PostSaveAdmisiPasienModel implements HttpResponseModel {
 
 export interface IGetAdmisiPasienModel {
     id_register: number
+    id_person: number;
     no_antrian: string
     tgl_admisi: string
     no_rekam_medis: string

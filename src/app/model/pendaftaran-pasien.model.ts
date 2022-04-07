@@ -31,8 +31,11 @@ export interface IPersonModel {
     tempat_lahir: string
     tanggal_lahir: string
     alamat_lengkap: string
-    no_hp: string
-    user_created: number
+    no_hp_1: string
+    no_hp_2: string
+    no_hp_3: string
+    path_foto: string
+    nama_foto: string
 }
 
 interface IPasienModel {
@@ -61,4 +64,23 @@ export class GetAllPasienByDynamicFilterModel implements HttpResponseModel {
     responseResult!: boolean
     message!: string
     data!: IPersonPasienModel[]
+}
+
+export interface IUpdatePasienModel {
+    id_person: number
+    id_jenis_identitas: number
+    no_identitas: string
+    id_jenis_member: number
+    nama_depan: string
+    nama_belakang: string
+    gender: string
+    tempat_lahir: string
+    tanggal_lahir: string
+    alamat_lengkap: string
+    no_hp: string
+    no_hp_1: string
+    no_hp_2: string
+    no_hp_3: string
+    path_foto: string
+    nama_foto: string
 }

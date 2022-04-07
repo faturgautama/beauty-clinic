@@ -45,6 +45,14 @@ import { CashComponent } from './pages/billing/payment-method/cash/cash.componen
 import { QrisComponent } from './pages/billing/payment-method/qris/qris.component';
 import { SetupMarketingComponent } from './pages/setup-data/setup-marketing/setup-marketing.component';
 import { TreatmentComponent } from './pages/treatment/treatment.component';
+import { SetupRoleComponent } from './pages/setup-data/setup-role/setup-role.component';
+import { SetupUserComponent } from './pages/setup-data/setup-user/setup-user.component';
+import { InputResepComponent } from './pages/farmasi/input-resep/input-resep.component';
+import { InputBukaKasirComponent } from './pages/billing/input-buka-kasir/input-buka-kasir.component';
+import { InputTutupKasirComponent } from './pages/billing/input-tutup-kasir/input-tutup-kasir.component';
+import { ValidasiTutupKasirComponent } from './pages/billing/validasi-tutup-kasir/validasi-tutup-kasir.component';
+import { DebitCardComponent } from './pages/billing/payment-method/debit-card/debit-card.component';
+import { CreditCardComponent } from './pages/billing/payment-method/credit-card/credit-card.component';
 
 @NgModule({
     declarations: [
@@ -80,6 +88,14 @@ import { TreatmentComponent } from './pages/treatment/treatment.component';
         QrisComponent,
         SetupMarketingComponent,
         TreatmentComponent,
+        SetupRoleComponent,
+        SetupUserComponent,
+        InputResepComponent,
+        InputBukaKasirComponent,
+        InputTutupKasirComponent,
+        ValidasiTutupKasirComponent,
+        DebitCardComponent,
+        CreditCardComponent,
     ],
     imports: [
         CommonModule,

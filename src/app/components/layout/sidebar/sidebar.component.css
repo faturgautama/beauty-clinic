@@ -11,8 +11,15 @@ section#sidebar.shown {
   visibility: visible;
 }
 
+.bg_logo {
+  background-image: url("../../../../assets/image/1.png");
+  background-position: center;
+  background-size: 10rem;
+  background-repeat: no-repeat;
+}
+
 div.divImgUser {
-  transform: translate(0%, 50%);
+  transform: translate(0%, 65%);
 }
 
 img.imgUser {

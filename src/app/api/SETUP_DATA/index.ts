@@ -3,6 +3,8 @@ import * as SETUP_TARIF from './SETUP_TARIF';
 import * as SETUP_OBAT from './SETUP_OBAT';
 import * as SETUP_CARA_PAKAI_OBAT from './SETUP_CARA_PAKAI_OBAT';
 import * as SETUP_MARKETING from './SETUP_MARKETING';
+import * as SETUP_USER from './SETUP_USER';
+import * as SETUP_ROLE from './SETUP_ROLE';
 
 export const API = Object.assign({}, {
     SETUP_DOKTER: SETUP_DOKTER,
@@ -10,4 +12,6 @@ export const API = Object.assign({}, {
     SETUP_OBAT: SETUP_OBAT,
     SETUP_CARA_PAKAI_OBAT: SETUP_CARA_PAKAI_OBAT,
     SETUP_MARKETING: SETUP_MARKETING,
+    SETUP_USER: SETUP_USER,
+    SETUP_ROLE: SETUP_ROLE,
 })

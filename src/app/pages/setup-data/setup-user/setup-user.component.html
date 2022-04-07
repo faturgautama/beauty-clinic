@@ -1,0 +1,128 @@
+<app-base-layout>
+    <div class="row h-100">
+        <!-- Action Button -->
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-end mb-2">
+            <app-action-button [ActionButton]="ActionButton" (onClickActionButton)="handleClickActionButton($event)">
+            </app-action-button>
+        </div>
+
+        <!-- Offcanvas Filter -->
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="height: calc(100vh - 12rem);">
+            <app-filter #FilterComp [FilterAttribute]="FilterAttribute" (onSearchFilter)="handleSearchFilter($event)">
+            </app-filter>
+
+            <app-grid #GridComp [GridAttributes]="GridAttributes" (onSelectionChange)="handleSelectionChanged($event)">
+            </app-grid>
+        </div>
+
+        <!-- Modal Add User -->
+        <ng-template #ModalAddUser>
+            <div class="modal-header py-2 bg-abu">
+                <h4 class="modal-title pull-left">
+                    {{ FormSetupUserState == 'insert' ? 'Insert User' : 'Update User' }}
+                </h4>
+                <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+                    <span aria-hidden="true" class="visually-hidden">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="FormSetupUser">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                            <!-- Nama User -->
+                            <div class="row mb-3">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <app-form-label [Caption]="'Nama User'"></app-form-label>
+                                    <input class="form-control form-select-sm" type="text" formControlName="full_name">
+                                    <app-form-validator [Show]="full_name.touched && full_name.invalid"
+                                        [Caption]="'Nama User Tidak Boleh Kosong'">
+                                    </app-form-validator>
+                                </div>
+                            </div>
+
+                            <!-- No. Handphone -->
+                            <div class="row mb-3">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <app-form-label [Caption]="'No. Handphone'"></app-form-label>
+                                    <input class="form-control form-select-sm" type="text" formControlName="no_hp">
+                                    <app-form-validator [Show]="no_hp.touched && no_hp.invalid"
+                                        [Caption]="'No. Handphone Tidak Boleh Kosong'">
+                                    </app-form-validator>
+                                </div>
+                            </div>
+
+                            <!-- Alamat -->
+                            <div class="row mb-0">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <app-form-label [Caption]="'Alamat Lengkap'"></app-form-label>
+                                    <textarea class="form-control" rows="3" type="text" formControlName="alamat_lengkap"
+                                        formControlName="alamat_lengkap">
+                            </textarea>
+                                    <app-form-validator [Show]="alamat_lengkap.touched && alamat_lengkap.invalid"
+                                        [Caption]="'Alamat Lengkap Tidak Boleh Kosong'">
+                                    </app-form-validator>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                            <!-- Nama Role -->
+                            <div class="row mb-3">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <app-form-label [Caption]="'Role User'"></app-form-label>
+                                    <ejs-dropdownlist [dataSource]="DropdownRoleDatasource" [fields]="DropdownRoleField"
+                                        formControlName="id_role">
+                                    </ejs-dropdownlist>
+                                    <app-form-validator [Show]="id_role.touched && id_role.invalid"
+                                        [Caption]="'Role User Tidak Boleh Kosong'">
+                                    </app-form-validator>
+                                </div>
+                            </div>
+
+                            <!-- Username -->
+                            <div class="row mb-3">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <app-form-label [Caption]="'Username'"></app-form-label>
+                                    <input class="form-control" formControlName="user_name">
+                                    <app-form-validator [Caption]="'Username Tidak Boleh Kosong'"
+                                        [Show]="user_name.touched && user_name.invalid">
+                                    </app-form-validator>
+                                </div>
+                            </div>
+
+                            <!-- Password -->
+                            <div class="row mb-0">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <app-form-label [Caption]="'Password'"></app-form-label>
+                                    <div class="input-group mb-0">
+                                        <input type="text" id="password" class="form-control" formControlName="password"
+                                            type="password" aria-describedby="passwordToggle">
+                                        <span class="input-group-text" id="passwordToggle"
+                                            (click)="onTogglePassword(this.SeePassword)">
+                                            <i id="passwordToggleIcon" class="fas fa-eye fa-sm"></i>
+                                        </span>
+                                    </div>
+                                    <app-form-validator [Caption]="'Password Tidak Boleh Kosong'"
+                                        [Show]="password.touched && password.invalid">
+                                    </app-form-validator>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer py-2">
+                <button type="button" class="btn btn-secondary btn-sm" (click)="modalRef?.hide()">
+                    Close
+                </button>
+                <button *ngIf="FormSetupUserState == 'insert'" type="button" class="btn btn-primary btn-sm"
+                    (click)="onSubmitForm(FormSetupUser.value)">
+                    Submit
+                </button>
+                <button *ngIf="FormSetupUserState == 'update'" type="button" class="btn btn-warning btn-sm"
+                    (click)="onUpdateForm(FormSetupUser.value)">
+                    Update
+                </button>
+            </div>
+        </ng-template>
+    </div>
+</app-base-layout>

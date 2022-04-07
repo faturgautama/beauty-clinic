@@ -20,8 +20,8 @@ export class SetupMarketingService {
         return this.httpRequestService.defaultPostRequest(this.API.GET_ALL_BY_DYNAMIC_FILTER, body);
     }
 
-    onGetAll(body: any): Observable<GetAllSetupMarketingModel> {
-        return this.httpRequestService.defaultPostRequest(this.API.GET_ALL, body);
+    onGetAll(): Observable<GetAllSetupMarketingModel> {
+        return this.httpRequestService.defaultGetRequest(this.API.GET_ALL);
     }
 
     onGetById(id_marketing: number): Observable<GetByIdSetupMarketingModel> {

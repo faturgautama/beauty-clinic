@@ -3,6 +3,9 @@ import * as SETUP_DATA from './SETUP_DATA';
 import * as PENDAFTARAN_PASIEN from './PENDAFTARAN_PASIEN';
 import * as PELAYANAN_PASIEN from './PELAYANAN_PASIEN';
 import * as TREATMENT from './TREATMENT';
+import * as RESEP from './RESEP';
+import * as BILLING from './BILLING';
+import * as SETTING_KASIR from './SETTING_KASIR';
 
 export const API = Object.assign({}, {
     AUTHENTICATION: AUTHENTICATION,
@@ -10,4 +13,7 @@ export const API = Object.assign({}, {
     PENDAFTARAN_PASIEN: PENDAFTARAN_PASIEN,
     PELAYANAN_PASIEN: PELAYANAN_PASIEN,
     TREATMENT: TREATMENT,
+    RESEP: RESEP,
+    SETTING_KASIR: SETTING_KASIR,
+    BILLING: BILLING,
 })

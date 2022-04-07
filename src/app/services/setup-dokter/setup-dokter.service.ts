@@ -38,4 +38,12 @@ export class SetupDokterService {
     onSaveSetupDokter(body: ISetupDokterModel): Observable<HttpResponseModel> {
         return this.httpRequestService.defaultPostRequest(this.API.SAVE_PENDAFTARAN_DOKTER, body);
     }
+
+    onUploadFotoPasien(data: FormData): Observable<HttpResponseModel> {
+        return this.httpRequestService.defaultUploadFileRequest(this.API.UPLOAD_FOTO_DOKTER, data);
+    }
+
+    onGetLinkFotoPerson(id_person: number): Observable<HttpResponseModel> {
+        return this.httpRequestService.defaultGetRequest(this.API.GET_LINK_FOTO_DOKTER + id_person, [], false);
+    }
 }

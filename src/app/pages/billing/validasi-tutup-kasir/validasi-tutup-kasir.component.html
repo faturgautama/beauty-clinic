@@ -1,0 +1,84 @@
+<app-base-layout>
+    <div class="row h-100">
+        <!-- Action Button -->
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-end mb-2">
+            <app-action-button [ActionButton]="ActionButton" (onClickActionButton)="handleClickActionButton($event)">
+            </app-action-button>
+        </div>
+
+        <!-- Grid Header -->
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-2" style="height: calc(100vh - 26rem);">
+            <app-grid #GridComp [GridAttributes]="GridHeaderAttributes"
+                (onSelectionChange)="handleSelectionChanged($event)">
+            </app-grid>
+        </div>
+
+        <!-- Grid Header -->
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="height: calc(100vh - 26.5rem);">
+            <div class="row h-100">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 ps-0">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-abu">
+                            <h5 class="modal-title mb-0">
+                                Detail Pendapatan Versi Kasir
+                            </h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <app-grid #GridPenerimaanVersiKasirComp
+                                [GridAttributes]="GridPenerimaanVersiKasirAttributes">
+                            </app-grid>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pe-0">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-abu">
+                            <h5 class="modal-title mb-0">
+                                Detail Pendapatan Versi System
+                            </h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <app-grid #GridPenerimaanVersiSystemComp
+                                [GridAttributes]="GridPenerimaanVersiSystemAttributes">
+                            </app-grid>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Validasi Tutup Kasir -->
+        <ng-template #ModalValidasi>
+            <div class="modal-header py-2 bg-abu">
+                <h4 class="modal-title pull-left">
+                    Validasi Tutup Kasir
+                </h4>
+                <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+                    <span aria-hidden="true" class="visually-hidden">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="FormValidasi">
+                    <!-- Keterangan Validasi -->
+                    <div class="row mb-3">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 px-0">
+                            <app-form-label [Caption]="'Keterangan Validasi'"></app-form-label>
+                            <textarea formControlName="keterangan_validasi" rows="5" class="form-control"></textarea>
+                            <app-form-validator [Show]="keterangan_validasi.touched && keterangan_validasi.invalid"
+                                [Caption]="'Keterangan Validasi Tidak Boleh Kosong'">
+                            </app-form-validator>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer py-2">
+                <button type="button" class="btn btn-secondary btn-sm" (click)="modalRef?.hide()">
+                    Close
+                </button>
+                <button type="button" class="btn btn-primary btn-sm" (click)="onValidasiTutupKasir(FormValidasi.value)">
+                    Validasi
+                </button>
+            </div>
+        </ng-template>
+    </div>
+</app-base-layout>

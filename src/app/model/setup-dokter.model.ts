@@ -15,17 +15,19 @@ export interface ISetupDokterModel {
 }
 
 export interface IPersonDokterModel {
-    id_person: number
+    id_jenis_identitas: number
     no_identitas: string
-    id_dokter: number
-    kode_dokter: string
-    full_name: string
+    nama_depan: string
+    nama_belakang: string
     gender: string
-    tgl_lahir: string
+    tempat_lahir: string
+    tanggal_lahir: string
     alamat_lengkap: string
-    no_hp: string
-    keterangan: string
-    is_active: boolean
+    no_hp_1: string
+    no_hp_2: string
+    no_hp_3: string
+    path_foto: string
+    nama_foto: string
 }
 
 export class GetAllDokterByDynamicFilterModel implements HttpResponseModel {

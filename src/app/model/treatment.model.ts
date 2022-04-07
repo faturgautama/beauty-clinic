@@ -1,8 +1,14 @@
 import { HttpResponseModel } from "./http-request.model"
 
+interface DetailPelaksanaTindakanModel {
+    id_user: number
+    id_role: number
+}
+
 interface DetailTransaksiModel {
     id_setup_tarif: number
     id_dokter: number
+    pelaksana_tindakan: DetailPelaksanaTindakanModel[]
     qty: number
 }
 

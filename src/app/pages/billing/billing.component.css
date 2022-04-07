@@ -1,5 +1,22 @@
 #offcanvasPayment {
-    height: calc(100vh - 10rem);
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
+  height: 38rem;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.cardBillingDetail {
+  height: calc(100vh - 29rem);
+  overflow-y: auto;
+}
+
+@media (min-width: 1919.98px) {
+  .cardBillingDetail {
+    height: calc(100vh - 39rem);
+    overflow-y: auto;
+  }
+
+  .cardInfoPasien {
+    height: calc(100vh - 13rem);
+    overflow-y: auto;
+  }
 }

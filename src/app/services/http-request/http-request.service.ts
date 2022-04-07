@@ -201,6 +201,26 @@ export class HttpRequestService {
         )
     }
 
+    defaultUploadFileRequest(url: string, req: FormData): Observable<any> {
+        this.utilityService.onShowLoadingBeforeSend();
+
+        return this.httpClient.post<any>(url, req)
+            .pipe(
+                map((result) => {
+                    Swal.close();
+
+                    if (result.responseResult) {
+                        return result;
+                    } else {
+                        this.handlingErrorWithStatusCode200(result);
+                    }
+                }),
+                catchError((error: HttpErrorResponse): any => {
+                    return this.handlingError(error, req);
+                }),
+            );
+    }
+
     handlingErrorWithStatusCode200(response: HttpResponseModel): any {
 
         if (response.data.length > 0 && typeof response.data !== "string") {
@@ -212,6 +232,35 @@ export class HttpRequestService {
         };
 
         return;
+    }
+
+    defaultGetPrintRequest(url: string, params?: any): void {
+        this.utilityService.onShowLoadingBeforeSend();
+
+        this.httpClient.get(
+            `${url}`,
+            {
+                headers: new HttpHeaders()
+                    .set('Accept', 'application/pdf')
+                    .set('Content-Type', 'application/pdf'),
+                params: params,
+                responseType: 'arraybuffer',
+            }
+        ).pipe(
+            map((result) => {
+                Swal.close();
+                return result;
+            }),
+            catchError((error: HttpErrorResponse): any => {
+                return this.handlingError(error, params);
+            }),
+        ).subscribe((result: any) => {
+            const file = new Blob([result], { type: 'application/pdf' });
+
+            const fileUrl = window.URL.createObjectURL(file);
+
+            window.open(fileUrl);
+        })
     }
 
     handlingError(error: HttpErrorResponse, parameter?: any): any {

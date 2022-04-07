@@ -8,13 +8,13 @@
                         Billing Information
                     </h4>
                 </div>
-                <div class="card-body px-2">
-                    <div class="row">
+                <div class="card-body px-2 cardInfoPasien">
+                    <div class="row" [formGroup]="FormTransHeader">
                         <!-- Pencarian Pasien -->
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
                             <app-form-label [Caption]="'Nama Pasien'"></app-form-label>
                             <div class="input-group input-group-sm mb-0">
-                                <input id="full_name" type="text" class="form-control" readonly>
+                                <input id="nama_pasien" type="text" class="form-control" readonly>
                                 <span class="input-group-text bg-hijau-tua border-0 cursor-pointer"
                                     style="border-top-right-radius: 0.2rem; border-bottom-right-radius: 0.2rem;  "
                                     id="SearchPasien" (click)="FilterDialogPasien.onOpenFilterDialog()">
@@ -30,7 +30,9 @@
                         <!-- Nama Sales -->
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-2 pb-3 border-bottom">
                             <app-form-label [Caption]="'Nama Sales'"></app-form-label>
-                            <ejs-dropdownlist></ejs-dropdownlist>
+                            <ejs-dropdownlist #DropdownMarketing formControlName="id_marketing"
+                                [dataSource]="DropdownMarketingDatasource" [fields]="DropdownMarketingField">
+                            </ejs-dropdownlist>
                         </div>
 
                         <!-- Total -->
@@ -41,7 +43,7 @@
                                 </div>
                                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-0">
                                     <p class="text-hijau-tua mb-1 formLabel text-end">
-                                        {{ 900000 | currency: 'Rp.' }}
+                                        {{ total_amount.value | currency: 'Rp.' }}
                                     </p>
                                 </div>
                             </div>
@@ -58,7 +60,7 @@
                                         <input id="full_name" type="text" class="form-control" readonly>
                                         <span class="input-group-text bg-hijau-tua border-0 cursor-pointer"
                                             style="border-top-right-radius: 0.2rem; border-bottom-right-radius: 0.2rem;  "
-                                            id="SearchPasien" (click)="FilterDialogPasien.onOpenFilterDialog()">
+                                            id="SearchPasien">
                                             <i class="fas fa-search fa-xs text-white"></i>
                                         </span>
 
@@ -78,7 +80,7 @@
                                 </div>
                                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-0">
                                     <p class="text-hijau-tua mb-1 formLabel text-end">
-                                        {{ 900000 | currency: 'Rp.' }}
+                                        {{ GrandTotal | currency: 'Rp.' }}
                                     </p>
                                 </div>
                             </div>
@@ -96,96 +98,247 @@
             </div>
         </div>
 
-        <!-- Detail Treatment dan Resep -->
+        <!-- Detail -->
         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-3">
-            <app-tab>
-                <!-- Detail Treatment -->
-                <app-tab-item>
-                    <app-tab-header [id]="'detail_treatment'">
-                        Treatment
-                    </app-tab-header>
-                    <app-tab-body>
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <ul class="list-group">
-                                    <li *ngFor="let item of DetailDatasource.treatment"
-                                        class="list-group-item shadow-sm border-0 mb-3 rounded">
-                                        <p class="text-hijau-tua mb-2 fw-bold">
-                                            {{ item.nama_tarif }}
-                                        </p>
-                                        <p class="text-hijau-muda mb-0">
-                                            {{ item.nominal | currency: 'Rp. ' }}
-                                        </p>
-                                    </li>
-                                </ul>
-                            </div>
+            <!-- Treatment -->
+            <div class="row mb-3">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="card-header bg-abu">
+                            <h4 class="modal-title">
+                                Treatment
+                            </h4>
                         </div>
-                    </app-tab-body>
-                </app-tab-item>
+                        <div class="card-body p-2 cardBillingDetail">
+                            <ul class="list-group">
+                                <li *ngFor="let item of DetailDatasource?.tdmk"
+                                    class="list-group-item shadow-sm border-0 mb-3 rounded">
+                                    <p class="text-hijau-tua mb-2 fw-bold">
+                                        {{ item.nama_setup_tarif | titlecase }}
+                                    </p>
+                                    <p class="text-hijau-muda mb-0">
+                                        {{ item.total_amount | currency: 'Rp. ' }}
+                                    </p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                <!-- Detail Skincare -->
-                <app-tab-item>
-                    <app-tab-header [id]="'detail_skincare'">
-                        Skincare
-                    </app-tab-header>
-                    <app-tab-body>
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <ul class="list-group">
-                                    <li *ngFor="let item of DetailDatasource.skincare"
-                                        class="list-group-item shadow-sm border-0 mb-3 rounded">
-                                        <p class="text-hijau-tua mb-2 fw-bold">
-                                            {{ item.nama_skincare }}
-                                        </p>
-                                        <p class="text-hijau-muda mb-0">
-                                            {{ item.nominal | currency: 'Rp. ' }}
-                                        </p>
-                                    </li>
-                                </ul>
-                            </div>
+            <!-- Obat dan Skincare -->
+            <div class="row mb-0">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="card-header bg-abu">
+                            <h4 class="modal-title">
+                                Obat & Skincare
+                            </h4>
                         </div>
-                    </app-tab-body>
-                </app-tab-item>
+                        <div class="card-body p-2 cardBillingDetail">
+                            <ul class="list-group">
+                                <li *ngFor="let item of DetailDatasource?.resep; let i = index"
+                                    class="list-group-item shadow-sm border-0 mb-3 rounded {{ item.status_bayar ? '' : 'bg-abu' }}">
+                                    <div class="row">
+                                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 px-0">
+                                            <p class="text-hijau-tua mb-1 fw-bold">
+                                                {{ item.nama_obat | titlecase }}
+                                            </p>
+                                            <p class="text-hijau-muda mb-1">
+                                                {{ item.qty }} @ {{ item.unit_amount | currency: 'Rp. ' }} = {{
+                                                item.total_amount | currency: 'Rp. ' }}
+                                            </p>
 
-                <!-- Detail Resep -->
-                <app-tab-item>
-                    <app-tab-header [id]="'detail_resep'">
-                        Resep
-                    </app-tab-header>
-                    <app-tab-body>
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <ul class="list-group">
-                                    <li *ngFor="let item of DetailDatasource.resep"
-                                        class="list-group-item shadow-sm border-0 mb-3 rounded">
-                                        <p class="text-hijau-tua mb-2 fw-bold">
-                                            {{ item.nama_obat }}
-                                        </p>
-                                        <p class="text-hijau-muda mb-0">
-                                            {{ item.nominal | currency: 'Rp. ' }}
-                                        </p>
-                                    </li>
-                                </ul>
-                            </div>
+                                        </div>
+                                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-center">
+                                            <span *ngIf="item.status_bayar" class="badge bg-warning cursor-pointer"
+                                                style="font-size: 14px;"
+                                                (click)="onChangeStateDetailResep(item, i, false)">
+                                                <i class="fas fa-trash fa-sm"></i>
+                                            </span>
+                                            <span *ngIf="!item.status_bayar" class="badge bg-primary cursor-pointer"
+                                                style="font-size: 14px;"
+                                                (click)="onChangeStateDetailResep(item, i, true)">
+                                                <i class="fas fa-plus fa-sm"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
-                    </app-tab-body>
-                </app-tab-item>
-            </app-tab>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasPayment" aria-labelledby="offcanvasPaymentLabel">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasPaymentLabel">Payment Method</h5>
-            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <button id="btnCloseOffcanvas" type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                aria-label="Close"></button>
         </div>
         <div class="offcanvas-body small">
             <div class="row">
-                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                <!-- Input Payment -->
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                    <!-- Cash -->
+                    <div class="row mb-3">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="radioPaymentMethod"
+                                    id="radioPaymentMethodCash" (click)="handleChangePaymentMethodState('cash')"
+                                    [checked]="true">
+                                <label for="radioPaymentMethodCash" class="form-label text-hijau-tua fw-bold">
+                                    Cash
+                                </label>
+                            </div>
+                        </div>
+                        <div *ngIf="PaymentDetailState == 'cash'" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <app-cash #CashComp (onSendPaymentCash)="onReceivePaymentMethod($event)">
+                                    </app-cash>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
+                    <!-- QR -->
+                    <div class="row mb-3">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="radioPaymentMethod"
+                                    id="radioPaymentMethodQR" (click)="handleChangePaymentMethodState('qris')">
+                                <label for="radioPaymentMethodQR" class="form-label text-hijau-tua fw-bold">
+                                    QR
+                                </label>
+                            </div>
+                        </div>
+                        <div *ngIf="PaymentDetailState == 'qris'" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <app-qris #QRComp (onSendPaymentQr)="onReceivePaymentMethod($event)">
+                                    </app-qris>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Debit Card -->
+                    <div class="row mb-3">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="radioPaymentMethod"
+                                    id="radioPaymentMethodDebit" (click)="handleChangePaymentMethodState('debit_card')">
+                                <label for="radioPaymentMethodDebit" class="form-label text-hijau-tua fw-bold">
+                                    Debit Card
+                                </label>
+                            </div>
+                        </div>
+                        <div *ngIf="PaymentDetailState == 'debit_card'" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <app-debit-card #DebitCardComp
+                                        (onSendPaymentDebitCard)="onReceivePaymentMethod($event)">
+                                    </app-debit-card>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Credit Card -->
+                    <div class="row mb-0">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="radioPaymentMethod"
+                                    id="radioPaymentMethodCredit"
+                                    (click)="handleChangePaymentMethodState('credit_card')">
+                                <label for="radioPaymentMethodCredit" class="form-label text-hijau-tua fw-bold">
+                                    Credit Card
+                                </label>
+                            </div>
+                        </div>
+                        <div *ngIf="PaymentDetailState == 'credit_card'"
+                            class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <app-credit-card #CreditCardComp
+                                        (onSendPaymentCreditCard)="onReceivePaymentMethod($event)">
+                                    </app-credit-card>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
 
+                <!-- List Payment -->
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 d-grid gap-2">
+                    <div class="card shadow-sm mb-2">
+                        <div class="card-header bg-abu">
+                            <h5 class="modal-title">Daftar Payment</h5>
+                        </div>
+                        <div class="card-body" style=" height: 20rem; overflow-y: auto;">
+                            <div *ngFor="let item of ListPayment; let i = index" class="row mb-2 align-items-center">
+                                <div class="col-lg-5 col-md-5 col-md-5 col-sm-5">
+                                    <p class="text-hijau-tua mb-0">
+                                        {{ item.payment_method }}
+                                    </p>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-md-6 col-sm-6">
+                                    <p class="text-hijau-tua mb-0">
+                                        {{ item.jumlah_bayar | currency: 'Rp. ' }}
+                                    </p>
+                                </div>
+                                <div class="col-lg-1 col-md-1 col-md-1 col-sm-1 px-0 text-center"
+                                    (click)="onDeletePaymentMethod(i)">
+                                    <span class="fas fa-times fa-xs text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row mb-2">
+                                <div class="col-lg-5 col-md-5 col-md-5 col-sm-5">
+                                    <p class="text-hijau-tua mb-0">
+                                        Kurang Bayar
+                                    </p>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-md-6 col-sm-6">
+                                    <p class="text-hijau-tua mb-0">
+                                        {{ KurangBayar > 0 ? (KurangBayar | currency: 'Rp. ') : 0 }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-lg-5 col-md-5 col-md-5 col-sm-5">
+                                    <p class="text-hijau-tua mb-0">
+                                        Total Pembayaran
+                                    </p>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-md-6 col-sm-6">
+                                    <p class="text-hijau-tua mb-0">
+                                        {{ TotalBayar | currency: 'Rp. ' }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row mb-0">
+                                <div class="col-lg-5 col-md-5 col-md-5 col-sm-5">
+                                    <p class="text-hijau-tua mb-0">
+                                        Kembalian
+                                    </p>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-md-6 col-sm-6">
+                                    <p class="text-hijau-tua mb-0">
+                                        {{ (TotalBayar - GrandTotal) > 0 ? (TotalBayar - GrandTotal | currency: 'Rp. ')
+                                        : 0 }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-sm" type="button" (click)="onSubmitBillingPasien()">
+                        Proceed Billing
+                    </button>
                 </div>
             </div>
         </div>

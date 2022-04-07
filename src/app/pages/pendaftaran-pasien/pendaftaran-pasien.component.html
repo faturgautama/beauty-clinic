@@ -15,7 +15,8 @@
                         </app-filter>
 
                         <app-grid #GridComp [GridAttributes]="GridAttributes"
-                            [FrameworkComponents]="FrameworkComponents">
+                            [FrameworkComponents]="FrameworkComponents"
+                            (onSelectionChange)="handleSelectionChanged($event)">
                         </app-grid>
                     </div>
                 </div>
@@ -30,7 +31,7 @@
             <app-tab-body>
                 <form [formGroup]="FormPendaftaranPasien">
                     <div class="row" formGroupName="person">
-                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                             <!-- Jenis Identitas -->
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
                                 <app-form-label [Caption]="'Jenis Identitas'"></app-form-label>
@@ -51,24 +52,35 @@
                                 </app-form-validator>
                             </div>
 
+                            <!-- No Member -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                                <app-form-label [Caption]="'No. Kartu'"></app-form-label>
+                                <input class="form-control form-select-sm" type="text" formControlName="nomor_kartu">
+                            </div>
+
                             <!-- Nama Depan -->
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
-                                <app-form-label [Caption]="'Nama Depan'"></app-form-label>
-                                <input class="form-control form-select-sm" type="text" formControlName="nama_depan">
-                                <app-form-validator [Show]="nama_depan.touched && nama_depan.invalid"
-                                    [Caption]="'Nama Belakang Tidak Boleh Kosong'">
-                                </app-form-validator>
+                                <app-form-label [Caption]="'Nama Depan / Nama Belakang'"></app-form-label>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 ps-0 pe-2">
+                                        <input class="form-control form-select-sm" type="text"
+                                            formControlName="nama_depan">
+                                        <app-form-validator [Show]="nama_depan.touched && nama_depan.invalid"
+                                            [Caption]="'Nama Belakang Tidak Boleh Kosong'">
+                                        </app-form-validator>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 ps-2 pe-0">
+                                        <input class="form-control form-select-sm" type="text"
+                                            formControlName="nama_belakang">
+                                        <app-form-validator [Show]="nama_belakang.touched && nama_belakang.invalid"
+                                            [Caption]="'Nama Belakang Tidak Boleh Kosong'">
+                                        </app-form-validator>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
 
-                            <!-- Nama Belakang -->
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
-                                <app-form-label [Caption]="'Nama Belakang'"></app-form-label>
-                                <input class="form-control form-select-sm" type="text" formControlName="nama_belakang">
-                                <app-form-validator [Show]="nama_belakang.touched && nama_belakang.invalid"
-                                    [Caption]="'Nama Belakang Tidak Boleh Kosong'">
-                                </app-form-validator>
-                            </div>
-
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                             <!-- Gender -->
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
                                 <app-form-label [Caption]="'Gender'"></app-form-label>
@@ -79,46 +91,81 @@
                                     [Caption]="'Gender Tidak Boleh Kosong'">
                                 </app-form-validator>
                             </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+
                             <!-- Tempat Lahir -->
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
-                                <app-form-label [Caption]="'Tempat Lahir'"></app-form-label>
-                                <input class="form-control form-select-sm" type="text" formControlName="tempat_lahir">
-                                <app-form-validator [Show]="tempat_lahir.touched && tempat_lahir.invalid"
-                                    [Caption]="'Tempat Lahir Tidak Boleh Kosong'">
-                                </app-form-validator>
-                            </div>
-
-                            <!-- Tanggal Lahir -->
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
-                                <app-form-label [Caption]="'Tgl. Lahir'"></app-form-label>
-                                <ejs-datepicker [format]="'dd/MM/yyyy'" formControlName="tanggal_lahir">
-                                </ejs-datepicker>
-                                <app-form-validator [Show]="tanggal_lahir.touched && tanggal_lahir.invalid"
-                                    [Caption]="'Tgl. Lahir Tidak Boleh Kosong'">
-                                </app-form-validator>
+                                <app-form-label [Caption]="'Tempat / Tanggal Lahir'"></app-form-label>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 ps-0 pe-2">
+                                        <input class="form-control form-select-sm" type="text"
+                                            formControlName="tempat_lahir">
+                                        <app-form-validator [Show]="tempat_lahir.touched && tempat_lahir.invalid"
+                                            [Caption]="'Tempat Lahir Tidak Boleh Kosong'">
+                                        </app-form-validator>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 ps-2 pe-0">
+                                        <ejs-datepicker [format]="'dd/MM/yyyy'" formControlName="tanggal_lahir">
+                                        </ejs-datepicker>
+                                        <app-form-validator [Show]="tanggal_lahir.touched && tanggal_lahir.invalid"
+                                            [Caption]="'Tgl. Lahir Tidak Boleh Kosong'">
+                                        </app-form-validator>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Alamat Lengkap -->
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
                                 <app-form-label [Caption]="'Alamat Lengkap'"></app-form-label>
-                                <textarea class="form-control" formControlName="alamat_lengkap"
-                                    style="height: 105px; resize: none;">
+                                <textarea class="form-control form-select-sm" formControlName="alamat_lengkap"
+                                    style="height: 108px; resize: none;">
                                 </textarea>
                                 <app-form-validator [Show]="alamat_lengkap.touched && alamat_lengkap.invalid"
                                     [Caption]="'Alamat Lengkap Tidak Boleh Kosong'">
                                 </app-form-validator>
                             </div>
+                        </div>
 
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                             <!-- No. Handphone -->
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-2">
-                                <app-form-label [Caption]="'No. Handphone'"></app-form-label>
-                                <input type="text" class="form-control form-select-sm" formControlName="no_hp"
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                                <app-form-label [Caption]="'No. Handphone 1'"></app-form-label>
+                                <input type="text" class="form-control form-select-sm" formControlName="no_hp_1"
                                     aria-describedby="phone">
-                                <app-form-validator [Show]="no_hp.touched && no_hp.invalid"
+                                <app-form-validator [Show]="no_hp_1.touched && no_hp_1.invalid"
                                     [Caption]="'No. Handphone Tidak Boleh Kosong'">
                                 </app-form-validator>
+                            </div>
+
+                            <!-- No. Handphone 3 -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                                <app-form-label [Caption]="'No. Handphone 2'"></app-form-label>
+                                <input type="text" class="form-control form-select-sm" formControlName="no_hp_2"
+                                    aria-describedby="phone">
+                            </div>
+
+                            <!-- No. Handphone 3 -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                                <app-form-label [Caption]="'No. Handphone 3'"></app-form-label>
+                                <input type="text" class="form-control form-select-sm" formControlName="no_hp_3"
+                                    aria-describedby="phone">
+                            </div>
+
+                            <!-- Foto -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                                <app-form-label [Caption]="'Foto Pasien'"></app-form-label>
+                                <input #PathFoto id="path_foto" class="form-control form-select-sm" type="file"
+                                    accept="image/*" (change)="onSelectFotoPasien($event, PathFoto.value)">
+                            </div>
+
+                            <!-- Foto -->
+                            <div *ngIf="FormPendaftaranPasienState == 'update'"
+                                class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="card border-0 shadow-sm" style="height: 10rem; width: 8rem;">
+                                    <div class="card-body p-0 bg-abu">
+                                        <img *ngIf="PathFotoPasien" [src]="PathFotoPasien" alt="foto_pasien"
+                                            style="height: 10rem; width: 100%;">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

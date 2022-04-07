@@ -9,6 +9,7 @@ import { TabComponent } from 'src/app/components/navigation/tab/tab.component';
 import { IGetPersonForLookupAdmisiModel, ISaveAdmisiPasienModel } from 'src/app/model/pelayanan-pasien.model';
 import { IPersonDokterModel } from 'src/app/model/setup-dokter.model';
 import { PelayananPasienService } from 'src/app/services/pelayanan-pasien/pelayanan-pasien.service';
+import { PendaftaranPasienService } from 'src/app/services/pendaftaran-pasien/pendaftaran-pasien.service';
 import { SetupDokterService } from 'src/app/services/setup-dokter/setup-dokter.service';
 import { UtilityService } from 'src/app/services/utility/utility.service';
 import * as API_CONFIG from '../../api';
@@ -34,6 +35,8 @@ export class PelayananPasienComponent implements OnInit, AfterViewInit {
 
     FormAdmisiPasien!: FormGroup;
 
+    PathFoto: string = "";
+
     @ViewChild('FilterDialogPasien') FilterDialogPasien!: FilterDialogComponent;
     FilterDialogProp!: FilterDialogProp;
 
@@ -45,7 +48,8 @@ export class PelayananPasienComponent implements OnInit, AfterViewInit {
         private formBuilder: FormBuilder,
         private utilityService: UtilityService,
         private setupDokterService: SetupDokterService,
-        private pelayananPasienService: PelayananPasienService
+        private pelayananPasienService: PelayananPasienService,
+        private pendaftaranPasienService: PendaftaranPasienService,
     ) { }
 
     ngOnInit(): void {
@@ -164,8 +168,17 @@ export class PelayananPasienComponent implements OnInit, AfterViewInit {
 
         this.no_rekam_medis.setValue(args.no_rekam_medis);
 
-        const jenis_member = document.getElementById('jenis_member') as HTMLInputElement;
-        jenis_member.value = args.jenis_member;
+        const no_identitas = document.getElementById('no_identitas') as HTMLInputElement;
+        no_identitas.value = args.no_identitas;
+
+        this.onGetFotoPasien(this.id_person.value);
+    }
+
+    onGetFotoPasien(id_person: number): void {
+        this.pendaftaranPasienService.onGetLinkFotoPerson(id_person)
+            .subscribe((result) => {
+                this.PathFoto = result.data;
+            })
     }
 
     handleSubmitFormAdmisiPasien(args: ISaveAdmisiPasienModel): void {
@@ -192,10 +205,12 @@ export class PelayananPasienComponent implements OnInit, AfterViewInit {
         const full_name = document.getElementById('full_name') as HTMLInputElement;
         full_name.value = "";
 
-        const jenis_member = document.getElementById('jenis_member') as HTMLInputElement;
-        jenis_member.value = "";
+        const no_identitas = document.getElementById('no_identitas') as HTMLInputElement;
+        no_identitas.value = "";
 
         this.DropdownDokterComp.value = null as any;
+
+        this.PathFoto = "";
     }
 
     get id_person(): AbstractControl { return this.FormAdmisiPasien.get('id_person') as AbstractControl };

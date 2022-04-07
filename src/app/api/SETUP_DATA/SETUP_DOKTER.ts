@@ -6,3 +6,5 @@ export const GET_ALL_PERSON_DOKTER_DYNAMIC_FILTER = `${environment.webApi}/Perso
 export const GET_ALL_JENIS_IDENTITAS = `${environment.webApi}/Person/jenisIdentitasGetAll`;
 export const CHECK_IDENTITAS_DOKTER = `${environment.webApi}/Person/CheckPersonByNoIdentitas/`;
 export const SAVE_PENDAFTARAN_DOKTER = `${environment.webApi}/Person/PendaftaranBaruDokterInsert`;
+export const UPLOAD_FOTO_DOKTER = `${environment.webApi}/Person/UploadFotoPerson`;
+export const GET_LINK_FOTO_DOKTER = `${environment.webApi}/Person/GetLinkFotoPerson/`;

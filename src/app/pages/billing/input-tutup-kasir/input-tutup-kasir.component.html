@@ -1,0 +1,62 @@
+<app-base-layout>
+    <div class="row">
+        <!-- Action Button -->
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-end mb-2">
+            <app-action-button [ActionButton]="ActionButton" (onClickActionButton)="handleClickActionButton($event)">
+            </app-action-button>
+        </div>
+
+        <!-- Form -->
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <form [formGroup]="FormTutupKasir">
+                <div class="row">
+                    <!-- Payment Rekap -->
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <div class="card">
+                            <div class="card-header bg-abu">
+                                <h4 class="card-title mb-0">Rekap Pendapatan Kasir</h4>
+                            </div>
+                            <div class="card-body px-2 pb-1">
+                                <!-- Jumlah Penerimaan -->
+                                <div *ngFor="let item of ListPayment; let i = index"
+                                    class="row mb-2 align-items-center">
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                        <app-form-label [Caption]="item.payment_method | titlecase"></app-form-label>
+                                    </div>
+                                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                        <ejs-numerictextbox id="{{ item.payment_method }}_jumlah_penerimaan"
+                                            [format]="'N2'" [showClearButton]="false" [showSpinButton]="false"
+                                            [value]="item.jumlah_penerimaan" [min]="0"
+                                            (change)="handleChangeJumlahPenerimaan($event, i)">
+                                        </ejs-numerictextbox>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer px-2 bg-abu">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                        <app-form-label [Caption]="'Subtotal'"></app-form-label>
+                                    </div>
+                                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                                        <ejs-numerictextbox [format]="'N2'" [showClearButton]="false"
+                                            [showSpinButton]="false" [value]="TotalPenerimaan" [enabled]="false">
+                                        </ejs-numerictextbox>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Keterangan -->
+                    <div class=" col-lg-6 col-md-6 col-sm-6 col-xs-6 pt-5">
+                        <app-form-label [Caption]="'Keterangan'"></app-form-label>
+                        <textarea class="form-control" formControlName="keterangan_tutup_kasir" rows="7"></textarea>
+                        <app-form-validator [Show]="keterangan_tutup_kasir.touched && keterangan_tutup_kasir.invalid"
+                            [Caption]="'Keterangan Tidak Boleh Kosong'">
+                        </app-form-validator>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</app-base-layout>

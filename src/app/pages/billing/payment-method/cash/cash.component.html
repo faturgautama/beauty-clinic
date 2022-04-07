@@ -1,0 +1,24 @@
+<!-- Kurang Bayar -->
+<div class="row mb-2 align-items-center">
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 px-0">
+        <app-form-label [Caption]="'Kurang Bayar'"></app-form-label>
+    </div>
+    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-0">
+        <p class="text-hijau-tua mb-1 formLabel">
+            {{ SisaKurangBayar > 0 ? ( SisaKurangBayar | currency: 'Rp.') : 0 }}
+        </p>
+    </div>
+</div>
+
+<!-- Jumlah Bayar -->
+<div class="row mb-0 align-items-center" [formGroup]="FormPaymentMethod">
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 px-0">
+        <app-form-label [Caption]="'Jumlah Bayar'"></app-form-label>
+    </div>
+    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-0">
+        <ejs-numerictextbox [format]="'N2'" formControlName="jumlah_bayar" [showClearButton]="false"
+            [showSpinButton]="false" (keyup.enter)="onSubmitPayment(FormPaymentMethod.value)"
+            [enabled]="SisaKurangBayar > 0">
+        </ejs-numerictextbox>
+    </div>
+</div>

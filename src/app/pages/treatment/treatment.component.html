@@ -15,7 +15,10 @@
                     <div class="row justify-content-center">
                         <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 mb-3">
                             <div class="card border-0 shadow-sm" style="height: 10.3rem;">
-                                <div class="card-body bg-abu"></div>
+                                <div class="card-body p-0 bg-abu">
+                                    <img *ngIf="PathFoto !== ''" [src]="PathFoto" alt="foto_pasien"
+                                        style="height: 10.3rem; width: 100%;">
+                                </div>
                             </div>
                         </div>
 
@@ -95,40 +98,89 @@
         </div>
         <div class="modal-body">
             <form [formGroup]="FormInsertUpdateTarif">
-                <!-- Nama Tarif -->
-                <div class="row mb-3">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <app-form-label [Caption]="'Nama Tarif'"></app-form-label>
-                        <ejs-dropdownlist [dataSource]="DropdownTarifDatasource" [fields]="DropdownTarifField"
-                            (change)="handleChangeDropdownTarif($event)" formControlName="id_setup_tarif">
-                        </ejs-dropdownlist>
-                        <app-form-validator [Show]="id_setup_tarif.touched && id_setup_tarif.invalid"
-                            [Caption]="'Nama Tarif Tidak Boleh Kosong'">
-                        </app-form-validator>
-                    </div>
-                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <!-- Nama Tarif -->
+                        <div class="row mb-3">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <app-form-label [Caption]="'Nama Tarif'"></app-form-label>
+                                <ejs-dropdownlist [dataSource]="DropdownTarifDatasource" [fields]="DropdownTarifField"
+                                    [allowFiltering]="true" (change)="handleChangeDropdownTarif($event)"
+                                    formControlName="id_setup_tarif">
+                                </ejs-dropdownlist>
+                                <app-form-validator [Show]="id_setup_tarif.touched && id_setup_tarif.invalid"
+                                    [Caption]="'Nama Tarif Tidak Boleh Kosong'">
+                                </app-form-validator>
+                            </div>
+                        </div>
 
-                <!-- Nominal Tarif -->
-                <div class="row mb-3">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <app-form-label [Caption]="'Nominal Tarif'"></app-form-label>
-                        <input class="form-control form-select-sm" type="text" formControlName="nominal_tarif" readonly>
-                        <app-form-validator [Show]="nominal_tarif.touched && nominal_tarif.invalid"
-                            [Caption]="'Nominal Tarif Tidak Boleh Kosong'">
-                        </app-form-validator>
-                    </div>
-                </div>
+                        <!-- Nominal Tarif -->
+                        <div class="row mb-3">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <app-form-label [Caption]="'Nominal Tarif'"></app-form-label>
+                                <input class="form-control form-select-sm" type="text" formControlName="nominal_tarif"
+                                    readonly>
+                                <app-form-validator [Show]="nominal_tarif.touched && nominal_tarif.invalid"
+                                    [Caption]="'Nominal Tarif Tidak Boleh Kosong'">
+                                </app-form-validator>
+                            </div>
+                        </div>
 
-                <!-- Nama Dokter -->
-                <div class="row mb-3">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <app-form-label [Caption]="'Nama Dokter'"></app-form-label>
-                        <ejs-dropdownlist [dataSource]="DropdownDokterDatasource" [fields]="DropdownDokterField"
-                            (change)="handleChangeDropdownDokter($event)" formControlName="id_dokter">
-                        </ejs-dropdownlist>
-                        <app-form-validator [Show]="id_dokter.touched && id_dokter.invalid"
-                            [Caption]="'Nama Dokter Tidak Boleh Kosong'">
-                        </app-form-validator>
+                        <!-- Nama Dokter -->
+                        <div class="row mb-0">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <app-form-label [Caption]="'Nama Dokter'"></app-form-label>
+                                <ejs-dropdownlist [dataSource]="DropdownDokterDatasource" [fields]="DropdownDokterField"
+                                    (change)="handleChangeDropdownDokter($event)" formControlName="id_dokter">
+                                </ejs-dropdownlist>
+                                <app-form-validator [Show]="id_dokter.touched && id_dokter.invalid"
+                                    [Caption]="'Nama Dokter Tidak Boleh Kosong'">
+                                </app-form-validator>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <div class="card">
+                            <div class="card-header px-2 bg-abu">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 ps-0">
+                                        <p class="card-title mb-0">
+                                            Pelaksana Treatment
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 d-grid gap-2">
+                                        <span class="badge bg-success" (click)="handleAddPelaksanaTindakan()"
+                                            style="font-size: 14px">
+                                            <i class="fas fa-plus fa-sm"></i>
+                                        </span>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 d-grid gap-2">
+                                        <span class="badge bg-warning" type="button" style="font-size: 14px"
+                                            (click)="handleRemovePelaksanaTindakan()">
+                                            <i class="fas fa-trash fa-sm"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body px-0 pt-2 pb-0">
+                                <div class="row" formArrayName="pelaksana_tindakan">
+                                    <div *ngFor="let item of FormPelaksanaTindakan.controls; let i = index"
+                                        [formGroupName]="i" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-2 px-0">
+
+                                        <!-- Nama User -->
+                                        <div class="row mb-0">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <app-form-label [Caption]="'Nama Pelaksana'"></app-form-label>
+                                                <ejs-dropdownlist #DropdownUser [dataSource]="DropdownUserDatasource"
+                                                    [fields]="DropdownUserField" formControlName="id_user"
+                                                    (change)="handleChangeDropdownUser($event, i)">
+                                                </ejs-dropdownlist>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>

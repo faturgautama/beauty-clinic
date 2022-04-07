@@ -1,15 +1,20 @@
 import { formatCurrency } from '@angular/common';
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ActionButtonModel } from 'src/app/components/navigation/action-button/action-button.component';
 import { FilterDialogComponent, FilterDialogProp } from 'src/app/components/navigation/filter-dialog/filter-dialog.component';
 import { IGetAdmisiPasienModel, IGetPersonForLookupAdmisiModel } from 'src/app/model/pelayanan-pasien.model';
 import { IPersonDokterModel, ISetupDokterModel } from 'src/app/model/setup-dokter.model';
+import { ISetupRoleModel } from 'src/app/model/setup-role.model';
 import { ISetupTarifModel } from 'src/app/model/setup-tarif.model';
+import { ISetupUserModel } from 'src/app/model/setup-user.model';
 import { PelayananPasienService } from 'src/app/services/pelayanan-pasien/pelayanan-pasien.service';
+import { PendaftaranPasienService } from 'src/app/services/pendaftaran-pasien/pendaftaran-pasien.service';
 import { SetupDokterService } from 'src/app/services/setup-dokter/setup-dokter.service';
+import { SetupRoleService } from 'src/app/services/setup-role/setup-role.service';
 import { SetupTarifService } from 'src/app/services/setup-tarif/setup-tarif.service';
+import { SetupUserService } from 'src/app/services/setup-user/setup-user.service';
 import { TreatmentService } from 'src/app/services/treatment/treatment.service';
 import { UtilityService } from 'src/app/services/utility/utility.service';
 import * as API_CONFIG from '../../api';
@@ -48,20 +53,32 @@ export class TreatmentComponent implements OnInit {
 
     FormInsertUpdateTarif!: FormGroup;
 
+    PathFoto: string = "";
+
+    FormPelaksanaTindakan!: FormArray;
+
     DropdownTarifDatasource: ISetupTarifModel[] = [];
     DropdownTarifField: Object = { text: 'nama_setup_tarif', value: 'id_setup_tarif' };
 
     DropdownDokterDatasource: IPersonDokterModel[] = [];
     DropdownDokterField: Object = { text: 'full_name', value: 'id_dokter' };
 
+    DropdownUserDatasource: ISetupUserModel[] = [];
+    DropdownUserField: Object = { text: 'full_name', value: 'id_user' };
+
+    DropdownRoleDatasource: ISetupRoleModel[] = [];
+    DropdownRoleField: Object = { text: 'nama_role', value: 'id_role' };
+
     constructor(
         private formBuilder: FormBuilder,
         private bsModalService: BsModalService,
         private utilityService: UtilityService,
         private treatmentService: TreatmentService,
+        private setupRoleService: SetupRoleService,
+        private setupUserService: SetupUserService,
         private setupTarifService: SetupTarifService,
         private setupDokterService: SetupDokterService,
-        private pelayananPasienService: PelayananPasienService,
+        private pendaftaranPasienService: PendaftaranPasienService,
     ) { }
 
     ngOnInit(): void {
@@ -86,17 +103,34 @@ export class TreatmentComponent implements OnInit {
             nominal_tarif: [0, []],
             id_dokter: [0, [Validators.required]],
             nama_dokter: ['', []],
-            qty: [1, []]
+            qty: [1, []],
+            pelaksana_tindakan: this.formBuilder.array([])
         });
+
+        this.FormPelaksanaTindakan = this.FormInsertUpdateTarif.get('pelaksana_tindakan') as FormArray;
+        this.FormPelaksanaTindakan.push(this.formBuilder.group({
+            id_user: [0, [Validators.required]],
+            id_role: [0, [Validators.required]],
+        }));
 
         this.setupTarifService.onGetAllByDynamicFilter([])
             .subscribe((result) => {
                 this.DropdownTarifDatasource = result.data;
             });
 
-        this.setupDokterService.onGetAllPersonDokterByDynamicFilter([])
+        this.setupDokterService.onGetAllPersonDokter()
             .subscribe((result) => {
                 this.DropdownDokterDatasource = result.data;
+            });
+
+        this.setupUserService.onGetAllUser()
+            .subscribe((result) => {
+                this.DropdownUserDatasource = result.data;
+            });
+
+        this.setupRoleService.onGetAllRole()
+            .subscribe((result) => {
+                this.DropdownRoleDatasource = result.data;
             });
     }
 
@@ -127,11 +161,23 @@ export class TreatmentComponent implements OnInit {
 
         const umur = document.getElementById('umur') as HTMLInputElement;
         umur.value = args.umur;
+
+        console.log(args);
+
+        this.onGetFotoPasien(args.id_person);
+    }
+
+    onGetFotoPasien(id_person: number): void {
+        this.pendaftaranPasienService.onGetLinkFotoPerson(id_person)
+            .subscribe((result) => {
+                this.PathFoto = result.data;
+            })
     }
 
     handleOpenModalInsertUpdateTarif(): void {
         this.modalRef = this.bsModalService.show(this.ModalInsertUpdateTarif, {
-            backdrop: 'static'
+            backdrop: 'static',
+            class: 'modal-lg'
         });
 
         this.onResetForm();
@@ -149,6 +195,27 @@ export class TreatmentComponent implements OnInit {
         const itemData = args.itemData;
 
         this.nama_dokter.setValue(itemData.full_name);
+    }
+
+    handleChangeDropdownUser(args: any, index: number): void {
+        this.FormPelaksanaTindakan.controls[index].get('id_role')?.setValue(args.itemData.id_role);
+    }
+
+    handleAddPelaksanaTindakan(): void {
+        this.FormPelaksanaTindakan = this.FormInsertUpdateTarif.get('pelaksana_tindakan') as FormArray;
+        this.FormPelaksanaTindakan.push(
+            this.formBuilder.group({
+                id_user: [0, [Validators.required]],
+                id_role: [0, [Validators.required]],
+            })
+        )
+    }
+
+    handleRemovePelaksanaTindakan(): void {
+        this.FormPelaksanaTindakan = this.FormInsertUpdateTarif.get('pelaksana_tindakan') as FormArray;
+        if (this.FormPelaksanaTindakan.length > 1) {
+            this.FormPelaksanaTindakan.removeAt(this.FormPelaksanaTindakan.length - 1);
+        }
     }
 
     handleClickListTreatment(item: any, index: number): void {
@@ -210,6 +277,8 @@ export class TreatmentComponent implements OnInit {
 
                             const umur = document.getElementById('umur') as HTMLInputElement;
                             umur.value = "";
+
+                            this.PathFoto = "";
                         });
                 };
             })
@@ -221,4 +290,8 @@ export class TreatmentComponent implements OnInit {
     get id_dokter(): AbstractControl { return this.FormInsertUpdateTarif.get('id_dokter') as AbstractControl };
     get nama_dokter(): AbstractControl { return this.FormInsertUpdateTarif.get('nama_dokter') as AbstractControl };
     get qty(): AbstractControl { return this.FormInsertUpdateTarif.get('qty') as AbstractControl };
+
+    get pelaksana_tindakan(): FormArray {
+        return this.FormInsertUpdateTarif.get('pelaksana_tindakan') as FormArray
+    }
 }

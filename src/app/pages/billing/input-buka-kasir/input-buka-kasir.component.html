@@ -1,0 +1,64 @@
+<app-base-layout>
+    <div class="row h-100">
+        <!-- Action Button -->
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-end mb-2">
+            <app-action-button [ActionButton]="ActionButton" (onClickActionButton)="handleClickActionButton($event)">
+            </app-action-button>
+        </div>
+
+        <!-- Grid -->
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="height: calc(100vh - 12rem);">
+            <app-grid #GridComp [GridAttributes]="GridAttributes" (onSelectionChange)="handleSelectionChanged($event)">
+            </app-grid>
+        </div>
+
+        <!-- Modal Buka Kasir -->
+        <ng-template #ModalBukaKasir>
+            <div class="modal-header py-2 bg-abu">
+                <h4 class="modal-title pull-left">
+                    Input Buka Kasir
+                </h4>
+                <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+                    <span aria-hidden="true" class="visually-hidden">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="FormBukaKasir">
+                    <!-- Nama Marketing -->
+                    <div class="row mb-3">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <app-form-label [Caption]="'Nama Kasir'"></app-form-label>
+                            <ejs-dropdownlist formControlName="user_kasir" [dataSource]="DropdownUserKasirDatasource"
+                                [fields]="DropdownUserKasirField">
+                            </ejs-dropdownlist>
+                            <app-form-validator [Show]="user_kasir.touched && user_kasir.invalid"
+                                [Caption]="'User Kasir Tidak Boleh Kosong'">
+                            </app-form-validator>
+                        </div>
+                    </div>
+
+                    <!-- No. Handphone -->
+                    <div class="row mb-3">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <app-form-label [Caption]="'Jumlah Modal'"></app-form-label>
+                            <ejs-numerictextbox formControlName="jumlah_modal_awal" [format]="'N2'"
+                                [showClearButton]="false" [showSpinButton]="false">
+                            </ejs-numerictextbox>
+                            <app-form-validator [Show]="jumlah_modal_awal.touched && jumlah_modal_awal.invalid"
+                                [Caption]="'Jumlah Modal Tidak Boleh Kosong'">
+                            </app-form-validator>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer py-2">
+                <button type="button" class="btn btn-secondary btn-sm" (click)="modalRef?.hide()">
+                    Close
+                </button>
+                <button type="button" class="btn btn-primary btn-sm" (click)="onSubmitForm(FormBukaKasir.value)">
+                    Submit
+                </button>
+            </div>
+        </ng-template>
+    </div>
+</app-base-layout>
