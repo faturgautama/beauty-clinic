@@ -43,6 +43,7 @@ export class SetupTarifComponent implements OnInit {
         this.ActionButton = [
             { id: 'add', caption: 'Add', icon: 'fas fa-plus' },
             { id: 'edit', caption: 'Edit', icon: 'fas fa-edit' },
+            { id: 'update_status', caption: 'Update Status', icon: 'fas fa-check' },
             { id: 'filter', caption: 'Filter', icon: 'fas fa-filter' }
         ];
 
@@ -83,6 +84,16 @@ export class SetupTarifComponent implements OnInit {
                         }
                     },
                 },
+                {
+                    field: 'is_active', headerName: 'STATUS ACTIVE', headerClass: 'text-center', cellClass: 'text-center',
+                    cellRenderer: (args: any) => {
+                        if (args.value) {
+                            return '<span><i class="fas fa-check fa-xs"></i></span>'
+                        } else {
+                            return '<span><i class="fas fa-times fa-xs"></i></span>'
+                        }
+                    },
+                }
             ],
             dataSource: []
         };
@@ -110,6 +121,13 @@ export class SetupTarifComponent implements OnInit {
                 this.nama_setup_tarif.setValue(this.GridSelectedData.nama_setup_tarif);
                 this.nominal_tarif.setValue(this.GridSelectedData.nominal_tarif);
                 this.is_paket.setValue(this.GridSelectedData.is_paket);
+                break;
+            case 'update_status':
+                if (this.GridSelectedData) {
+                    this.onUpdateStatus(this.GridSelectedData);
+                } else {
+                    this.utilityService.onShowCustomAlert('warning', 'Warning', 'Tidak Ada Data yg Dipilih')
+                }
                 break;
             case 'filter':
                 this.FilterComp.handleOpenFilter();
@@ -166,6 +184,19 @@ export class SetupTarifComponent implements OnInit {
                             this.modalRef?.hide();
                             this.handleSearchFilter([]);
                             this.FormSetupTarifState = 'insert';
+                        });
+                };
+            })
+    }
+
+    onUpdateStatus(data: any): void {
+        this.setupTarifService.onPutUpdateStatusActive(data.id_setup_tarif, data.is_active)
+            .subscribe((result) => {
+                if (result.responseResult) {
+                    this.utilityService.onShowCustomAlert('success', 'Success', 'Setup Tarif Berhasil Diupdate')
+                        .then(() => {
+                            this.modalRef?.hide();
+                            this.handleSearchFilter([]);
                         });
                 };
             })

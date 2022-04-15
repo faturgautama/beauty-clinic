@@ -53,6 +53,11 @@ import { InputTutupKasirComponent } from './pages/billing/input-tutup-kasir/inpu
 import { ValidasiTutupKasirComponent } from './pages/billing/validasi-tutup-kasir/validasi-tutup-kasir.component';
 import { DebitCardComponent } from './pages/billing/payment-method/debit-card/debit-card.component';
 import { CreditCardComponent } from './pages/billing/payment-method/credit-card/credit-card.component';
+import { HistoryTreatmentComponent } from './pages/treatment/history-treatment/history-treatment.component';
+import { SetupMenuComponent } from './pages/setup-data/setup-menu/setup-menu.component';
+import { SetupVoucherComponent } from './pages/setup-data/setup-voucher/setup-voucher.component';
+import { RekamMedisPasienComponent } from './pages/rekam-medis-pasien/rekam-medis-pasien.component';
+import { ListResepComponent } from './pages/farmasi/list-resep/list-resep.component';
 
 @NgModule({
     declarations: [
@@ -96,6 +101,11 @@ import { CreditCardComponent } from './pages/billing/payment-method/credit-card/
         ValidasiTutupKasirComponent,
         DebitCardComponent,
         CreditCardComponent,
+        HistoryTreatmentComponent,
+        SetupMenuComponent,
+        SetupVoucherComponent,
+        RekamMedisPasienComponent,
+        ListResepComponent,
     ],
     imports: [
         CommonModule,

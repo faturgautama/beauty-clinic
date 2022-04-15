@@ -4,6 +4,7 @@ import { UtilityService } from '../utility/utility.service';
 import * as API_CONFIG from '../../api';
 import { Observable } from 'rxjs';
 import { GetAllAdmisiPasienModel, ISaveAdmisiPasienModel, PostSaveAdmisiPasienModel } from 'src/app/model/pelayanan-pasien.model';
+import { GetRiwayatPelayananPasienModel } from 'src/app/model/riwayat-pelayanan.model';
 
 @Injectable({
     providedIn: 'root'
@@ -23,5 +24,9 @@ export class PelayananPasienService {
 
     onSaveAdmisiPasien(body: ISaveAdmisiPasienModel): Observable<PostSaveAdmisiPasienModel> {
         return this.httpRequestService.defaultPostRequest(this.API.SAVE_ADMISI, body);
+    }
+
+    onGetRiwayatAdmisiPasienByDynamicFilter(body: any): Observable<GetRiwayatPelayananPasienModel> {
+        return this.httpRequestService.defaultPostRequest(this.API.GET_RIWAYAT_ADMISI_BY_DYNAMIC_FILTER, body);
     }
 }

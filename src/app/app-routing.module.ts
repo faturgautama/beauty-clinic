@@ -10,12 +10,15 @@ import { ValidasiTutupKasirComponent } from './pages/billing/validasi-tutup-kasi
 import { InputResepComponent } from './pages/farmasi/input-resep/input-resep.component';
 import { PelayananPasienComponent } from './pages/pelayanan-pasien/pelayanan-pasien.component';
 import { PendaftaranPasienComponent } from './pages/pendaftaran-pasien/pendaftaran-pasien.component';
+import { RekamMedisPasienComponent } from './pages/rekam-medis-pasien/rekam-medis-pasien.component';
 import { SetupDokterComponent } from './pages/setup-data/setup-dokter/setup-dokter.component';
 import { SetupMarketingComponent } from './pages/setup-data/setup-marketing/setup-marketing.component';
 import { SetupObatComponent } from './pages/setup-data/setup-obat/setup-obat.component';
 import { SetupRoleComponent } from './pages/setup-data/setup-role/setup-role.component';
 import { SetupTarifComponent } from './pages/setup-data/setup-tarif/setup-tarif.component';
 import { SetupUserComponent } from './pages/setup-data/setup-user/setup-user.component';
+import { SetupVoucherComponent } from './pages/setup-data/setup-voucher/setup-voucher.component';
+import { HistoryTreatmentComponent } from './pages/treatment/history-treatment/history-treatment.component';
 import { TreatmentComponent } from './pages/treatment/treatment.component';
 
 const routes: Routes = [
@@ -29,11 +32,14 @@ const routes: Routes = [
             { path: 'setup-marketing', component: SetupMarketingComponent, data: { title: 'Setup Marketing' } },
             { path: 'setup-role', component: SetupRoleComponent, data: { title: 'Setup Role' } },
             { path: 'setup-user', component: SetupUserComponent, data: { title: 'Setup User' } },
+            { path: 'setup-voucher', component: SetupVoucherComponent, data: { title: 'Setup Voucher' } },
         ],
     },
-    { path: 'pendaftaran-pasien', canActivate: [AuthGuard], component: PendaftaranPasienComponent, data: { title: 'Pendaftaran Pasien' } },
-    { path: 'pelayanan-pasien', canActivate: [AuthGuard], component: PelayananPasienComponent, data: { title: 'Pelayanan Pasien' } },
+    { path: 'pasien/pendaftaran-baru', canActivate: [AuthGuard], component: PendaftaranPasienComponent, data: { title: 'Pendaftaran Pasien' } },
+    { path: 'pasien/pelayanan-pasien', canActivate: [AuthGuard], component: PelayananPasienComponent, data: { title: 'Pelayanan Pasien' } },
+    { path: 'pasien/riwayat-pelayanan', canActivate: [AuthGuard], component: RekamMedisPasienComponent, data: { title: 'Riwayat Pelayanan' } },
     { path: 'input-treatment', canActivate: [AuthGuard], component: TreatmentComponent, data: { title: 'Treatment Pasien' } },
+    { path: 'history-treatment', canActivate: [AuthGuard], component: HistoryTreatmentComponent, data: { title: 'History Treatment Pasien' } },
     { path: 'input-resep', canActivate: [AuthGuard], component: InputResepComponent, data: { title: 'Resep Pasien' } },
     { path: 'billing', canActivate: [AuthGuard], component: BillingComponent, data: { title: 'Pembayaran Billing' } },
     { path: 'input-buka-kasir', canActivate: [AuthGuard], component: InputBukaKasirComponent, data: { title: 'Buka Kasir' } },

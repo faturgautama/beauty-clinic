@@ -5,6 +5,7 @@ import * as SETUP_CARA_PAKAI_OBAT from './SETUP_CARA_PAKAI_OBAT';
 import * as SETUP_MARKETING from './SETUP_MARKETING';
 import * as SETUP_USER from './SETUP_USER';
 import * as SETUP_ROLE from './SETUP_ROLE';
+import * as SETUP_VOUCHER from './SETUP_VOUCHER';
 
 export const API = Object.assign({}, {
     SETUP_DOKTER: SETUP_DOKTER,
@@ -14,4 +15,5 @@ export const API = Object.assign({}, {
     SETUP_MARKETING: SETUP_MARKETING,
     SETUP_USER: SETUP_USER,
     SETUP_ROLE: SETUP_ROLE,
+    SETUP_VOUCHER: SETUP_VOUCHER,
 })

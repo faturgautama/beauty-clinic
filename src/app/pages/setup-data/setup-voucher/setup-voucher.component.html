@@ -1,0 +1,99 @@
+<app-base-layout>
+    <div class="row h-100">
+        <!-- Action Button -->
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-end mb-2">
+            <app-action-button [ActionButton]="ActionButton" (onClickActionButton)="handleClickActionButton($event)">
+            </app-action-button>
+        </div>
+
+        <!-- Offcanvas Filter -->
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="height: calc(100vh - 12rem);">
+            <app-filter #FilterComp [FilterAttribute]="FilterAttribute" (onSearchFilter)="handleSearchFilter($event)">
+            </app-filter>
+
+            <app-grid #GridComp [GridAttributes]="GridAttributes" (onSelectionChange)="handleSelectionChanged($event)">
+            </app-grid>
+        </div>
+
+        <!-- Modal Add Voucher -->
+        <ng-template #ModalAddVoucher>
+            <div class="modal-header py-2 bg-abu">
+                <h4 class="modal-title pull-left">
+                    {{ FormSetupVoucherState == 'insert' ? 'Insert Voucher' : 'Update Voucher' }}
+                </h4>
+                <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+                    <span aria-hidden="true" class="visually-hidden">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="FormSetupVoucher">
+                    <!-- Kode Voucher -->
+                    <div class="row mb-3">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <app-form-label [Caption]="'Kode Voucher'"></app-form-label>
+                            <input class="form-control form-select-sm" type="text" formControlName="kode_voucher">
+                            <app-form-validator [Show]="kode_voucher.touched && kode_voucher.invalid"
+                                [Caption]="'Kode Voucher Tidak Boleh Kosong'">
+                            </app-form-validator>
+                        </div>
+                    </div>
+
+                    <!-- Nama Voucher -->
+                    <div class="row mb-3">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <app-form-label [Caption]="'Nama Voucher'"></app-form-label>
+                            <input class="form-control form-select-sm" type="text" formControlName="nama">
+                            <app-form-validator [Show]="nama.touched && nama.invalid"
+                                [Caption]="'Nama Voucher Tidak Boleh Kosong'">
+                            </app-form-validator>
+                        </div>
+                    </div>
+
+                    <!-- Nominal Voucher -->
+                    <div class="row mb-3">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <app-form-label [Caption]="'Nominal Voucher'"></app-form-label>
+                            <ejs-numerictextbox [format]="'N2'" [showClearButton]="false" [showSpinButton]="false"
+                                formControlName="nominal_voucher">
+                            </ejs-numerictextbox>
+                            <app-form-validator [Show]="nominal_voucher.touched && nominal_voucher.invalid"
+                                [Caption]="'Nominal Voucher Tidak Boleh Kosong'">
+                            </app-form-validator>
+                        </div>
+                    </div>
+
+                    <!-- Prosentase Voucher -->
+                    <div class="row mb-3">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <app-form-label [Caption]="'Prosentase Voucher'"></app-form-label>
+                            <ejs-numerictextbox [format]="'N2'" [showClearButton]="false" [showSpinButton]="false"
+                                formControlName="prosentase_voucher" [max]="100">
+                            </ejs-numerictextbox>
+                        </div>
+                    </div>
+
+                    <!-- Keterangan -->
+                    <div class="row mb-3">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <app-form-label [Caption]="'Keterangan'"></app-form-label>
+                            <input class="form-control form-select-sm" type="text" formControlName="keterangan">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer py-2">
+                <button type="button" class="btn btn-secondary btn-sm" (click)="modalRef?.hide()">
+                    Close
+                </button>
+                <button *ngIf="FormSetupVoucherState == 'insert'" type="button" class="btn btn-primary btn-sm"
+                    (click)="onSubmitForm(FormSetupVoucher.value)">
+                    Submit
+                </button>
+                <button *ngIf="FormSetupVoucherState == 'update'" type="button" class="btn btn-warning btn-sm"
+                    (click)="onUpdateForm(FormSetupVoucher.value)">
+                    Update
+                </button>
+            </div>
+        </ng-template>
+    </div>
+</app-base-layout>

@@ -12,38 +12,64 @@
                     <div class="row" [formGroup]="FormTransHeader">
                         <!-- Pencarian Pasien -->
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
-                            <app-form-label [Caption]="'Nama Pasien'"></app-form-label>
-                            <div class="input-group input-group-sm mb-0">
-                                <input id="nama_pasien" type="text" class="form-control" readonly>
-                                <span class="input-group-text bg-hijau-tua border-0 cursor-pointer"
-                                    style="border-top-right-radius: 0.2rem; border-bottom-right-radius: 0.2rem;  "
-                                    id="SearchPasien" (click)="FilterDialogPasien.onOpenFilterDialog()">
-                                    <i class="fas fa-search fa-xs text-white"></i>
-                                </span>
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 ps-0">
+                                    <app-form-label [Caption]="'Pasien'"></app-form-label>
+                                </div>
+                                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-0">
+                                    <div class="input-group input-group-sm mb-0">
+                                        <input id="nama_pasien" type="text" class="form-control" readonly>
+                                        <span class="input-group-text bg-hijau-tua border-0 cursor-pointer"
+                                            style="border-top-right-radius: 0.2rem; border-bottom-right-radius: 0.2rem;  "
+                                            id="SearchPasien" (click)="FilterDialogPasien.onOpenFilterDialog()">
+                                            <i class="fas fa-search fa-xs text-white"></i>
+                                        </span>
 
-                                <app-filter-dialog #FilterDialogPasien [FilterDialogProp]="FilterDialogProp"
-                                    (onChooseResult)="handleChooseFilterDialog($event)">
-                                </app-filter-dialog>
+                                        <app-filter-dialog #FilterDialogPasien [FilterDialogProp]="FilterDialogProp"
+                                            (onChooseResult)="handleChooseFilterDialog($event)">
+                                        </app-filter-dialog>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Nama Sales -->
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-2 pb-3 border-bottom">
-                            <app-form-label [Caption]="'Nama Sales'"></app-form-label>
-                            <ejs-dropdownlist #DropdownMarketing formControlName="id_marketing"
-                                [dataSource]="DropdownMarketingDatasource" [fields]="DropdownMarketingField">
-                            </ejs-dropdownlist>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3 pb-3 border-bottom">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 ps-0">
+                                    <app-form-label [Caption]="'Marketing'"></app-form-label>
+                                </div>
+                                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-0">
+                                    <ejs-dropdownlist #DropdownMarketing formControlName="id_marketing"
+                                        [dataSource]="DropdownMarketingDatasource" [fields]="DropdownMarketingField">
+                                    </ejs-dropdownlist>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Total -->
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 my-3">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt-2 mb-3">
                             <div class="row">
                                 <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 px-0">
-                                    <app-form-label [Caption]="'Total'"></app-form-label>
+                                    <app-form-label [Caption]="'Sub Total'"></app-form-label>
                                 </div>
                                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-0">
                                     <p class="text-hijau-tua mb-1 formLabel text-end">
-                                        {{ total_amount.value | currency: 'Rp.' }}
+                                        {{ Total | currency: 'Rp.' }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Diskon -->
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 px-0">
+                                    <app-form-label [Caption]="'Diskon'"></app-form-label>
+                                </div>
+                                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-0">
+                                    <p class="text-hijau-tua mb-1 formLabel text-end">
+                                        {{ Diskon | currency: 'Rp.' }}
                                     </p>
                                 </div>
                             </div>
@@ -57,23 +83,66 @@
                                 </div>
                                 <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-0">
                                     <div class="input-group input-group-sm mb-0">
-                                        <input id="full_name" type="text" class="form-control" readonly>
+                                        <input id="nama_voucher" type="text" class="form-control" readonly>
                                         <span class="input-group-text bg-hijau-tua border-0 cursor-pointer"
                                             style="border-top-right-radius: 0.2rem; border-bottom-right-radius: 0.2rem;  "
-                                            id="SearchPasien">
+                                            id="SearchVoucher" (click)="FilterDialogVoucher.onOpenFilterDialog()">
                                             <i class="fas fa-search fa-xs text-white"></i>
                                         </span>
 
-                                        <app-filter-dialog #FilterDialogPasien [FilterDialogProp]="FilterDialogProp"
-                                            (onChooseResult)="handleChooseFilterDialog($event)">
+                                        <app-filter-dialog #FilterDialogVoucher
+                                            [FilterDialogProp]="FilterVoucherDialogProp"
+                                            (onChooseResult)="handleChooseFilterVoucherDialog($event)">
                                         </app-filter-dialog>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
+                        <!-- Total -->
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 px-0">
+                                    <app-form-label [Caption]="'Total'"></app-form-label>
+                                </div>
+                                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-0">
+                                    <p class="text-hijau-tua mb-1 formLabel text-end">
+                                        {{ Total2 | currency: 'Rp.' }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PPn 11% -->
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 px-0">
+                                    <app-form-label [Caption]="'PPn 11%'"></app-form-label>
+                                </div>
+                                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-0">
+                                    <p class="text-hijau-tua mb-1 formLabel text-end">
+                                        {{ PPn | currency: 'Rp.' }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Services 5% -->
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-2">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 px-0">
+                                    <app-form-label [Caption]="'Services 5%'"></app-form-label>
+                                </div>
+                                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-0">
+                                    <p class="text-hijau-tua mb-1 formLabel text-end">
+                                        {{ ServicesTaxes | currency: 'Rp.' }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Grand Total -->
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-5">
+                        <!-- <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
                             <div class="row">
                                 <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 px-0">
                                     <app-form-label [Caption]="'Grand Total'"></app-form-label>
@@ -84,13 +153,13 @@
                                     </p>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <!-- Button Pay -->
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-grid gap-2 mt-5">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-grid gap-2 mt-2">
                             <button class="btn btn-hijau-tua" type="button" data-bs-toggle="offcanvas"
                                 data-bs-target="#offcanvasPayment">
-                                Pay Now
+                                Pay Now {{ GrandTotal | currency: 'Rp. ' }}
                             </button>
                         </div>
                     </div>
@@ -111,14 +180,39 @@
                         </div>
                         <div class="card-body p-2 cardBillingDetail">
                             <ul class="list-group">
-                                <li *ngFor="let item of DetailDatasource?.tdmk"
-                                    class="list-group-item shadow-sm border-0 mb-3 rounded">
-                                    <p class="text-hijau-tua mb-2 fw-bold">
-                                        {{ item.nama_setup_tarif | titlecase }}
-                                    </p>
-                                    <p class="text-hijau-muda mb-0">
-                                        {{ item.total_amount | currency: 'Rp. ' }}
-                                    </p>
+                                <li *ngFor="let item of DetailDatasource?.tdmk; let i = index"
+                                    class="list-group-item shadow-sm border-0 mb-3 rounded {{ item.status_bayar ? '' : 'bg-abu' }}">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 px-0">
+                                            <p class="text-hijau-tua mb-1 fw-bold">
+                                                {{ item.nama_setup_tarif | titlecase }}
+                                            </p>
+                                            <p class="text-hijau-muda mb-0">
+                                                {{ item.total_amount | currency: 'Rp. ' }}
+                                            </p>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 px-0">
+                                            <p class="text-hijau-tua">
+                                                Diskon {{ item.diskon_nominal | currency: 'Rp. ' }}
+                                            </p>
+                                        </div>
+                                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 px-0 text-center">
+                                            <span class="badge bg-success cursor-pointer me-2" style="font-size: 14px;"
+                                                (click)="onEditDetailTreatment(item, i)">
+                                                <i class="fas fa-edit fa-sm"></i>
+                                            </span>
+                                            <span *ngIf="item.status_bayar" class="badge bg-warning cursor-pointer"
+                                                style="font-size: 14px;"
+                                                (click)="onChangeStateDetailTreatment(item, i, false)">
+                                                <i class="fas fa-trash fa-sm"></i>
+                                            </span>
+                                            <span *ngIf="!item.status_bayar" class="badge bg-primary cursor-pointer"
+                                                style="font-size: 14px;"
+                                                (click)="onChangeStateDetailTreatment(item, i, true)">
+                                                <i class="fas fa-plus fa-sm"></i>
+                                            </span>
+                                        </div>
+                                    </div>
                                 </li>
                             </ul>
                         </div>
@@ -144,7 +238,7 @@
                                             <p class="text-hijau-tua mb-1 fw-bold">
                                                 {{ item.nama_obat | titlecase }}
                                             </p>
-                                            <p class="text-hijau-muda mb-1">
+                                            <p class="text-hijau-muda mb-0">
                                                 {{ item.qty }} @ {{ item.unit_amount | currency: 'Rp. ' }} = {{
                                                 item.total_amount | currency: 'Rp. ' }}
                                             </p>
@@ -172,11 +266,13 @@
         </div>
     </div>
 
+    <!-- Offcanvas Payment -->
     <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasPayment" aria-labelledby="offcanvasPaymentLabel">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title" id="offcanvasPaymentLabel">Payment Method</h5>
             <button id="btnCloseOffcanvas" type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
-                aria-label="Close"></button>
+                aria-label="Close">
+            </button>
         </div>
         <div class="offcanvas-body small">
             <div class="row">
@@ -343,4 +439,58 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Update Detail Treatment -->
+    <ng-template #ModalUpdateDetailTreatment>
+        <div class="modal-header py-2 bg-abu">
+            <h4 class="modal-title pull-left">
+                Edit Diskon Treatment
+            </h4>
+            <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+                <span aria-hidden="true" class="visually-hidden">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="FormUpdateDetailTreatment">
+                <!-- Nama Voucher -->
+                <div class="row mb-3">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <app-form-label [Caption]="'Nama Treatment'"></app-form-label>
+                        <input class="form-control form-select-sm" type="text" formControlName="nama_setup_tarif"
+                            readonly>
+                    </div>
+                </div>
+
+                <!-- Diskon -->
+                <div class="row mb-3">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <app-form-label [Caption]="'Diskon (Rp)'"></app-form-label>
+                        <ejs-numerictextbox [format]="'N2'" [showClearButton]="false" [showSpinButton]="false"
+                            [max]="total_amount_treatment.value" formControlName="diskon_nominal"
+                            (change)="handleChangeDiskonNominalTreatment($event)">
+                        </ejs-numerictextbox>
+                    </div>
+                </div>
+
+                <!-- Subtotal -->
+                <div class="row mb-3">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <app-form-label [Caption]="'Subtotal'"></app-form-label>
+                        <ejs-numerictextbox [format]="'N2'" [showClearButton]="false" [showSpinButton]="false"
+                            formControlName="total_amount_treatment" [enabled]="false">
+                        </ejs-numerictextbox>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer py-2">
+            <button type="button" class="btn btn-secondary btn-sm" (click)="modalRef?.hide()">
+                Close
+            </button>
+            <button type="button" class="btn btn-warning btn-sm"
+                (click)="onUpdateDetailTreatment(FormUpdateDetailTreatment.value)">
+                Update
+            </button>
+        </div>
+    </ng-template>
 </app-base-layout>

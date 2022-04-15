@@ -23,6 +23,7 @@ export class SetupDokterComponent implements OnInit {
     ActionButton: ActionButtonModel[] = [];
 
     FormPendaftaranDokter!: FormGroup;
+    FormPendaftaranDokterState: 'insert' | 'update' = 'insert';
 
     @ViewChild('JenisIdentitasComp') JenisIdentitasComp!: DropDownListComponent;
     JenisIdentitasDatasource: IJenisIdentitasModel[] = [];
@@ -33,6 +34,7 @@ export class SetupDokterComponent implements OnInit {
 
     @ViewChild('GridComp') GridComp!: GridComponent;
     GridAttributes!: GridAttribute;
+    GridSelectedData: any;
 
     GenderDatasource = [
         { text: 'Laki - Laki', value: 'L' },
@@ -52,6 +54,7 @@ export class SetupDokterComponent implements OnInit {
         this.onSetFormSetupDokterAttributes();
 
         this.ActionButton = [
+            { tabId: 'data_dokter', id: 'edit', caption: 'Edit', icon: 'fas fa-edit' },
             { tabId: 'data_dokter', id: 'filter', caption: 'Filter', icon: 'fas fa-filter' },
             { tabId: 'input_dokter', id: 'reset', caption: 'Reset', icon: 'fas fa-undo' },
             { tabId: 'input_dokter', id: 'save', caption: 'Save', icon: 'fas fa-save' },
@@ -106,17 +109,24 @@ export class SetupDokterComponent implements OnInit {
     onSetFormSetupDokterAttributes(): void {
         this.FormPendaftaranDokter = this.formBuilder.group({
             person: this.formBuilder.group({
+                id_person: [0, []],
                 id_jenis_identitas: [0, [Validators.required]],
                 no_identitas: ['', [Validators.required]],
+                nomor_kartu: ['', []],
                 nama_depan: ['', [Validators.required]],
                 nama_belakang: ['', [Validators.required]],
                 gender: ['', [Validators.required]],
                 tempat_lahir: ['', [Validators.required]],
                 tanggal_lahir: ['', [Validators.required]],
                 alamat_lengkap: ['', [Validators.required]],
-                no_hp: ['', [Validators.required]],
+                no_hp_1: ['', [Validators.required]],
+                no_hp_2: ['', []],
+                no_hp_3: ['', []],
+                path_foto: ['', []],
+                nama_foto: ['', []],
             }),
             dokter: this.formBuilder.group({
+                id_dokter: [0, []],
                 no_surat_ijin_praktek: ['', []],
                 tgl_exp_surat_ijin_praktek: ['', []],
                 no_str: ['', []],
@@ -127,6 +137,15 @@ export class SetupDokterComponent implements OnInit {
 
     handleClickActionButton(args: ActionButtonModel): void {
         switch (args.id) {
+            case 'edit':
+                this.ActionButton = [
+                    { tabId: 'data_dokter', id: 'edit', caption: 'Edit', icon: 'fas fa-edit' },
+                    { tabId: 'data_dokter', id: 'filter', caption: 'Filter', icon: 'fas fa-filter' },
+                    { tabId: 'input_dokter', id: 'reset', caption: 'Reset', icon: 'fas fa-undo' },
+                    { tabId: 'input_dokter', id: 'update', caption: 'Update', icon: 'fas fa-save' },
+                ];
+                this.handleDoEditDokter(this.GridSelectedData);
+                break;
             case 'filter':
                 this.FilterComp.handleOpenFilter();
                 break;
@@ -135,6 +154,9 @@ export class SetupDokterComponent implements OnInit {
                 break;
             case 'save':
                 this.handleSubmitFormPendaftaranDokter(this.FormPendaftaranDokter.value);
+                break;
+            case 'update':
+                this.handleUpdateFormPendaftaranDokter(this.FormPendaftaranDokter.value);
                 break;
             default:
                 break;
@@ -146,6 +168,10 @@ export class SetupDokterComponent implements OnInit {
             .subscribe((result) => {
                 this.GridAttributes.dataSource = result.data;
             });
+    }
+
+    handleSelectionChanged(args: any): void {
+        this.GridSelectedData = args;
     }
 
     onGetAllJenisIdentitas(): void {
@@ -168,6 +194,70 @@ export class SetupDokterComponent implements OnInit {
             });
     }
 
+    handleDoEditDokter(data: any): void {
+        this.FormPendaftaranDokterState = 'update';
+
+        this.setupDokterService.onGetDetailDokter(data.id_person)
+            .subscribe((result) => {
+                const person = result.data.person;
+
+                delete person.id_jenis_member;
+                delete person.is_active;
+                delete person.jenis_member;
+                delete person.time_created;
+                delete person.time_deactived;
+                delete person.user_created;
+                delete person.user_deactived;
+                delete person.nama_panggilan;
+
+                person.nomor_kartu = "";
+
+                const dokter = result.data.dokter;
+
+                delete dokter.id_person;
+                delete dokter.is_active;
+                delete dokter.kode_dokter;
+                delete dokter.time_created;
+                delete dokter.time_deactived;
+                delete dokter.user_created;
+                delete dokter.user_deactived;
+
+                const parameter = {
+                    person: person,
+                    dokter: dokter,
+                };
+
+                this.FormPendaftaranDokter.setValue(parameter);
+            }, (error) => {
+
+            }, () => {
+                const btninput_dokter = document.getElementById('btninput_dokter') as HTMLElement;
+                btninput_dokter.click();
+            });
+    }
+
+    handleUpdateFormPendaftaranDokter(args: any): void {
+        const person = args.person;
+        person['id_jenis_member'] = 0;
+
+        const dokter = args.dokter;
+
+        this.pendaftaranPasienService.onPutUpdatePasien(person as any)
+            .subscribe((result) => {
+                if (result.responseResult) {
+                    this.setupDokterService.onPutUpdateDokter(dokter)
+                        .subscribe((result) => {
+                            this.utilityService.onShowCustomAlert('success', 'Success', 'Update Dokter Berhasil')
+                                .then(() => {
+                                    this.handleResetFormPendaftaranDokter();
+                                    this.TabRef.onNavigateTab(0, 'data_dokter');
+                                    this.handleSearchFilter([]);
+                                });
+                        })
+                }
+            });
+    }
+
     handleResetFormPendaftaranDokter(): void {
         this.FormPendaftaranDokter.reset();
         this.no_identitas.setValue('');
@@ -177,7 +267,9 @@ export class SetupDokterComponent implements OnInit {
         this.tempat_lahir.setValue('');
         this.tanggal_lahir.setValue('');
         this.alamat_lengkap.setValue('');
-        this.no_hp.setValue('');
+        this.no_hp_1.setValue('');
+        this.no_hp_2.setValue('');
+        this.no_hp_3.setValue('');
         this.no_surat_ijin_praktek.setValue('');
         this.tgl_exp_surat_ijin_praktek.setValue('');
         this.no_str.setValue('');
@@ -192,8 +284,9 @@ export class SetupDokterComponent implements OnInit {
     get tempat_lahir(): AbstractControl { return this.FormPendaftaranDokter.get('person.tempat_lahir') as AbstractControl }
     get tanggal_lahir(): AbstractControl { return this.FormPendaftaranDokter.get('person.tanggal_lahir') as AbstractControl }
     get alamat_lengkap(): AbstractControl { return this.FormPendaftaranDokter.get('person.alamat_lengkap') as AbstractControl }
-    get no_hp(): AbstractControl { return this.FormPendaftaranDokter.get('person.no_hp') as AbstractControl }
-    get no_surat_ijin_praktek(): AbstractControl { return this.FormPendaftaranDokter.get('dokter.no_surat_ijin_praktek') as AbstractControl }
+    get no_hp_1(): AbstractControl { return this.FormPendaftaranDokter.get('person.no_hp_1') as AbstractControl }
+    get no_hp_2(): AbstractControl { return this.FormPendaftaranDokter.get('person.no_hp_2') as AbstractControl }
+    get no_hp_3(): AbstractControl { return this.FormPendaftaranDokter.get('person.no_hp_3') as AbstractControl } get no_surat_ijin_praktek(): AbstractControl { return this.FormPendaftaranDokter.get('dokter.no_surat_ijin_praktek') as AbstractControl }
     get tgl_exp_surat_ijin_praktek(): AbstractControl { return this.FormPendaftaranDokter.get('dokter.tgl_exp_surat_ijin_praktek') as AbstractControl }
     get no_str(): AbstractControl { return this.FormPendaftaranDokter.get('dokter.no_str') as AbstractControl }
     get tgl_exp_str(): AbstractControl { return this.FormPendaftaranDokter.get('dokter.tgl_exp_str') as AbstractControl }

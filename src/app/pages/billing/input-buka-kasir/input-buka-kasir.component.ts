@@ -66,8 +66,21 @@ export class InputBukaKasirComponent implements OnInit {
             jumlah_modal_awal: [0, [Validators.required]],
         });
 
-        this.setupUserService.onGetAllUserKasir()
-            .subscribe((result) => {
+        this.setupUserService.onGetAllUserByDynamicFilter(
+            [
+                {
+                    "columnName": "mr.nama_role",
+                    "filter": "like",
+                    "searchText": "cs",
+                    "searchText2": ""
+                },
+                {
+                    "columnName": "mr.nama_role",
+                    "filter": "like",
+                    "searchText": "kasir",
+                    "searchText2": ""
+                }
+            ]).subscribe((result) => {
                 this.DropdownUserKasirDatasource = result.data;
             });
 

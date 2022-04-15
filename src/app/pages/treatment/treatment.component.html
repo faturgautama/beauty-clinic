@@ -103,7 +103,7 @@
                         <!-- Nama Tarif -->
                         <div class="row mb-3">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <app-form-label [Caption]="'Nama Tarif'"></app-form-label>
+                                <app-form-label [Caption]="'Nama Treatment'"></app-form-label>
                                 <ejs-dropdownlist [dataSource]="DropdownTarifDatasource" [fields]="DropdownTarifField"
                                     [allowFiltering]="true" (change)="handleChangeDropdownTarif($event)"
                                     formControlName="id_setup_tarif">
@@ -131,7 +131,8 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <app-form-label [Caption]="'Nama Dokter'"></app-form-label>
                                 <ejs-dropdownlist [dataSource]="DropdownDokterDatasource" [fields]="DropdownDokterField"
-                                    (change)="handleChangeDropdownDokter($event)" formControlName="id_dokter">
+                                    (change)="handleChangeDropdownDokter($event)" formControlName="id_dokter"
+                                    [showClearButton]="true">
                                 </ejs-dropdownlist>
                                 <app-form-validator [Show]="id_dokter.touched && id_dokter.invalid"
                                     [Caption]="'Nama Dokter Tidak Boleh Kosong'">
@@ -148,13 +149,13 @@
                                             Pelaksana Treatment
                                         </p>
                                     </div>
-                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 d-grid gap-2">
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 d-grid gap-2 ps-2 pe-0 ">
                                         <span class="badge bg-success" (click)="handleAddPelaksanaTindakan()"
                                             style="font-size: 14px">
                                             <i class="fas fa-plus fa-sm"></i>
                                         </span>
                                     </div>
-                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 d-grid gap-2">
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 d-grid gap-2 ps-2 pe-0 ">
                                         <span class="badge bg-warning" type="button" style="font-size: 14px"
                                             (click)="handleRemovePelaksanaTindakan()">
                                             <i class="fas fa-trash fa-sm"></i>

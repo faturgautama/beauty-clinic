@@ -27,4 +27,8 @@ export class ResepService {
     onCancel(body: ICancelResepModel): Observable<HttpResponseModel> {
         return this.httpRequestService.defaultPostRequest(this.API.CANCEL, body);
     }
+
+    onPrintResep(id_register: number): void {
+        this.httpRequestService.defaultGetPrintRequest(this.API.CETAK_RESEP_BY_ID_REGISTER, { id_register: id_register })
+    }
 }

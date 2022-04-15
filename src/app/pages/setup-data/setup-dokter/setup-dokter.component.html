@@ -13,7 +13,8 @@
                             (onSearchFilter)="handleSearchFilter($event)">
                         </app-filter>
 
-                        <app-grid #GridComp [GridAttributes]="GridAttributes"></app-grid>
+                        <app-grid #GridComp [GridAttributes]="GridAttributes"
+                            (onSelectionChange)="handleSelectionChanged($event)"></app-grid>
                     </div>
                 </div>
             </app-tab-body>
@@ -111,9 +112,9 @@
                             <!-- No. Handphone -->
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-2">
                                 <app-form-label [Caption]="'No. Handphone'"></app-form-label>
-                                <input type="text" class="form-control form-select-sm" formControlName="no_hp"
+                                <input type="text" class="form-control form-select-sm" formControlName="no_hp_1"
                                     aria-describedby="phone">
-                                <app-form-validator [Show]="no_hp.touched && no_hp.invalid"
+                                <app-form-validator [Show]="no_hp_1.touched && no_hp_1.invalid"
                                     [Caption]="'No. Handphone Tidak Boleh Kosong'">
                                 </app-form-validator>
                             </div>

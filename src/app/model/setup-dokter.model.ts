@@ -35,3 +35,12 @@ export class GetAllDokterByDynamicFilterModel implements HttpResponseModel {
     message!: string
     data!: IPersonDokterModel[]
 }
+
+export interface IUpdateDokterModel {
+    id_dokter: number
+    id_person: number
+    no_surat_ijin_praktek: string
+    tgl_exp_surat_ijin_praktek: string
+    no_str: string
+    tgl_exp_str: string
+}

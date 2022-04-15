@@ -1,0 +1,190 @@
+<app-base-layout>
+    <div class="row mb-3">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-end">
+            <app-action-button [ActionButton]="ActionButton" (onClickActionButton)="handleClickActionButton($event)">
+            </app-action-button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 ps-0">
+            <div class="card shadow-sm">
+                <div class=" card-header bg-abu">
+                    <h4 class="modal-title">Pasien Information</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 mb-3">
+                            <div class="card border-0 shadow-sm" style="height: 10.3rem;">
+                                <div class="card-body p-0 bg-abu">
+                                    <img *ngIf="PathFoto !== ''" [src]="PathFoto" alt="foto_pasien"
+                                        style="height: 10.3rem; width: 100%;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Nama Pasien -->
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                            <app-form-label [Caption]="'Nama Pasien'"></app-form-label>
+                            <div class="input-group input-group-sm mb-0">
+                                <input id="nama_pasien" type="text" class="form-control" readonly>
+                                <span class="input-group-text bg-hijau-tua border-0 cursor-pointer"
+                                    style="border-top-right-radius: 0.2rem; border-bottom-right-radius: 0.2rem;  "
+                                    id="SearchPasien" (click)="FilterDialogPasien.onOpenFilterDialog()">
+                                    <i class="fas fa-search fa-xs text-white"></i>
+                                </span>
+
+                                <app-filter-dialog #FilterDialogPasien [FilterDialogProp]="FilterDialogProp"
+                                    (onChooseResult)="handleChooseFilterDialogPasien($event)">
+                                </app-filter-dialog>
+                            </div>
+                        </div>
+
+                        <!-- No. Rekam Medis -->
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                            <app-form-label [Caption]="'No. Rekam Medis'"></app-form-label>
+                            <input id="no_rekam_medis" type="text" class="form-control form-select-sm" readonly>
+                        </div>
+
+                        <!-- Usia -->
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <app-form-label [Caption]="'Usia'"></app-form-label>
+                            <input id="umur" type="text" class="form-control form-select-sm" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 pe-0">
+            <div class="card shadow-sm">
+                <div class="card-header bg-abu">
+                    <h4 class="modal-title">
+                        List Treatment
+                    </h4>
+                </div>
+                <div class="card-body" style="height: calc(100vh - 15rem); overflow-y: auto;">
+                    <div class="row">
+                        <div *ngFor="let item of ListTreatment; let i = index;"
+                            class="col-lg-12 col-md-12 col-sm-12 col-xs-12 px-0 mb-2 cursor-pointer"
+                            (click)="handleClickListTreatment(item, i)">
+                            <div [id]="'cardListTreatment' + i" class="card border-0 shadow-sm">
+                                <div class="card-body p-2">
+                                    <h5 class="text-hijau-tua mb-1 fw-bold">
+                                        {{ item.nama_setup_tarif | titlecase }}
+                                    </h5>
+                                    <p class="text-hijau-tua mb-1">
+                                        {{ item.total | currency: 'Rp. ' }}
+                                    </p>
+                                    <p *ngIf="item.dokter.length > 2" class="text-hitam mb-0">
+                                        Dokter {{ item.dokter | titlecase }}
+                                    </p>
+                                    <p class="text-hitam mb-0">
+                                        {{ item.bc_transaksi.length }} BC
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Insert Update Tarif -->
+    <ng-template #ModalInsertUpdateTarif>
+        <div class="modal-header py-2 bg-abu">
+            <h4 class="modal-title pull-left">
+                Edit Pelaksana Treatment
+            </h4>
+            <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+                <span aria-hidden="true" class="visually-hidden">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="FormInsertUpdateTarif">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <!-- Nama Tarif -->
+                        <div class="row mb-3">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <app-form-label [Caption]="'Nama Treatment'"></app-form-label>
+                                <input class="form-control form-select-sm" type="text"
+                                    formControlName="nama_setup_tarif" readonly>
+                            </div>
+                        </div>
+
+                        <!-- Nominal Tarif -->
+                        <div class="row mb-3">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <app-form-label [Caption]="'Total Treatment'"></app-form-label>
+                                <ejs-numerictextbox formControlName="total" [enabled]="false" [showClearButton]="false"
+                                    [showSpinButton]="false">
+                                </ejs-numerictextbox>
+                            </div>
+                        </div>
+
+                        <!-- Nama Dokter -->
+                        <div class="row mb-0">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <app-form-label [Caption]="'Nama Dokter'"></app-form-label>
+                                <input class="form-control form-select-sm" type="text" formControlName="dokter"
+                                    readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <div class="card">
+                            <div class="card-header px-2 bg-abu">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 ps-0">
+                                        <p class="card-title mb-0">
+                                            Pelaksana Treatment
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 d-grid gap-2 ps-2 pe-0 ">
+                                        <span class="badge bg-success" (click)="handleAddPelaksanaTindakan()"
+                                            style="font-size: 14px">
+                                            <i class="fas fa-plus fa-sm"></i>
+                                        </span>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 d-grid gap-2 ps-2 pe-0 ">
+                                        <span class="badge bg-warning" type="button" style="font-size: 14px"
+                                            (click)="handleRemovePelaksanaTindakan()">
+                                            <i class="fas fa-trash fa-sm"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body px-0 pt-2 pb-0">
+                                <div class="row" formArrayName="bc_transaksi">
+                                    <div *ngFor="let item of FormPelaksanaTindakan.controls; let i = index"
+                                        [formGroupName]="i" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-2 px-0">
+
+                                        <!-- Nama User -->
+                                        <div class="row mb-0">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <app-form-label [Caption]="'Nama Pelaksana'"></app-form-label>
+                                                <ejs-dropdownlist #DropdownUser [dataSource]="DropdownUserDatasource"
+                                                    [fields]="DropdownUserField" formControlName="id_user"
+                                                    (change)="handleChangeDropdownUser($event, i)">
+                                                </ejs-dropdownlist>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer py-2">
+            <button type="button" class="btn btn-secondary btn-sm" (click)="modalRef?.hide()">
+                Close
+            </button>
+            <button type="button" class="btn btn-primary btn-sm"
+                (click)="onSaveInsertUpdateTarif(FormInsertUpdateTarif.value)">
+                Update BC
+            </button>
+        </div>
+    </ng-template>
+</app-base-layout>

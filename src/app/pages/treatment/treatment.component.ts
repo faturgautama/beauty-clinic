@@ -2,14 +2,14 @@ import { formatCurrency } from '@angular/common';
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { map } from 'rxjs/operators';
 import { ActionButtonModel } from 'src/app/components/navigation/action-button/action-button.component';
 import { FilterDialogComponent, FilterDialogProp } from 'src/app/components/navigation/filter-dialog/filter-dialog.component';
-import { IGetAdmisiPasienModel, IGetPersonForLookupAdmisiModel } from 'src/app/model/pelayanan-pasien.model';
-import { IPersonDokterModel, ISetupDokterModel } from 'src/app/model/setup-dokter.model';
+import { IGetAdmisiPasienModel } from 'src/app/model/pelayanan-pasien.model';
+import { IPersonDokterModel } from 'src/app/model/setup-dokter.model';
 import { ISetupRoleModel } from 'src/app/model/setup-role.model';
 import { ISetupTarifModel } from 'src/app/model/setup-tarif.model';
 import { ISetupUserModel } from 'src/app/model/setup-user.model';
-import { PelayananPasienService } from 'src/app/services/pelayanan-pasien/pelayanan-pasien.service';
 import { PendaftaranPasienService } from 'src/app/services/pendaftaran-pasien/pendaftaran-pasien.service';
 import { SetupDokterService } from 'src/app/services/setup-dokter/setup-dokter.service';
 import { SetupRoleService } from 'src/app/services/setup-role/setup-role.service';
@@ -114,8 +114,17 @@ export class TreatmentComponent implements OnInit {
         }));
 
         this.setupTarifService.onGetAllByDynamicFilter([])
+            .pipe(
+                map((result) => {
+                    const is_active = result.data.filter((item) => {
+                        return item.is_active == true;
+                    });
+
+                    return is_active;
+                })
+            )
             .subscribe((result) => {
-                this.DropdownTarifDatasource = result.data;
+                this.DropdownTarifDatasource = result;
             });
 
         this.setupDokterService.onGetAllPersonDokter()
@@ -123,7 +132,7 @@ export class TreatmentComponent implements OnInit {
                 this.DropdownDokterDatasource = result.data;
             });
 
-        this.setupUserService.onGetAllUser()
+        this.setupUserService.onGetAllUserActive()
             .subscribe((result) => {
                 this.DropdownUserDatasource = result.data;
             });
@@ -162,8 +171,6 @@ export class TreatmentComponent implements OnInit {
         const umur = document.getElementById('umur') as HTMLInputElement;
         umur.value = args.umur;
 
-        console.log(args);
-
         this.onGetFotoPasien(args.id_person);
     }
 
@@ -198,7 +205,10 @@ export class TreatmentComponent implements OnInit {
     }
 
     handleChangeDropdownUser(args: any, index: number): void {
+        this.FormPelaksanaTindakan.controls[index].get('id_user')?.setValue(args.itemData.id_user);
         this.FormPelaksanaTindakan.controls[index].get('id_role')?.setValue(args.itemData.id_role);
+
+        console.log(this.FormPelaksanaTindakan.value);
     }
 
     handleAddPelaksanaTindakan(): void {
@@ -239,6 +249,10 @@ export class TreatmentComponent implements OnInit {
     }
 
     onSaveInsertUpdateTarif(FormInsertUpdateTarif: any): void {
+        FormInsertUpdateTarif.pelaksana_tindakan = FormInsertUpdateTarif.pelaksana_tindakan.filter((item: any) => {
+            return item.id_user !== 0 && item.id_role !== 0;
+        });
+
         this.ListTreatment.push(FormInsertUpdateTarif);
 
         this.modalRef?.hide();
@@ -249,7 +263,7 @@ export class TreatmentComponent implements OnInit {
     }
 
     onResetForm(): void {
-        this.FormInsertUpdateTarif.reset();
+        // this.FormInsertUpdateTarif.reset();
         this.id_setup_tarif.setValue(0);
         this.nama_setup_tarif.setValue('');
         this.nominal_tarif.setValue(0);

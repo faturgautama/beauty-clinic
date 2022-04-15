@@ -33,6 +33,16 @@ export interface DetailTreatmentModel {
     qty: number
     dokter: string
     total: number
+    status: string
+    bc_transaksi: DetailPelaksanaTreatmentModel[]
+}
+
+export interface DetailPelaksanaTreatmentModel {
+    id_transaksi: number
+    id_trans_detail_tindakan_medis_pelaksana: number
+    id_user: number
+    id_role: number
+    fee_pelaksana?: number
 }
 
 export class GetAllTreatmenByIdRegisterModel implements HttpResponseModel {

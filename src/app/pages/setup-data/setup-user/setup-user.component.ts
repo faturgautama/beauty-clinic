@@ -50,6 +50,7 @@ export class SetupUserComponent implements OnInit {
         this.ActionButton = [
             { id: 'add', caption: 'Add', icon: 'fas fa-plus' },
             { id: 'edit', caption: 'Edit', icon: 'fas fa-edit' },
+            { id: 'update_status', caption: 'Update Status', icon: 'fas fa-check' },
             { id: 'filter', caption: 'filter', icon: 'fas fa-filter' },
         ];
 
@@ -76,6 +77,16 @@ export class SetupUserComponent implements OnInit {
                 { field: 'nama_role', headerName: 'ROLE', minWidth: 200 },
                 { field: 'alamat_lengkap', headerName: 'ALAMAT LENGKAP', minWidth: 100 },
                 { field: 'no_hp', headerName: 'NO. HANDPHONE', minWidth: 100 },
+                {
+                    field: 'is_active', headerName: 'STATUS ACTIVE', headerClass: 'text-center', cellClass: 'text-center',
+                    cellRenderer: (args: any) => {
+                        if (args.value) {
+                            return '<span><i class="fas fa-check fa-xs"></i></span>'
+                        } else {
+                            return '<span><i class="fas fa-times fa-xs"></i></span>'
+                        }
+                    },
+                }
             ],
             dataSource: []
         };
@@ -115,6 +126,35 @@ export class SetupUserComponent implements OnInit {
                 this.alamat_lengkap.setValue(this.GridSelectedData.alamat_lengkap);
                 this.no_hp.setValue(this.GridSelectedData.no_hp);
                 break;
+            case 'update_status':
+                const id_user = this.GridSelectedData.id_user;
+                const is_active = this.GridSelectedData.is_active;
+                if (this.GridSelectedData) {
+                    if (is_active) {
+                        this.setupUserService.onPutUpdateDeactivated(id_user)
+                            .subscribe((result) => {
+                                if (result.responseResult) {
+                                    this.utilityService.onShowCustomAlert('success', 'Success', 'User Berhasil Dinonaktifkan')
+                                        .then(() => {
+                                            this.handleSearchFilter([]);
+                                        });
+                                }
+                            });
+                    } else {
+                        this.setupUserService.onPutUpdateActivated(id_user)
+                            .subscribe((result) => {
+                                if (result.responseResult) {
+                                    this.utilityService.onShowCustomAlert('success', 'Success', 'User Berhasil Diaktifkan')
+                                        .then(() => {
+                                            this.handleSearchFilter([]);
+                                        });
+                                }
+                            });
+                    }
+                } else {
+                    this.utilityService.onShowCustomAlert('warning', 'Warning', 'Tidak Ada Data yg Dipilih')
+                }
+                break;
             case 'filter':
                 this.FilterComp.handleOpenFilter();
                 break;
@@ -132,6 +172,24 @@ export class SetupUserComponent implements OnInit {
 
     handleSelectionChanged(args: any): void {
         this.GridSelectedData = args;
+
+        const is_active = this.GridSelectedData.is_active;
+
+        if (is_active) {
+            this.ActionButton = [
+                { id: 'add', caption: 'Add', icon: 'fas fa-plus' },
+                { id: 'edit', caption: 'Edit', icon: 'fas fa-edit' },
+                { id: 'update_status', caption: 'Update Status', icon: 'fas fa-ban' },
+                { id: 'filter', caption: 'filter', icon: 'fas fa-filter' },
+            ];
+        } else {
+            this.ActionButton = [
+                { id: 'add', caption: 'Add', icon: 'fas fa-plus' },
+                { id: 'edit', caption: 'Edit', icon: 'fas fa-edit' },
+                { id: 'update_status', caption: 'Update Status', icon: 'fas fa-check' },
+                { id: 'filter', caption: 'filter', icon: 'fas fa-filter' },
+            ];
+        }
     }
 
     onOpenModalInsertUpdate(): void {

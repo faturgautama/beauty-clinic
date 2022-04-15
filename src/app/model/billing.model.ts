@@ -40,7 +40,9 @@ export interface DetailTindakanBillingModel {
     qty: number
     unit_amount: number
     total_amount: number
-    status_bayar: string
+    total_amount_treatment: number
+    status_bayar: boolean
+    diskon_nominal?: number
 }
 
 export interface ResepBillingModel {
@@ -59,6 +61,7 @@ export interface DetailResepBillingModel {
     unit_amount: number
     total_amount: number
     status_bayar: boolean
+    diskon_nominal?: number
 }
 
 export interface IDataBilingModel {
@@ -78,6 +81,11 @@ export interface TransHeader {
     id_register: number
     total_amount: number
     id_marketing: number
+    id_voucher: number
+    applied_ppn_procentage?: number
+    applied_ppn_nominal?: number
+    applied_service_fee_procentage?: number
+    applied_service_fee_nominal?: number
 }
 
 export interface TransDetail {
@@ -85,6 +93,7 @@ export interface TransDetail {
     qty: number
     unit_amount: number
     total_amount: number
+    diskon_nominal?: number
 }
 
 export interface ResepDetail {
@@ -92,6 +101,7 @@ export interface ResepDetail {
     qty: number
     unit_amount: number
     total_amount: number
+    diskon_nominal?: number
 }
 
 export interface Payment {

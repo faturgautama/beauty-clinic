@@ -195,6 +195,8 @@ export class InputResepComponent implements OnInit {
                 if (result.responseResult) {
                     this.utilityService.onShowCustomAlert('success', 'Success', 'Resep Berhasil Disimpan')
                         .then(() => {
+                            this.inputResepService.onPrintResep(this.SelectedIdRegister);
+
                             this.SelectedIdRegister = 0;
                             this.ListResep = [];
                             this.SelectedListResep = 0;
@@ -212,7 +214,7 @@ export class InputResepComponent implements OnInit {
                             this.PathFoto = "";
                         });
                 };
-            })
+            });
     }
 
     get id_obat(): AbstractControl { return this.FormInsertUpdateResep.get('id_obat') as AbstractControl };

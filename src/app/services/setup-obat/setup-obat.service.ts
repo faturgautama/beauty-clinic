@@ -43,4 +43,8 @@ export class SetupObatService {
     onDelete(id_obat: number): Observable<HttpResponseModel> {
         return this.httpRequestService.defaultDeleteRequest(`${this.API.DELETE_OBAT}${id_obat}`);
     }
+
+    onPrintResep(id_register: number): void {
+        this.httpRequestService.defaultGetPrintRequest(this.API.CETAK_RESEP_BY_ID_REGISTER, { id_register: id_register })
+    }
 }
