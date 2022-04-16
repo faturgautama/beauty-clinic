@@ -118,8 +118,8 @@ export class InputResepComponent implements OnInit {
         const no_rekam_medis = document.getElementById('no_rekam_medis') as HTMLInputElement;
         no_rekam_medis.value = args.no_rekam_medis;
 
-        const umur = document.getElementById('umur') as HTMLInputElement;
-        umur.value = args.umur;
+        const keluhan = document.getElementById('keluhan') as HTMLInputElement;
+        keluhan.innerHTML = args.keluhan ? args.keluhan : "";
 
         this.onGetFotoPasien(args.id_person);
     }
@@ -208,10 +208,13 @@ export class InputResepComponent implements OnInit {
                             const no_rekam_medis = document.getElementById('no_rekam_medis') as HTMLInputElement;
                             no_rekam_medis.value = "";
 
-                            const umur = document.getElementById('umur') as HTMLInputElement;
-                            umur.value = "";
+                            const keluhan = document.getElementById('keluhan') as HTMLInputElement;
+                            keluhan.innerHTML = "";
 
                             this.PathFoto = "";
+
+                            this.FilterDialogPasien.onResetResult();
+
                         });
                 };
             });

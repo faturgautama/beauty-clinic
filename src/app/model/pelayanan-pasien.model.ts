@@ -26,6 +26,7 @@ export interface IGetAdmisiPasienModel {
     nama_pasien: string
     gender: string
     umur: string
+    keluhan?: string
 }
 
 export class GetAllAdmisiPasienModel implements HttpResponseModel {

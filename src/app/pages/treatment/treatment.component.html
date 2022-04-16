@@ -9,15 +9,15 @@
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 ps-0">
             <div class="card shadow-sm">
                 <div class=" card-header bg-abu">
-                    <h4 class="modal-title">Pasien Information</h4>
+                    <p class="modal-title">Pasien Information</p>
                 </div>
-                <div class="card-body">
+                <div class="card-body" style="height: calc(100vh - 14.1rem); overflow-y: auto;">
                     <div class="row justify-content-center">
                         <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 mb-3">
-                            <div class="card border-0 shadow-sm" style="height: 10.3rem;">
+                            <div class="card border-0 shadow-sm" style="height: 8.5rem;">
                                 <div class="card-body p-0 bg-abu">
                                     <img *ngIf="PathFoto !== ''" [src]="PathFoto" alt="foto_pasien"
-                                        style="height: 10.3rem; width: 100%;">
+                                        style="height: 8.5rem; width: 100%;">
                                 </div>
                             </div>
                         </div>
@@ -45,10 +45,11 @@
                             <input id="no_rekam_medis" type="text" class="form-control form-select-sm" readonly>
                         </div>
 
-                        <!-- Usia -->
+                        <!-- Keluhan -->
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <app-form-label [Caption]="'Usia'"></app-form-label>
-                            <input id="umur" type="text" class="form-control form-select-sm" readonly>
+                            <app-form-label [Caption]="'Keluhan'"></app-form-label>
+                            <textarea id="keluhan" type="text" class="form-control form-select-sm" readonly rows="3">
+                            </textarea>
                         </div>
                     </div>
                 </div>
@@ -57,11 +58,11 @@
         <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 pe-0">
             <div class="card shadow-sm">
                 <div class="card-header bg-abu">
-                    <h4 class="modal-title">
+                    <p class="modal-title">
                         Add Treatment
-                    </h4>
+                    </p>
                 </div>
-                <div class="card-body" style="height: calc(100vh - 15rem); overflow-y: auto;">
+                <div class="card-body" style="height: calc(100vh - 14.1rem); overflow-y: auto;">
                     <div class="row">
                         <div *ngFor="let item of ListTreatment; let i = index;"
                             class="col-lg-12 col-md-12 col-sm-12 col-xs-12 px-0 mb-2 cursor-pointer"

@@ -192,14 +192,15 @@ export class BillingComponent implements OnInit {
         let total_amount = informasi_pasien.total_biaya;
 
         // ** Set Value for Total 1
-        this.Total = informasi_pasien.total_biaya;
+        this.Total = total_amount;
+        this.total_amount.setValue(total_amount);
 
         // ** Set Value for Diskon and Total TDMK
         let total_tdmk = 0;
         this.Diskon = 0;
         tdmk.filter((item: any) => {
             if (item.status_bayar) {
-                total_tdmk += item.total_amount_treatment;
+                total_tdmk += (item.total_amount - item.diskon_nominal);
                 this.Diskon += item.diskon_nominal;
             }
         });
@@ -213,12 +214,11 @@ export class BillingComponent implements OnInit {
         });
 
         // ** Set Value for Total Amount
-        total_amount = total_tdmk + total_resep;
-        this.total_amount.setValue(total_amount);
+        let total_amount_after_discount = total_tdmk + total_resep;
 
         // ** Set Value for Total 2
         this.Total2 = 0;
-        this.Total2 = total_amount;
+        this.Total2 = total_amount_after_discount;
 
         // ** Check if Data Voucher exist
         if (this.SelectedDataVoucher) {
@@ -255,8 +255,6 @@ export class BillingComponent implements OnInit {
     }
 
     onEditDetailTreatment(data: DetailTindakanBillingModel, index: number): void {
-        data.total_amount_treatment = data.total_amount;
-
         this.SelectedDetailTreatment = data;
         this.SelectedDetailTreatmentIndex = index;
 
@@ -276,8 +274,6 @@ export class BillingComponent implements OnInit {
     }
 
     onUpdateDetailTreatment(data: DetailTindakanBillingModel): void {
-        data.total_amount = data.total_amount_treatment;
-
         this.DetailDatasource.tdmk[this.SelectedDetailTreatmentIndex] = data;
 
         this.modalRef?.hide();
@@ -403,6 +399,10 @@ export class BillingComponent implements OnInit {
         this.TotalBayar = 0;
         this.handleChangePaymentMethodState('cash');
         this.ListPayment = [];
+
+        this.FilterDialogPasien.onResetResult();
+
+        this.FilterDialogVoucher.onResetResult();
     }
 
     get id_register(): AbstractControl { return this.FormTransHeader.get('id_register') as AbstractControl };

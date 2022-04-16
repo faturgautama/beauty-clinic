@@ -89,4 +89,8 @@ export class FilterDialogComponent implements OnInit {
     onCloseFilterDialog(): void {
         this.modalRef?.hide();
     }
+
+    onResetResult(): void {
+        this.Result = [];
+    }
 }
