@@ -84,8 +84,8 @@ export class BillingComponent implements OnInit {
             id_voucher: [0, []],
             applied_ppn_procentage: [11, []],
             applied_ppn_nominal: [0, []],
-            applied_service_fee_procentage: [5, []],
-            applied_service_fee_nominal: [0, []],
+            // applied_service_fee_procentage: [5, []],
+            // applied_service_fee_nominal: [0, []],
         });
 
         this.FilterDialogProp = {
@@ -234,10 +234,10 @@ export class BillingComponent implements OnInit {
         this.PPn = this.Total2 * (11 / 100);
         this.applied_ppn_nominal.setValue(this.PPn);
 
-        this.ServicesTaxes = this.Total2 * (5 / 100);
-        this.applied_service_fee_nominal.setValue(this.ServicesTaxes);
+        // this.ServicesTaxes = this.Total2 * (5 / 100);
+        // this.applied_service_fee_nominal.setValue(this.ServicesTaxes);
 
-        this.GrandTotal = this.Total2 + this.PPn + this.ServicesTaxes;
+        this.GrandTotal = this.Total2 + this.PPn; //+ this.ServicesTaxes;
         this.KurangBayar = this.GrandTotal;
 
         // ** Set Value for Total Payment and Kurang Bayar
@@ -385,8 +385,8 @@ export class BillingComponent implements OnInit {
         this.total_amount.setValue(0);
         this.id_marketing.setValue(0);
         this.id_voucher.setValue(0);
-        this.applied_ppn_nominal.setValue(0);
-        this.applied_service_fee_nominal.setValue(0);
+        // this.applied_ppn_nominal.setValue(0);
+        // this.applied_service_fee_nominal.setValue(0);
         this.Total = 0;
         this.Diskon = 0;
         this.SelectedDataVoucher = {} as any;
@@ -411,8 +411,8 @@ export class BillingComponent implements OnInit {
     get id_voucher(): AbstractControl { return this.FormTransHeader.get('id_voucher') as AbstractControl };
     get applied_ppn_procentage(): AbstractControl { return this.FormTransHeader.get('applied_ppn_procentage') as AbstractControl };
     get applied_ppn_nominal(): AbstractControl { return this.FormTransHeader.get('applied_ppn_nominal') as AbstractControl };
-    get applied_service_fee_procentage(): AbstractControl { return this.FormTransHeader.get('applied_service_fee_procentage') as AbstractControl };
-    get applied_service_fee_nominal(): AbstractControl { return this.FormTransHeader.get('applied_service_fee_nominal') as AbstractControl };
+    // get applied_service_fee_procentage(): AbstractControl { return this.FormTransHeader.get('applied_service_fee_procentage') as AbstractControl };
+    // get applied_service_fee_nominal(): AbstractControl { return this.FormTransHeader.get('applied_service_fee_nominal') as AbstractControl };
 
     get id_transaksi(): AbstractControl { return this.FormUpdateDetailTreatment.get('id_transaksi') as AbstractControl };
     get kode_setup_tarif(): AbstractControl { return this.FormUpdateDetailTreatment.get('kode_setup_tarif') as AbstractControl };

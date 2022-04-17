@@ -38,6 +38,7 @@ export class GetAllAdmisiPasienModel implements HttpResponseModel {
 export interface IGetPersonForLookupAdmisiModel {
     id_person: number
     no_identitas: string
+    nomor_kartu: string
     no_rekam_medis: string
     id_jenis_member: number
     jenis_member: any

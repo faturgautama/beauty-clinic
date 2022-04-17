@@ -160,6 +160,28 @@ export class PelayananPasienComponent implements OnInit, AfterViewInit {
             });
     }
 
+    handleSearchNoKartuFilter(nomor_kartu: string): void {
+        const parameter = [
+            {
+                "columnName": "per.nomor_kartu",
+                "filter": "like",
+                "searchText": nomor_kartu,
+                "searchText2": ""
+            }
+        ];
+
+        this.pelayananPasienService.onGetPasienForLookupAdmisi(parameter)
+            .subscribe((result) => {
+                if (result.responseResult) {
+                    if (result.data.length) {
+                        this.handleChooseFilterDialog(result.data[0] as any);
+                    } else {
+                        this.utilityService.onShowCustomAlert('warning', 'Oops', 'Pasien Tidak Ditemukan');
+                    }
+                }
+            });
+    }
+
     handleChooseFilterDialog(args: IGetPersonForLookupAdmisiModel): void {
         this.id_person.setValue(args.id_person);
 
@@ -168,8 +190,8 @@ export class PelayananPasienComponent implements OnInit, AfterViewInit {
 
         this.no_rekam_medis.setValue(args.no_rekam_medis);
 
-        const no_identitas = document.getElementById('no_identitas') as HTMLInputElement;
-        no_identitas.value = args.no_identitas;
+        const nomor_kartu = document.getElementById('nomor_kartu') as HTMLInputElement;
+        nomor_kartu.value = args.nomor_kartu;
 
         this.onGetFotoPasien(this.id_person.value);
     }

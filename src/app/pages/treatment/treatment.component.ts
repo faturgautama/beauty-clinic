@@ -104,6 +104,7 @@ export class TreatmentComponent implements OnInit {
             id_dokter: [0, [Validators.required]],
             nama_dokter: ['', []],
             qty: [1, []],
+            subtotal: [0, []],
             pelaksana_tindakan: this.formBuilder.array([])
         });
 
@@ -194,8 +195,8 @@ export class TreatmentComponent implements OnInit {
         const itemData = args.itemData;
 
         this.nama_setup_tarif.setValue(itemData.nama_setup_tarif);
-        this.nominal_tarif.setValue(formatCurrency(itemData.nominal_tarif, 'EN', 'Rp. '));
-        this.qty.setValue(1);
+        this.nominal_tarif.setValue(itemData.nominal_tarif);
+        this.qty.setValue(0);
     }
 
     handleChangeDropdownDokter(args: any): void {
@@ -207,8 +208,6 @@ export class TreatmentComponent implements OnInit {
     handleChangeDropdownUser(args: any, index: number): void {
         this.FormPelaksanaTindakan.controls[index].get('id_user')?.setValue(args.itemData.id_user);
         this.FormPelaksanaTindakan.controls[index].get('id_role')?.setValue(args.itemData.id_role);
-
-        console.log(this.FormPelaksanaTindakan.value);
     }
 
     handleAddPelaksanaTindakan(): void {
@@ -269,7 +268,8 @@ export class TreatmentComponent implements OnInit {
         this.nominal_tarif.setValue(0);
         this.id_dokter.setValue(0);
         this.nama_dokter.setValue('');
-        this.qty.setValue(1);
+        this.qty.setValue(0);
+        this.subtotal.setValue(0);
     }
 
     onSubmitTreatment(id_register: number, item_transaksi: any): void {
@@ -297,7 +297,7 @@ export class TreatmentComponent implements OnInit {
                             this.FilterDialogPasien.onResetResult();
                         });
                 };
-            })
+            });
     }
 
     get id_setup_tarif(): AbstractControl { return this.FormInsertUpdateTarif.get('id_setup_tarif') as AbstractControl };
@@ -306,6 +306,7 @@ export class TreatmentComponent implements OnInit {
     get id_dokter(): AbstractControl { return this.FormInsertUpdateTarif.get('id_dokter') as AbstractControl };
     get nama_dokter(): AbstractControl { return this.FormInsertUpdateTarif.get('nama_dokter') as AbstractControl };
     get qty(): AbstractControl { return this.FormInsertUpdateTarif.get('qty') as AbstractControl };
+    get subtotal(): AbstractControl { return this.FormInsertUpdateTarif.get('subtotal') as AbstractControl };
 
     get pelaksana_tindakan(): FormArray {
         return this.FormInsertUpdateTarif.get('pelaksana_tindakan') as FormArray

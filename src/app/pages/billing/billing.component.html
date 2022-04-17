@@ -128,7 +128,7 @@
                         </div>
 
                         <!-- Services 5% -->
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-2">
+                        <!-- <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-2">
                             <div class="row">
                                 <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 px-0">
                                     <app-form-label [Caption]="'Services 5%'"></app-form-label>
@@ -139,7 +139,7 @@
                                     </p>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <!-- Grand Total -->
                         <!-- <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
@@ -183,19 +183,21 @@
                                 <li *ngFor="let item of DetailDatasource?.tdmk; let i = index"
                                     class="list-group-item shadow-sm border-0 mb-3 rounded {{ item.status_bayar ? '' : 'bg-abu' }}">
                                     <div class="row">
-                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 px-0">
+                                        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 px-0">
                                             <p class="text-hijau-tua mb-1 fw-bold">
                                                 {{ item.nama_setup_tarif | titlecase }}
                                             </p>
-                                            <p class="text-hijau-muda mb-0">
-                                                {{ item.total_amount | currency: 'Rp. ' }}
+                                            <p class="text-hijau-muda mb-1">
+                                                {{ item.qty }} @ {{ item.unit_amount | currency: 'Rp. ' }} = {{
+                                                item.total_amount | currency: 'Rp. ' }}
                                             </p>
-                                        </div>
-                                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 px-0">
-                                            <p class="text-hijau-tua">
+                                            <p class="text-hijau-tua mb-0">
                                                 Diskon {{ item.diskon_nominal | currency: 'Rp. ' }}
                                             </p>
                                         </div>
+                                        <!-- <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 px-0">
+                                           
+                                        </div> -->
                                         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 px-0 text-center">
                                             <span class="badge bg-success cursor-pointer me-2" style="font-size: 14px;"
                                                 (click)="onEditDetailTreatment(item, i)">

@@ -52,10 +52,18 @@
                                 </div>
                             </div>
 
-                            <!-- No. Identitas -->
+                            <!-- No. Kartu -->
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
-                                <app-form-label [Caption]="'No. Identitas'"></app-form-label>
-                                <input id="no_identitas" type="text" class="form-control form-select-sm" readonly>
+                                <app-form-label [Caption]="'No. Kartu'"></app-form-label>
+                                <div class="input-group input-group-sm mb-0">
+                                    <input #NoKartu id="nomor_kartu" type="text" class="form-control form-select-sm"
+                                        (keyup.enter)="handleSearchNoKartuFilter(NoKartu.value)">
+                                    <span class="input-group-text bg-hijau-tua border-0 cursor-pointer"
+                                        style="border-top-right-radius: 0.2rem; border-bottom-right-radius: 0.2rem;  "
+                                        id="SearchPasienByNoKartu" (click)="handleSearchNoKartuFilter(NoKartu.value)">
+                                        <i class="fas fa-search fa-xs text-white"></i>
+                                    </span>
+                                </div>
                             </div>
 
                             <!-- No. Rekam Medis -->

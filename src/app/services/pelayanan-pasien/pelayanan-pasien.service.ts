@@ -5,6 +5,7 @@ import * as API_CONFIG from '../../api';
 import { Observable } from 'rxjs';
 import { GetAllAdmisiPasienModel, ISaveAdmisiPasienModel, PostSaveAdmisiPasienModel } from 'src/app/model/pelayanan-pasien.model';
 import { GetRiwayatPelayananPasienModel } from 'src/app/model/riwayat-pelayanan.model';
+import { FilterModel } from 'src/app/components/navigation/filter/filter.component';
 
 @Injectable({
     providedIn: 'root'
@@ -20,6 +21,10 @@ export class PelayananPasienService {
 
     onGetAllAdmisiPasienByDynamicFilter(body: any): Observable<GetAllAdmisiPasienModel> {
         return this.httpRequestService.defaultPostRequest(this.API.GET_ALL_ADMISI_BY_DYNAMIC_FILTER, body);
+    }
+
+    onGetPasienForLookupAdmisi(body: any): Observable<GetAllAdmisiPasienModel> {
+        return this.httpRequestService.defaultPostRequest(this.API.LOOKUP_PERSON_FOR_ADMISI, body);
     }
 
     onSaveAdmisiPasien(body: ISaveAdmisiPasienModel): Observable<PostSaveAdmisiPasienModel> {
