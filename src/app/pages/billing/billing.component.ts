@@ -193,7 +193,9 @@ export class BillingComponent implements OnInit {
 
         // ** Set Value for Total 1
         this.Total = total_amount;
-        this.total_amount.setValue(total_amount);
+
+        // !! Revisi tgl 19 April 2022
+        // this.total_amount.setValue(total_tdmk + total_resep);
 
         // ** Set Value for Diskon and Total TDMK
         let total_tdmk = 0;
@@ -215,6 +217,10 @@ export class BillingComponent implements OnInit {
 
         // ** Set Value for Total Amount
         let total_amount_after_discount = total_tdmk + total_resep;
+
+        // !! Revisi tgl 19 April => total_tdmk hanya menghitung treatment yg ada
+        // !! Treatment yg dihapus gak perlu dihitung lagi
+        this.total_amount.setValue(total_tdmk + total_resep);
 
         // ** Set Value for Total 2
         this.Total2 = 0;
@@ -286,6 +292,8 @@ export class BillingComponent implements OnInit {
     onChangeStateDetailTreatment(data: DetailTindakanBillingModel, index: number, state: boolean): void {
         this.DetailDatasource.tdmk[index].status_bayar = state;
 
+        console.log(this.DetailDatasource);
+
         this.onCountTotalAmount(this.SelectedDataBilling.informasi_pasien, this.DetailDatasource.tdmk, this.DetailDatasource.resep);
     }
 
@@ -354,7 +362,7 @@ export class BillingComponent implements OnInit {
 
         const body: IInsertBillingModel = {
             trans_header: this.FormTransHeader.value,
-            trans_detail: this.DetailDatasource.tdmk,
+            trans_detail: this.DetailDatasource.tdmk.filter((item: any) => { return item.status_bayar == true }),
             resep_detail: this.DetailDatasource.resep.filter((item: any) => { return item.status_bayar == true }),
             payment: payment,
             payment_detail: this.ListPayment,

@@ -227,8 +227,8 @@ export class PelayananPasienComponent implements OnInit, AfterViewInit {
         const full_name = document.getElementById('full_name') as HTMLInputElement;
         full_name.value = "";
 
-        const no_identitas = document.getElementById('no_identitas') as HTMLInputElement;
-        no_identitas.value = "";
+        const nomor_kartu = document.getElementById('nomor_kartu') as HTMLInputElement;
+        nomor_kartu.value = "";
 
         this.DropdownDokterComp.value = null as any;
 
