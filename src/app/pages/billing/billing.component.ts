@@ -1,15 +1,20 @@
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { formatNumber } from '@angular/common';
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { FilterDialogComponent, FilterDialogProp } from 'src/app/components/navigation/filter-dialog/filter-dialog.component';
 import { TabComponent } from 'src/app/components/navigation/tab/tab.component';
+import { ILoginResponseModel } from 'src/app/model/authentication.model';
 import { DetailResepBillingModel, DetailTindakanBillingModel, IDataBilingModel, IInsertBillingModel, IPasienForBillingModel, PaymentDetail } from 'src/app/model/billing.model';
+import { ICancelResepModel } from 'src/app/model/resep.model';
 import { ISetupMarketingModel } from 'src/app/model/setup-marketing.model';
 import { ISetupVoucherModel } from 'src/app/model/setup-voucher.model';
+import { ICancelTreatmentModel } from 'src/app/model/treatment.model';
 import { BillingService } from 'src/app/services/billing/billing.service';
+import { ResepService } from 'src/app/services/resep/resep.service';
 import { SetupMarketingService } from 'src/app/services/setup-marketing/setup-marketing.service';
+import { TreatmentService } from 'src/app/services/treatment/treatment.service';
 import { UtilityService } from 'src/app/services/utility/utility.service';
 import * as API_CONFIG from '../../api';
 import { CashComponent } from './payment-method/cash/cash.component';
@@ -23,10 +28,13 @@ export class BillingComponent implements OnInit {
 
     API = API_CONFIG.API;
 
+    UserData!: ILoginResponseModel;
+
     @ViewChild('TabRef', { static: true }) TabRef!: TabComponent;
 
     @ViewChild('FilterDialogPasien') FilterDialogPasien!: FilterDialogComponent;
     FilterDialogProp!: FilterDialogProp;
+    SelectedDataPasien!: IPasienForBillingModel;
 
     @ViewChild('FilterDialogVoucher') FilterDialogVoucher!: FilterDialogComponent;
     FilterVoucherDialogProp!: FilterDialogProp;
@@ -70,9 +78,11 @@ export class BillingComponent implements OnInit {
 
     constructor(
         private formBuilder: FormBuilder,
+        private resepService: ResepService,
         private bsModalService: BsModalService,
         private utilityService: UtilityService,
         private billingService: BillingService,
+        private treatmentService: TreatmentService,
         private setupMarketingService: SetupMarketingService,
     ) { }
 
@@ -135,7 +145,11 @@ export class BillingComponent implements OnInit {
             total_bayar: [0, []],
             unit_amount: [0, []],
             diskon_nominal: [0, []],
+            diskon_prosentase: [0, []],
+            paid_amount: [0, []]
         });
+
+        this.UserData = JSON.parse(localStorage.getItem('UserData') as any);
     }
 
     handleChooseFilterDialog(args: IPasienForBillingModel): void {
@@ -144,16 +158,24 @@ export class BillingComponent implements OnInit {
 
         this.id_register.setValue(args.id_register);
 
+        this.SelectedDataPasien = args;
+
         this.onGetDataBillingPasien(args.no_register);
     }
 
     handleChooseFilterVoucherDialog(args: ISetupVoucherModel): void {
         this.id_voucher.setValue(args.id_voucher);
 
-        const nilai = args.nominal_voucher == 0 ? args.nominal_voucher : args.prosentase_voucher;
+        let nilai = 0;
+
+        if (args.nominal_voucher == 0 && args.prosentase_voucher != 0) {
+            nilai = args.prosentase_voucher;
+        } else {
+            nilai = args.nominal_voucher;
+        };
 
         const nama_voucher = document.getElementById('nama_voucher') as HTMLInputElement;
-        nama_voucher.value = `${args.nama} (${nilai})`
+        nama_voucher.value = `${args.nama} (${formatNumber(nilai, 'EN')})`
 
         this.SelectedDataVoucher = args;
 
@@ -169,18 +191,21 @@ export class BillingComponent implements OnInit {
                     ...item,
                     status_bayar: true,
                     total_amount_treatment: item.total_amount,
-                    diskon_nominal: 0,
+                    paid_amount: 0,
                 }));
 
                 const resep = result.data.resep.detail.map((item) => ({
                     ...item,
                     status_bayar: true,
+                    paid_amount: 0,
                 }));
 
                 this.DetailDatasource = {
                     tdmk: tdmk,
                     resep: resep
                 };
+
+                console.log(this.DetailDatasource);
 
                 this.handleChangePaymentMethodState('cash');
 
@@ -189,20 +214,18 @@ export class BillingComponent implements OnInit {
     }
 
     onCountTotalAmount(informasi_pasien: any, tdmk: any, resep: any): void {
-        let total_amount = informasi_pasien.total_biaya;
-
-        // ** Set Value for Total 1
-        this.Total = total_amount;
-
         // !! Revisi tgl 19 April 2022
         // this.total_amount.setValue(total_tdmk + total_resep);
 
         // ** Set Value for Diskon and Total TDMK
         let total_tdmk = 0;
+        let total_tdmk_real = 0;
         this.Diskon = 0;
         tdmk.filter((item: any) => {
             if (item.status_bayar) {
-                total_tdmk += (item.total_amount - item.diskon_nominal);
+                item.paid_amount = item.total_bayar;
+                total_tdmk += item.total_bayar;
+                total_tdmk_real += item.total_amount;
                 this.Diskon += item.diskon_nominal;
             }
         });
@@ -211,6 +234,7 @@ export class BillingComponent implements OnInit {
         let total_resep = 0;
         resep.filter((item: any) => {
             if (item.status_bayar) {
+                item.paid_amount = item.total_bayar;
                 total_resep += item.total_amount
             }
         });
@@ -220,7 +244,10 @@ export class BillingComponent implements OnInit {
 
         // !! Revisi tgl 19 April => total_tdmk hanya menghitung treatment yg ada
         // !! Treatment yg dihapus gak perlu dihitung lagi
-        this.total_amount.setValue(total_tdmk + total_resep);
+        this.total_amount.setValue(total_tdmk_real + total_resep);
+
+        // ** Set Value for Total 1
+        this.Total = this.total_amount.value;
 
         // ** Set Value for Total 2
         this.Total2 = 0;
@@ -228,11 +255,11 @@ export class BillingComponent implements OnInit {
 
         // ** Check if Data Voucher exist
         if (this.SelectedDataVoucher) {
-            if (this.SelectedDataVoucher.nominal_voucher > 0 && this.SelectedDataVoucher.prosentase_voucher == 0) {
+            if (this.SelectedDataVoucher.nominal_voucher != 0 && this.SelectedDataVoucher.prosentase_voucher == 0) {
                 this.Total2 = this.Total2 - this.SelectedDataVoucher.nominal_voucher;
             };
 
-            if (this.SelectedDataVoucher.prosentase_voucher > 0 && this.SelectedDataVoucher.nominal_voucher == 0) {
+            if (this.SelectedDataVoucher.prosentase_voucher != 0 && this.SelectedDataVoucher.nominal_voucher == 0) {
                 this.Total2 = this.Total2 - (this.Total2 * (this.SelectedDataVoucher.prosentase_voucher / 100));
             };
         }
@@ -249,11 +276,15 @@ export class BillingComponent implements OnInit {
         // ** Set Value for Total Payment and Kurang Bayar
         let total_payment = 0;
         if (this.ListPayment.length) {
-            this.ListPayment.filter((item) => {
-                total_payment += item.jumlah_bayar;
-            });
+            // this.ListPayment.filter((item) => {
+            //     total_payment += item.jumlah_bayar;
+            // });
+
+            this.ListPayment = [];
 
             this.KurangBayar = this.GrandTotal - total_payment;
+
+            this.onCountPaymentMethod(this.ListPayment);
         }
 
         // ** Trigger Change Payment Method Component
@@ -272,11 +303,11 @@ export class BillingComponent implements OnInit {
     }
 
     handleChangeDiskonNominalTreatment(args: any): void {
-        if (args.value > 0) {
-            this.total_amount_treatment.setValue(this.total_amount_treatment.value - this.diskon_nominal.value);
-        } else {
-            this.total_amount_treatment.setValue(this.total_amount_treatment.value + args.previousValue);
-        }
+        this.total_amount_treatment.setValue(this.unit_amount.value * this.qty.value);
+
+        this.diskon_nominal.setValue((this.unit_amount.value * this.qty.value) * args.value / 100);
+
+        this.total_bayar.setValue(this.total_amount_treatment.value - this.diskon_nominal.value);
     }
 
     onUpdateDetailTreatment(data: DetailTindakanBillingModel): void {
@@ -290,17 +321,48 @@ export class BillingComponent implements OnInit {
     }
 
     onChangeStateDetailTreatment(data: DetailTindakanBillingModel, index: number, state: boolean): void {
-        this.DetailDatasource.tdmk[index].status_bayar = state;
+        const parameter: ICancelTreatmentModel = {
+            id_register: this.id_register.value,
+            id_transaksi: data.id_transaksi,
+            total_amount: data.total_amount,
+            reason_canceled: `Canceled in Invoice By ${this.UserData.full_name}}`
+        };
 
-        console.log(this.DetailDatasource);
+        this.treatmentService.onCancel(parameter)
+            .subscribe((result) => {
+                if (result.responseResult) {
+                    this.utilityService.onShowCustomAlert('success', 'Success', 'Berhasil Hapus Data Treatment')
+                        .then(() => {
+                            this.onGetDataBillingPasien(this.SelectedDataPasien.no_register);
+                        });
+                };
+            });
 
-        this.onCountTotalAmount(this.SelectedDataBilling.informasi_pasien, this.DetailDatasource.tdmk, this.DetailDatasource.resep);
+        // this.DetailDatasource.tdmk[index].status_bayar = state;
+
+        // this.onCountTotalAmount(this.SelectedDataBilling.informasi_pasien, this.DetailDatasource.tdmk, this.DetailDatasource.resep);
     }
 
     onChangeStateDetailResep(data: DetailResepBillingModel, index: number, state: boolean): void {
-        this.DetailDatasource.resep[index].status_bayar = state;
+        const parameter: ICancelResepModel = {
+            id_transaksi_obat: data.id_transaksi_obat,
+            reason_canceled: `Canceled in Invoice By ${this.UserData.full_name}`
+        };
 
-        this.onCountTotalAmount(this.SelectedDataBilling.informasi_pasien, this.DetailDatasource.tdmk, this.DetailDatasource.resep);
+        this.resepService.onCancel(parameter)
+            .subscribe((result) => {
+                if (result.responseResult) {
+                    this.utilityService.onShowCustomAlert('success', 'Success', 'Berhasil Hapus Data Resep')
+                        .then(() => {
+                            this.onGetDataBillingPasien(this.SelectedDataPasien.no_register);
+                        });
+                };
+            });
+
+
+        // this.DetailDatasource.resep[index].status_bayar = state;
+
+        // this.onCountTotalAmount(this.SelectedDataBilling.informasi_pasien, this.DetailDatasource.tdmk, this.DetailDatasource.resep);
     }
 
     handleChangePaymentMethodState(state: 'cash' | 'qris' | 'debit_card' | 'credit_card'): void {
@@ -362,8 +424,8 @@ export class BillingComponent implements OnInit {
 
         const body: IInsertBillingModel = {
             trans_header: this.FormTransHeader.value,
-            trans_detail: this.DetailDatasource.tdmk.filter((item: any) => { return item.status_bayar == true }),
-            resep_detail: this.DetailDatasource.resep.filter((item: any) => { return item.status_bayar == true }),
+            trans_detail: this.DetailDatasource.tdmk,
+            resep_detail: this.DetailDatasource.resep,
             payment: payment,
             payment_detail: this.ListPayment,
         };
@@ -431,4 +493,7 @@ export class BillingComponent implements OnInit {
     get total_amount_treatment(): AbstractControl { return this.FormUpdateDetailTreatment.get('total_amount_treatment') as AbstractControl };
     get unit_amount(): AbstractControl { return this.FormUpdateDetailTreatment.get('unit_amount') as AbstractControl };
     get diskon_nominal(): AbstractControl { return this.FormUpdateDetailTreatment.get('diskon_nominal') as AbstractControl };
+    get diskon_prosentase(): AbstractControl { return this.FormUpdateDetailTreatment.get('diskon_prosentase') as AbstractControl };
+    get total_bayar(): AbstractControl { return this.FormUpdateDetailTreatment.get('total_bayar') as AbstractControl };
+    get paid_amount(): AbstractControl { return this.FormUpdateDetailTreatment.get('paid_amount') as AbstractControl };
 }

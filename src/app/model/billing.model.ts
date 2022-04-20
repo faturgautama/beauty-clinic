@@ -43,6 +43,7 @@ export interface DetailTindakanBillingModel {
     total_amount_treatment: number
     status_bayar: boolean
     diskon_nominal?: number
+    diskon_prosentase?: number
 }
 
 export interface ResepBillingModel {
