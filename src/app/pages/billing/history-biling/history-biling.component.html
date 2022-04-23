@@ -1,0 +1,97 @@
+<app-base-layout>
+    <div class="row mb-3">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-end">
+            <app-action-button [ActionButton]="ActionButton" (onClickActionButton)="handleClickActionButton($event)">
+            </app-action-button>
+        </div>
+
+        <!-- Offcanvas Filter -->
+        <app-filter #FilterComp [FilterAttribute]="FilterAttribute" (onSearchFilter)="handleSearchFilter($event)">
+        </app-filter>
+    </div>
+    <div class="row" style="height: 29rem;">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card p-0 h-100">
+                <div class="card-header">
+                    <p class="card-title mb-0">History Billing</p>
+                </div>
+                <div class="card-body p-0 h-100">
+                    <app-grid #GridHeaderComp [GridAttributes]="GridHeaderAttributes"
+                        (onSelectionChange)="handleSelectionChanged($event)">
+                    </app-grid>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Riwayat -->
+    <ng-template #ModalRiwayat>
+        <div class="modal-header py-2 bg-abu">
+            <h4 class="modal-title pull-left">
+                Detail Resep & Treatment No. Register {{ SelectedDataHeader.no_register }}
+            </h4>
+            <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+                <span aria-hidden="true" class="visually-hidden">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <!-- Riwayat Treatment -->
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Detail Treatment</h5>
+                        </div>
+                        <div class="card-body p-0" style="height: 10rem;">
+                            <app-grid #GridDetailTreatmentComp [GridAttributes]="GridDetailTreatmentAttributes">
+                            </app-grid>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Riwayat Resep -->
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Detail Resep</h5>
+                        </div>
+                        <div class="card-body p-0" style="height: 10rem;">
+                            <app-grid #GridDetailResepComp [GridAttributes]="GridDetailResepAttributes">
+                            </app-grid>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer py-2">
+            <button type="button" class="btn btn-primary btn-sm"
+                (click)="handleCetakNota(this.SelectedDataHeader.id_register)">
+                Cetak Nota
+            </button>
+            <button type="button" class="btn btn-secondary btn-sm" (click)="modalRef?.hide()">
+                Close
+            </button>
+        </div>
+    </ng-template>
+
+    <button id="btnOpenOffcanvas" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasPayment" hidden>
+    </button>
+
+    <!-- Offcanvas Payment -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasPayment" aria-labelledby="offcanvasPaymentLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasPaymentLabel">Daftar Payment</h5>
+            <button id="btnCloseOffcanvas" type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                aria-label="Close">
+            </button>
+        </div>
+        <div class="offcanvas-body small">
+            <div class="row h-100">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <app-grid #GridDetailPaymentComp [GridAttributes]="GridDetailPaymentAttributes">
+                    </app-grid>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-base-layout>

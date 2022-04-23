@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { GetDataBillingModel, IInsertBillingModel } from 'src/app/model/billing.model';
+import { GetDataBillingModel, GetHistoryBillingDetailModel, GetHistoryBillingModel, IInsertBillingModel } from 'src/app/model/billing.model';
 import { HttpResponseModel } from 'src/app/model/http-request.model';
 import * as API_CONFIG from '../../api';
 import { HttpRequestService } from '../http-request/http-request.service';
@@ -34,5 +34,13 @@ export class BillingService {
 
     onPrintNotaInvoice(id_register: number): void {
         this.httpRequestService.defaultGetPrintRequest(this.API.CETAK_NOTA_BY_ID_REGISTER, { id_register: id_register })
+    }
+
+    onGetHistoryBilling(body: any): Observable<GetHistoryBillingModel> {
+        return this.httpRequestService.defaultPostRequest(this.API.HISTORY_BILLING_DYNAMIC_FILTER, body);
+    }
+
+    onGetDetailHistoryBilling(id_register: number): Observable<GetHistoryBillingDetailModel> {
+        return this.httpRequestService.defaultGetRequest(`${this.API.DETAIL_HISTORY_BILLING}${id_register}`);
     }
 }

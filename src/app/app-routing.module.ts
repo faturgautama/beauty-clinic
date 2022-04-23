@@ -4,10 +4,15 @@ import { AuthGuard } from './helper/auth.guard';
 import { AuthenticationComponent } from './pages/authentication/authentication.component';
 import { BerandaComponent } from './pages/beranda/beranda.component';
 import { BillingComponent } from './pages/billing/billing.component';
+import { HistoryBilingComponent } from './pages/billing/history-biling/history-biling.component';
 import { InputBukaKasirComponent } from './pages/billing/input-buka-kasir/input-buka-kasir.component';
 import { InputTutupKasirComponent } from './pages/billing/input-tutup-kasir/input-tutup-kasir.component';
 import { ValidasiTutupKasirComponent } from './pages/billing/validasi-tutup-kasir/validasi-tutup-kasir.component';
 import { InputResepComponent } from './pages/farmasi/input-resep/input-resep.component';
+import { DetailObatComponent } from './pages/laporan/detail-obat/detail-obat.component';
+import { DetailTreatmentComponent } from './pages/laporan/detail-treatment/detail-treatment.component';
+import { SummaryObatComponent } from './pages/laporan/summary-obat/summary-obat.component';
+import { SummaryTreatmentComponent } from './pages/laporan/summary-treatment/summary-treatment.component';
 import { PelayananPasienComponent } from './pages/pelayanan-pasien/pelayanan-pasien.component';
 import { PendaftaranPasienComponent } from './pages/pendaftaran-pasien/pendaftaran-pasien.component';
 import { RekamMedisPasienComponent } from './pages/rekam-medis-pasien/rekam-medis-pasien.component';
@@ -42,9 +47,14 @@ const routes: Routes = [
     { path: 'history-treatment', canActivate: [AuthGuard], component: HistoryTreatmentComponent, data: { title: 'History Treatment Pasien' } },
     { path: 'input-resep', canActivate: [AuthGuard], component: InputResepComponent, data: { title: 'Resep Pasien' } },
     { path: 'billing', canActivate: [AuthGuard], component: BillingComponent, data: { title: 'Pembayaran Billing' } },
+    { path: 'billing/history', canActivate: [AuthGuard], component: HistoryBilingComponent, data: { title: 'History Billing' } },
     { path: 'input-buka-kasir', canActivate: [AuthGuard], component: InputBukaKasirComponent, data: { title: 'Buka Kasir' } },
     { path: 'input-tutup-kasir', canActivate: [AuthGuard], component: InputTutupKasirComponent, data: { title: 'Tutup Kasir' } },
     { path: 'validasi-tutup-kasir', canActivate: [AuthGuard], component: ValidasiTutupKasirComponent, data: { title: 'Validasi Tutup Kasir' } },
+    { path: 'laporan/summary-omset-treatment', canActivate: [AuthGuard], component: SummaryTreatmentComponent, data: { title: 'Summary Omset Treatment' } },
+    { path: 'laporan/detail-omset-treatment', canActivate: [AuthGuard], component: DetailTreatmentComponent, data: { title: 'Detail Omset Treatment' } },
+    { path: 'laporan/summary-omset-obat', canActivate: [AuthGuard], component: SummaryObatComponent, data: { title: 'Summary Obat Treatment' } },
+    { path: 'laporan/detail-omset-obat', canActivate: [AuthGuard], component: DetailObatComponent, data: { title: 'Detail Obat Treatment' } },
 ];
 
 @NgModule({

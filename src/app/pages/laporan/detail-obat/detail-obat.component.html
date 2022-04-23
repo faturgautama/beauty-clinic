@@ -1,0 +1,22 @@
+<app-base-layout>
+    <div class="row mb-3">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-end">
+            <app-action-button [ActionButton]="ActionButton" (onClickActionButton)="handleClickActionButton($event)">
+            </app-action-button>
+        </div>
+
+        <!-- Offcanvas Filter -->
+        <app-filter #FilterComp [FilterAttribute]="FilterAttribute" (onSearchFilter)="handleSearchFilter($event)">
+        </app-filter>
+    </div>
+    <div class="row" style="height: 29rem;">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card p-0 h-100">
+                <div class="card-body p-0 h-100">
+                    <app-grid #GridHeaderComp [AutoSizeColumn]="true" [GridAttributes]="GridHeaderAttributes">
+                    </app-grid>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-base-layout>

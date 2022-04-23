@@ -17,6 +17,8 @@ export class GridComponent implements OnInit, AfterViewInit {
 
     @Input('FrameworkComponents') FrameworkComponents: any;
 
+    @Input('AutoSizeColumn') AutoSizeColumn: boolean = false;
+
     defaultColDef: ColDef = {
         sortable: true,
         filter: true,
@@ -42,25 +44,35 @@ export class GridComponent implements OnInit, AfterViewInit {
         setTimeout(() => {
             // const allColumnsId: string[] = [];
 
-            // this.gridColumnApi.getAllColumns()!.forEach((column) => {
+            // this.gridColumnApi.getAllColumns()?.forEach((column) => {
             //     allColumnsId.push(column.getId());
             // });
 
             // this.gridColumnApi.autoSizeColumns(allColumnsId, false);
-        }, 1);
+        }, 200);
     }
 
     onGridReady(args: GridReadyEvent): void {
         this.gridApi = args.api;
         this.gridColumnApi = args.columnApi;
 
-        this.gridApi.sizeColumnsToFit();
+        if (args.columnApi.getAllColumns()!.length < 7) {
+            this.gridApi.sizeColumnsToFit();
 
-        window.addEventListener('resize', () => {
-            setTimeout(() => {
-                this.gridApi.sizeColumnsToFit();
+            window.addEventListener('resize', () => {
+                setTimeout(() => {
+                    this.gridApi.sizeColumnsToFit();
+                });
+            })
+        } else {
+            const allColumnsId: string[] = [];
+
+            this.gridColumnApi.getAllColumns()?.forEach((column) => {
+                allColumnsId.push(column.getId());
             });
-        })
+
+            this.gridColumnApi.autoSizeColumns(allColumnsId, false);
+        }
     }
 
     onSelectionChanged(args: any): void {

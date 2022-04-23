@@ -58,6 +58,11 @@ import { SetupMenuComponent } from './pages/setup-data/setup-menu/setup-menu.com
 import { SetupVoucherComponent } from './pages/setup-data/setup-voucher/setup-voucher.component';
 import { RekamMedisPasienComponent } from './pages/rekam-medis-pasien/rekam-medis-pasien.component';
 import { ListResepComponent } from './pages/farmasi/list-resep/list-resep.component';
+import { HistoryBilingComponent } from './pages/billing/history-biling/history-biling.component';
+import { SummaryTreatmentComponent } from './pages/laporan/summary-treatment/summary-treatment.component';
+import { DetailTreatmentComponent } from './pages/laporan/detail-treatment/detail-treatment.component';
+import { SummaryObatComponent } from './pages/laporan/summary-obat/summary-obat.component';
+import { DetailObatComponent } from './pages/laporan/detail-obat/detail-obat.component';
 
 @NgModule({
     declarations: [
@@ -106,6 +111,11 @@ import { ListResepComponent } from './pages/farmasi/list-resep/list-resep.compon
         SetupVoucherComponent,
         RekamMedisPasienComponent,
         ListResepComponent,
+        HistoryBilingComponent,
+        SummaryTreatmentComponent,
+        DetailTreatmentComponent,
+        SummaryObatComponent,
+        DetailObatComponent,
     ],
     imports: [
         CommonModule,

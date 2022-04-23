@@ -132,3 +132,69 @@ export interface IInsertBillingModel {
     payment: Payment
     payment_detail: PaymentDetail[]
 }
+
+// ** History Billing
+export interface IHistoryBillingHeaderModel {
+    id_register: number
+    no_register: string
+    keluhan: string
+    no_rekam_medis: string
+    nama_pasien: string
+    nama_dokter: string
+    time_inputed: string
+    time_closed_bill: string
+}
+
+export class GetHistoryBillingModel implements HttpResponseModel {
+    responseResult!: boolean
+    message!: string
+    data!: IHistoryBillingHeaderModel[]
+}
+
+export class GetHistoryBillingDetailModel implements HttpResponseModel {
+    responseResult!: boolean
+    message!: string
+    data!: {
+        id_register: number
+        no_register: string
+        keluhan: string
+        no_rekam_medis: string
+        nama_pasien: string
+        nama_dokter: string
+        time_inputed: string
+        time_closed_bill: string
+        history_treatment: HistoryTreatment[]
+        history_obat: HistoryObat[]
+        history_payment: HistoryPayment[]
+    }
+}
+
+export interface HistoryTreatment {
+    id_invoice: number
+    nomor_invoice: string
+    tgl_invoice: string
+    kode_setup_tarif: string
+    nama_setup_tarif: string
+    qty: number
+    unit_amount: number
+    diskon_nominal: number
+    total_amount: number
+    id_register: number
+}
+
+export interface HistoryObat {
+    id_invoice: number
+    nomor_invoice: string
+    tgl_invoice: string
+    nama_obat: string
+    qty: number
+    unit_amount: number
+    diskon_nominal: number
+    total_amount: number
+    id_register: number
+}
+
+export interface HistoryPayment {
+    payment_method: string
+    jumlah_bayar: number
+}

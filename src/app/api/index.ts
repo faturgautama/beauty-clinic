@@ -6,6 +6,7 @@ import * as TREATMENT from './TREATMENT';
 import * as RESEP from './RESEP';
 import * as BILLING from './BILLING';
 import * as SETTING_KASIR from './SETTING_KASIR';
+import * as LAPORAN from './LAPORAN';
 
 export const API = Object.assign({}, {
     AUTHENTICATION: AUTHENTICATION,
@@ -16,4 +17,5 @@ export const API = Object.assign({}, {
     RESEP: RESEP,
     SETTING_KASIR: SETTING_KASIR,
     BILLING: BILLING,
+    LAPORAN: LAPORAN,
 })

@@ -7,4 +7,7 @@ export const GET_ALL_PASIEN_FOR_BILLING = `${environment.webApi}/billing/TransBi
 export const GET_DATA_BILLING_BY_NO_REG = `${environment.webApi}/billing/TransBilling/GetDataBilling/`;
 export const INSERT_INVOICE_WITH_PAYMENT = `${environment.webApi}/billing/TrInvoice/InsertInvoiceWithPayment`;
 
+export const HISTORY_BILLING_DYNAMIC_FILTER = `${environment.webApi}/billing/HistoryBilling/GetAllByDynamicFilter`;
+export const DETAIL_HISTORY_BILLING = `${environment.webApi}/billing/HistoryBilling/GetByIdRegister/`;
+
 export const CETAK_NOTA_BY_ID_REGISTER = `${environment.webApi}/billing/Pdf/CetakNota/`;
