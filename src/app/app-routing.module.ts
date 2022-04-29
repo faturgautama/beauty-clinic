@@ -10,8 +10,12 @@ import { InputTutupKasirComponent } from './pages/billing/input-tutup-kasir/inpu
 import { ValidasiTutupKasirComponent } from './pages/billing/validasi-tutup-kasir/validasi-tutup-kasir.component';
 import { InputResepComponent } from './pages/farmasi/input-resep/input-resep.component';
 import { DetailObatComponent } from './pages/laporan/detail-obat/detail-obat.component';
+import { DetailPendapatanComponent } from './pages/laporan/detail-pendapatan/detail-pendapatan.component';
 import { DetailTreatmentComponent } from './pages/laporan/detail-treatment/detail-treatment.component';
+import { FeeBcComponent } from './pages/laporan/fee-bc/fee-bc.component';
+import { FeeDokterComponent } from './pages/laporan/fee-dokter/fee-dokter.component';
 import { SummaryObatComponent } from './pages/laporan/summary-obat/summary-obat.component';
+import { SummaryPendapatanComponent } from './pages/laporan/summary-pendapatan/summary-pendapatan.component';
 import { SummaryTreatmentComponent } from './pages/laporan/summary-treatment/summary-treatment.component';
 import { PelayananPasienComponent } from './pages/pelayanan-pasien/pelayanan-pasien.component';
 import { PendaftaranPasienComponent } from './pages/pendaftaran-pasien/pendaftaran-pasien.component';
@@ -55,6 +59,10 @@ const routes: Routes = [
     { path: 'laporan/detail-omset-treatment', canActivate: [AuthGuard], component: DetailTreatmentComponent, data: { title: 'Detail Omset Treatment' } },
     { path: 'laporan/summary-omset-obat', canActivate: [AuthGuard], component: SummaryObatComponent, data: { title: 'Summary Obat Treatment' } },
     { path: 'laporan/detail-omset-obat', canActivate: [AuthGuard], component: DetailObatComponent, data: { title: 'Detail Obat Treatment' } },
+    { path: 'laporan/summary-pendapatan', canActivate: [AuthGuard], component: SummaryPendapatanComponent, data: { title: 'Summary Pendapatan' } },
+    { path: 'laporan/detail-pendapatan', canActivate: [AuthGuard], component: DetailPendapatanComponent, data: { title: 'Detail Pendapatan' } },
+    { path: 'laporan/fee-dokter', canActivate: [AuthGuard], component: FeeDokterComponent, data: { title: 'Fee Dokter' } },
+    { path: 'laporan/fee-bc', canActivate: [AuthGuard], component: FeeBcComponent, data: { title: 'Fee Beautician' } },
 ];
 
 @NgModule({

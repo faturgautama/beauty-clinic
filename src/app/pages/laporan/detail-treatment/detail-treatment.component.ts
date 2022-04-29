@@ -56,7 +56,12 @@ export class DetailTreatmentComponent implements OnInit, AfterViewInit {
                     text: 'Nama Treament',
                     value: "st.nama_setup_tarif",
                     filter: 'like'
-                }
+                },
+                {
+                    text: 'Tgl. Invoice',
+                    value: "ti.tgl_invoice",
+                    filter: 'between'
+                },
             ]
         };
 

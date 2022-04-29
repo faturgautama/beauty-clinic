@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { RangeEventArgs } from '@syncfusion/ej2-angular-calendars';
-import { ChangeEventArgs, DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
+import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
+import { UtilityService } from 'src/app/services/utility/utility.service';
 
 export interface OffcanvasFilterModel {
     title: string;
@@ -43,7 +44,8 @@ export class FilterComponent implements OnInit {
     @Output('onSearchFilter') onSearchFilter = new EventEmitter<FilterModel[]>();
 
     constructor(
-        private formBuilder: FormBuilder
+        private formBuilder: FormBuilder,
+        private utilityService: UtilityService
     ) { }
 
     ngOnInit(): void {
@@ -78,8 +80,11 @@ export class FilterComponent implements OnInit {
     }
 
     handleChangeDateSearchText(args: RangeEventArgs): void {
-        this.searchText.setValue(args.startDate);
-        this.searchText2.setValue(args.endDate);
+        let startDate = this.utilityService.onFormatDate(args.startDate);
+        this.searchText.setValue(startDate);
+
+        let endDate = this.utilityService.onFormatDate(args.endDate?.setHours(23, 59, 59));
+        this.searchText2.setValue(endDate);
     }
 
     onResetFormFilter(): void {

@@ -63,6 +63,11 @@ import { SummaryTreatmentComponent } from './pages/laporan/summary-treatment/sum
 import { DetailTreatmentComponent } from './pages/laporan/detail-treatment/detail-treatment.component';
 import { SummaryObatComponent } from './pages/laporan/summary-obat/summary-obat.component';
 import { DetailObatComponent } from './pages/laporan/detail-obat/detail-obat.component';
+import { SummaryPendapatanComponent } from './pages/laporan/summary-pendapatan/summary-pendapatan.component';
+import { DetailPendapatanComponent } from './pages/laporan/detail-pendapatan/detail-pendapatan.component';
+import { FeeDokterComponent } from './pages/laporan/fee-dokter/fee-dokter.component';
+import { FeeBcComponent } from './pages/laporan/fee-bc/fee-bc.component';
+import { FilterSingleComponent } from './components/navigation/filter-single/filter-single.component';
 
 @NgModule({
     declarations: [
@@ -116,6 +121,11 @@ import { DetailObatComponent } from './pages/laporan/detail-obat/detail-obat.com
         DetailTreatmentComponent,
         SummaryObatComponent,
         DetailObatComponent,
+        SummaryPendapatanComponent,
+        DetailPendapatanComponent,
+        FeeDokterComponent,
+        FeeBcComponent,
+        FilterSingleComponent,
     ],
     imports: [
         CommonModule,

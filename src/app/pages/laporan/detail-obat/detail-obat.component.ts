@@ -51,7 +51,12 @@ export class DetailObatComponent implements OnInit, AfterViewInit {
                     text: 'Nama Obat',
                     value: "st.nama_obat",
                     filter: 'like'
-                }
+                },
+                {
+                    text: 'Tgl. Invoice',
+                    value: "ti.tgl_invoice",
+                    filter: 'between'
+                },
             ]
         };
 

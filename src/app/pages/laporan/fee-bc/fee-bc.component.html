@@ -1,0 +1,50 @@
+<app-base-layout>
+    <div class="row mb-3">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-end">
+            <app-action-button [ActionButton]="ActionButton" (onClickActionButton)="handleClickActionButton($event)">
+            </app-action-button>
+        </div>
+
+        <!-- Offcanvas Filter -->
+        <app-filter-single #FilterSingleComp [Title]="'Pencarian Fee BC'" (onSearchFilter)="handleSearchFilter($event)">
+        </app-filter-single>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+            <div class="card">
+                <div class="card-header bg-abu">
+                    <p class="card-title mb-0">
+                        Data Fee BC
+                    </p>
+                </div>
+                <div class="card-body p-2" style="height: 26rem">
+                    <ul class="list-group">
+                        <li *ngFor="let item of DataFeeBcDatasource" id="{{ item.id_user + '_list_fee_dokter'}}"
+                            class="list-group-item shadow-sm mb-3 rounded border-0 cursor-pointer list_data_fee_bc"
+                            (click)="handleClickListDataFeeDokter(item)">
+                            <p class="text-hijau-tua mb-1 fw-bold d-flex align-items-center">
+                                {{ item.full_name }} <i class="fas fa-chevron-right fa-xs ms-auto"></i>
+                            </p>
+                            <p class="text-hijau-tua mb-0">
+                                {{ item.fee_pelaksana | currency: 'Rp. ' }}
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+            <div class="card h-100">
+                <div class="card-header bg-abu">
+                    <p class="card-title mb-0">
+                        Detail Fee BC {{ SelectedDataFeeBc ? SelectedDataFeeBc.full_name : '' }}
+                    </p>
+                </div>
+                <div class="card-body p-0 h-100 border-0">
+                    <app-grid #GridHeaderComp [AutoSizeColumn]="true" [GridAttributes]="GridHeaderAttributes">
+                    </app-grid>
+                </div>
+            </div>
+        </div>
+    </div>
+</app-base-layout>

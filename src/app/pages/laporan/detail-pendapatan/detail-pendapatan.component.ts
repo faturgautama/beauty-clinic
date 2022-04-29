@@ -1,4 +1,4 @@
-import { formatCurrency, formatNumber } from '@angular/common';
+import { formatNumber, formatCurrency } from '@angular/common';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { GridComponent, GridAttribute } from 'src/app/components/grid/grid.component';
 import { ActionButtonModel } from 'src/app/components/navigation/action-button/action-button.component';
@@ -8,11 +8,11 @@ import { UtilityService } from 'src/app/services/utility/utility.service';
 import * as API_CONFIG from '../../../api';
 
 @Component({
-    selector: 'app-summary-treatment',
-    templateUrl: './summary-treatment.component.html',
-    styleUrls: ['./summary-treatment.component.css']
+    selector: 'app-detail-pendapatan',
+    templateUrl: './detail-pendapatan.component.html',
+    styleUrls: ['./detail-pendapatan.component.css']
 })
-export class SummaryTreatmentComponent implements OnInit, AfterViewInit {
+export class DetailPendapatanComponent implements OnInit, AfterViewInit {
 
     API = API_CONFIG.API.BILLING;
 
@@ -35,50 +35,62 @@ export class SummaryTreatmentComponent implements OnInit, AfterViewInit {
         ];
 
         this.FilterAttribute = {
-            title: 'Filter Pencarian Omset Treament',
+            title: 'Filter Pencarian Detail Pendapatan',
             filter: [
                 {
-                    text: 'Kode Treament',
-                    value: 'st.kode_setup_tarif',
+                    text: 'Nama Pasien',
+                    value: "concat(p.nama_depan, '' '', p.nama_belakang)",
                     filter: 'like'
                 },
                 {
-                    text: 'Nama Treament',
-                    value: "st.nama_setup_tarif",
+                    text: 'No. Rekam Medis',
+                    value: 'tp.no_rekam_medis',
+                    filter: 'like'
+                },
+                {
+                    text: 'No. Register',
+                    value: 'tp.no_register',
                     filter: 'like'
                 },
                 {
                     text: 'Tgl. Invoice',
-                    value: "ti.tgl_invoice",
+                    value: 'ti.tgl_invoice',
                     filter: 'between'
                 },
+                {
+                    text: 'No. Invoice',
+                    value: "ti.nomor_invoice",
+                    filter: 'like'
+                },
+                {
+                    text: 'Payment Method',
+                    value: "spm.payment_method",
+                    filter: 'like'
+                },
+                {
+                    text: 'Bank Payment',
+                    value: "sbp.nama_bank_payment",
+                    filter: 'like'
+                }
             ]
         };
 
         this.GridHeaderAttributes = {
             column: [
-                { field: 'kode_setup_tarif', headerName: 'KODE TREAMENT', },
-                { field: 'nama_setup_tarif', headerName: 'NAMA TREAMENT', },
+                { field: 'nama_pasien', headerName: 'NAMA PASIEN', },
+                { field: 'no_rekam_medis', headerName: 'NO. REKAM MEDIS', },
+                { field: 'no_register', headerName: 'NO. REGISTER', },
                 {
-                    field: 'qty', headerName: 'QTY', cellClass: 'text-end', width: 150,
-                    cellRenderer: (data: any) => { return formatNumber(data.value, 'EN') }
+                    field: 'tgl_invoice', headerName: 'TGL. INVOICE',
+                    cellRenderer: (data: any) => { return this.utilityService.onFormatDate(data.value, 'Do/MM/yyyy HH:mm') }
                 },
+                { field: 'nomor_invoice', headerName: 'NO. INVOICE', },
+                { field: 'payment_method', headerName: 'PAYMENT METHOD', },
                 {
-                    field: 'unit_amount', headerName: 'HARGA', cellClass: 'text-end',
+                    field: 'jumlah_bayar', headerName: 'JUMLAH BAYAR', cellClass: 'text-end',
                     cellRenderer: (data: any) => { return formatCurrency(data.value, 'EN', 'Rp. ') }
                 },
-                {
-                    field: 'total_amount', headerName: 'TOTAL', cellClass: 'text-end',
-                    cellRenderer: (data: any) => { return formatCurrency(data.value, 'EN', 'Rp. ') }
-                },
-                {
-                    field: 'diskon_nominal', headerName: 'DISC', cellClass: 'text-end',
-                    cellRenderer: (data: any) => { return formatCurrency(data.value, 'EN', 'Rp. ') }
-                },
-                {
-                    field: 'paid_amount', headerName: 'JUMLAH BAYAR', cellClass: 'text-end',
-                    cellRenderer: (data: any) => { return formatCurrency(data.value, 'EN', 'Rp. ') }
-                },
+                { field: 'nama_bank_payment', headerName: 'BANK PAYMENT', },
             ],
             dataSource: []
         };
@@ -101,10 +113,9 @@ export class SummaryTreatmentComponent implements OnInit, AfterViewInit {
     }
 
     handleSearchFilter(args: FilterModel[]): void {
-        this.laporanService.onGetSummaryOmsetTreatment(args)
+        this.laporanService.onGetDetailPendapatan(args)
             .subscribe((result) => {
                 this.GridHeaderAttributes.dataSource = result.data;
             });
     }
 }
-

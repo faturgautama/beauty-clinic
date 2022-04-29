@@ -39,7 +39,12 @@ export class SummaryObatComponent implements OnInit, AfterViewInit {
                     text: 'Nama Obat',
                     value: "so.nama_obat",
                     filter: 'like'
-                }
+                },
+                {
+                    text: 'Tgl. Invoice',
+                    value: "ti.tgl_invoice",
+                    filter: 'between'
+                },
             ]
         };
 
