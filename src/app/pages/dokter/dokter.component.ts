@@ -1,19 +1,21 @@
-import { formatCurrency } from '@angular/common';
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { map } from 'rxjs/operators';
+import { GridComponent, GridAttribute } from 'src/app/components/grid/grid.component';
 import { ActionButtonModel } from 'src/app/components/navigation/action-button/action-button.component';
 import { FilterDialogComponent, FilterDialogProp } from 'src/app/components/navigation/filter-dialog/filter-dialog.component';
 import { IGetAdmisiPasienModel } from 'src/app/model/pelayanan-pasien.model';
+import { InfoPasienModel } from 'src/app/model/riwayat-pelayanan.model';
 import { IPersonDokterModel } from 'src/app/model/setup-dokter.model';
+import { ISetupObatModel } from 'src/app/model/setup-obat.model';
 import { ISetupRoleModel } from 'src/app/model/setup-role.model';
 import { ISetupTarifModel } from 'src/app/model/setup-tarif.model';
 import { ISetupUserModel } from 'src/app/model/setup-user.model';
 import { PelayananPasienService } from 'src/app/services/pelayanan-pasien/pelayanan-pasien.service';
 import { PendaftaranPasienService } from 'src/app/services/pendaftaran-pasien/pendaftaran-pasien.service';
 import { SetupDokterService } from 'src/app/services/setup-dokter/setup-dokter.service';
+import { SetupObatService } from 'src/app/services/setup-obat/setup-obat.service';
 import { SetupRoleService } from 'src/app/services/setup-role/setup-role.service';
 import { SetupTarifService } from 'src/app/services/setup-tarif/setup-tarif.service';
 import { SetupUserService } from 'src/app/services/setup-user/setup-user.service';
@@ -22,40 +24,45 @@ import { UtilityService } from 'src/app/services/utility/utility.service';
 import * as API_CONFIG from '../../api';
 
 @Component({
-    selector: 'app-treatment',
-    templateUrl: './treatment.component.html',
-    styleUrls: ['./treatment.component.css']
+    selector: 'app-dokter',
+    templateUrl: './dokter.component.html',
+    styleUrls: ['./dokter.component.css']
 })
-export class TreatmentComponent implements OnInit {
+export class DokterComponent implements OnInit {
 
     API = API_CONFIG.API;
 
-    ActionButton: ActionButtonModel[] = [
-        {
-            id: 'add', icon: 'fas fa-plus', caption: 'Add Treatment'
-        },
-        {
-            id: 'delete', icon: 'fas fa-trash', caption: 'Delete Treatment'
-        },
-        {
-            id: 'save', icon: 'fas fa-save', caption: 'Save Treatment'
-        },
-    ];
+    ActionButton: ActionButtonModel[] = [];
 
     @ViewChild('FilterDialogPasien') FilterDialogPasien!: FilterDialogComponent;
     FilterDialogProp!: FilterDialogProp;
     SelectedIdRegister: number = 0;
 
+    PathFoto: string = "";
+
+    modalRef?: BsModalRef;
+
+    // ** Riwayat Pelayanan
+    @ViewChild('ModalRiwayat') ModalRiwayat!: TemplateRef<any>;
+
+    ListRiwayat: InfoPasienModel[] = [];
+    SelectedListRiwayat: InfoPasienModel = {} as any;
+    SelectedListRiwayatIndex: number = 0;
+
+    @ViewChild('GridDetailRResepComp') GridDetailResepComp!: GridComponent;
+    GridDetailResepAttributes!: GridAttribute;
+
+    @ViewChild('GridDetailTreatmentComp') GridDetailTreatmentComp!: GridComponent;
+    GridDetailTreatmentAttributes!: GridAttribute;
+
+    // ** Input Treatment
+    @ViewChild('ModalInsertUpdateTarif') ModalInsertUpdateTarif!: TemplateRef<any>;
+
     ListTreatment: any[] = [];
     SelectedListTreatment: any;
     SelectedListTreatmentIndex: number = 0;
 
-    modalRef?: BsModalRef;
-    @ViewChild('ModalInsertUpdateTarif') ModalInsertUpdateTarif!: TemplateRef<any>;
-
     FormInsertUpdateTarif!: FormGroup;
-
-    PathFoto: string = "";
 
     FormPelaksanaTindakan!: FormArray;
 
@@ -71,15 +78,26 @@ export class TreatmentComponent implements OnInit {
     DropdownRoleDatasource: ISetupRoleModel[] = [];
     DropdownRoleField: Object = { text: 'nama_role', value: 'id_role' };
 
+    // ** Input Obat
+    @ViewChild('ModalInsertUpdateResep') ModalInsertUpdateResep!: TemplateRef<any>;
+
+    ListResep: any[] = [];
+    SelectedListResep: any;
+    SelectedListResepIndex: number = 0;
+
+    FormInsertUpdateResep!: FormGroup;
+
+    DropdownObatDatasource: ISetupObatModel[] = [];
+    DropdownObatField: Object = { text: 'nama_obat', value: 'id_obat' };
+
     constructor(
-        private router: Router,
         private formBuilder: FormBuilder,
-        private activatedRoute: ActivatedRoute,
         private bsModalService: BsModalService,
         private utilityService: UtilityService,
         private treatmentService: TreatmentService,
         private setupRoleService: SetupRoleService,
         private setupUserService: SetupUserService,
+        private setupObatService: SetupObatService,
         private setupTarifService: SetupTarifService,
         private setupDokterService: SetupDokterService,
         private pelayananPasienService: PelayananPasienService,
@@ -100,6 +118,33 @@ export class TreatmentComponent implements OnInit {
                 id: 'nama_pasien',
                 text: 'no_rekam_medis'
             }
+        };
+
+        this.ActionButton = [
+            { tabId: 'riwayat_pasien', id: 'riwayat', caption: 'Riwayat', icon: 'fas fa-filter' },
+            { tabId: 'treatment_pasien', id: 'add_treatment', caption: 'Add', icon: 'fas fa-plus' },
+            { tabId: 'treatment_pasien', id: 'delete_treatment', caption: 'Delete', icon: 'fas fa-trash' },
+            { tabId: 'resep_pasien', id: 'add_obat', caption: 'Add', icon: 'fas fa-plus' },
+            { tabId: 'resep_pasien', id: 'delete_obat', caption: 'Delete', icon: 'fas fa-trash' },
+        ];
+
+        this.GridDetailTreatmentAttributes = {
+            column: [
+                { field: 'id_transaksi', headerName: 'ID TRANSAKSI', hide: true },
+                { field: 'kode_setup_tarif', headerName: 'KODE TREATMENT', },
+                { field: 'nama_setup_tarif', headerName: 'NAMA TREATMENT', },
+                { field: 'dokter', headerName: 'NAMA DOKTER', },
+            ],
+            dataSource: []
+        };
+
+        this.GridDetailResepAttributes = {
+            column: [
+                { field: 'id_transaksi_obat', headerName: 'ID TRANSAKSI OBAT', hide: true },
+                { field: 'nama_obat', headerName: 'NAMA OBAT', },
+                { field: 'qty', headerName: 'QTY', },
+            ],
+            dataSource: []
         };
 
         this.FormInsertUpdateTarif = this.formBuilder.group({
@@ -148,56 +193,21 @@ export class TreatmentComponent implements OnInit {
                 this.DropdownRoleDatasource = result.data;
             });
 
-        this.onGetRoutingData();
-    }
+        this.FormInsertUpdateResep = this.formBuilder.group({
+            id_register: [0, [Validators.required]],
+            id_obat: [0, [Validators.required]],
+            nama_obat: ["", [Validators.required]],
+            keterangan_pemakaian: ["", []],
+            kandungan_obat: ["", []],
+            qty_obat: [0, [Validators.required]],
+            unit_amount: [0, [Validators.required]],
+            total_amount: [0, [Validators.required]],
+        });
 
-    onGetRoutingData(): void {
-        this.activatedRoute.paramMap.subscribe((result) => {
-            let no_register = result.get('no_register');
-
-            if (no_register) {
-                let body = [
-                    {
-                        "columnName": "tp.no_register",
-                        "filter": "like",
-                        "searchText": no_register,
-                        "searchText2": ""
-                    }
-                ];
-
-                this.pelayananPasienService.onGetAllAdmisiPasienByDynamicFilter(body)
-                    .subscribe((result) => {
-                        if (result.data.length) {
-                            this.handleChooseFilterDialogPasien(result.data[0]);
-                        }
-                    });
-
-                this.ActionButton.push(
-                    {
-                        id: 'billing', icon: 'fas fa-chevron-left', caption: 'Back to Billing'
-                    }
-                );
-            }
-        })
-    }
-
-    handleClickActionButton(button: ActionButtonModel): void {
-        switch (button.id) {
-            case 'add':
-                this.handleOpenModalInsertUpdateTarif();
-                break;
-            case 'delete':
-                this.onDeleteTarif(this.SelectedListTreatmentIndex);
-                break;
-            case 'save':
-                this.onSubmitTreatment(this.SelectedIdRegister, this.ListTreatment);
-                break;
-            case 'billing':
-                this.router.navigateByUrl('billing');
-                break;
-            default:
-                break;
-        }
+        this.setupObatService.onGetAllByDynamicFilter([])
+            .subscribe((result) => {
+                this.DropdownObatDatasource = result.data;
+            });
     }
 
     handleChooseFilterDialogPasien(args: IGetAdmisiPasienModel): void {
@@ -213,6 +223,8 @@ export class TreatmentComponent implements OnInit {
         keluhan.innerHTML = args.keluhan ? args.keluhan : "";
 
         this.onGetFotoPasien(args.id_person);
+
+        this.onGetListRiwayat(args.no_rekam_medis);
     }
 
     onGetFotoPasien(id_person: number): void {
@@ -220,6 +232,89 @@ export class TreatmentComponent implements OnInit {
             .subscribe((result) => {
                 this.PathFoto = result.data;
             })
+    }
+
+    onSetActionButton(tabId: string): ActionButtonModel[] {
+        return this.ActionButton.filter((item) => {
+            return item.tabId == tabId;
+        });
+    }
+
+    handleClickActionButton(args: ActionButtonModel): void {
+        switch (args.id) {
+            case 'riwayat':
+                if (this.SelectedListRiwayat) {
+                    this.handleOpenModalRiwayat(this.SelectedListRiwayat);
+                } else {
+                    this.utilityService.onShowCustomAlert('warning', 'Oops', 'Tidak Ada Data yg Dipilih')
+                }
+                break;
+            case 'add_treatment':
+                this.handleOpenModalInsertUpdateTarif();
+                break;
+            case 'delete_treatment':
+                this.onDeleteTarif(this.SelectedListTreatmentIndex);
+                break;
+            case 'add_obat':
+                this.handleOpenModalInsertUpdateResep();
+                break;
+            case 'delete_obat':
+                this.onDeleteResep(this.SelectedListResepIndex);
+                break;
+            default:
+                break;
+        }
+    }
+
+    onGetListRiwayat(no_rekam_medis: string): void {
+        const parameter = [
+            {
+                "columnName": "p.no_rekam_medis",
+                "filter": "like",
+                "searchText": no_rekam_medis,
+                "searchText2": ""
+            }
+        ];
+
+        this.pelayananPasienService.onGetRiwayatAdmisiPasienByDynamicFilter(parameter)
+            .subscribe((result) => {
+                this.ListRiwayat = result.data[0].info_pasien;
+            });
+    }
+
+    handleClickListRiwayat(item: any, index: number): void {
+        this.SelectedListRiwayat = item;
+
+        this.SelectedListRiwayatIndex = index;
+
+        const elem = document.getElementById('cardListTreatment' + index) as HTMLElement;
+
+        this.ListRiwayat.forEach((item, i) => {
+            const el = document.getElementById('cardListTreatment' + i) as HTMLElement;
+
+            console.log(el);
+
+            if (i != index) {
+                if (el.classList.contains('treatmentSelected')) {
+                    el.classList.remove('treatmentSelected');
+                }
+            } else {
+                elem.classList.add('treatmentSelected')
+            }
+        });
+    }
+
+    handleOpenModalRiwayat(data: InfoPasienModel): void {
+        this.modalRef = this.bsModalService.show(this.ModalRiwayat, {
+            backdrop: 'static',
+            class: 'modal-lg'
+        });
+
+        this.GridDetailResepAttributes.dataSource = [];
+        this.GridDetailTreatmentAttributes.dataSource = [];
+
+        this.GridDetailResepAttributes.dataSource = data.resep;
+        this.GridDetailTreatmentAttributes.dataSource = data.tindakan;
     }
 
     handleOpenModalInsertUpdateTarif(): void {
@@ -312,32 +407,62 @@ export class TreatmentComponent implements OnInit {
         this.subtotal.setValue(0);
     }
 
-    onSubmitTreatment(id_register: number, item_transaksi: any): void {
-        this.treatmentService.onPostSave({ id_register: id_register, item_transaksi: item_transaksi })
-            .subscribe((result) => {
-                if (result.responseResult) {
-                    this.utilityService.onShowCustomAlert('success', 'Success', 'Treatment Berhasil Disimpan')
-                        .then(() => {
-                            this.SelectedIdRegister = 0;
-                            this.ListTreatment = [];
-                            this.SelectedListTreatment = 0;
-                            this.SelectedListTreatmentIndex = 0;
+    handleOpenModalInsertUpdateResep(): void {
+        this.modalRef = this.bsModalService.show(this.ModalInsertUpdateResep, {
+            backdrop: 'static'
+        });
 
-                            const nama_pasien = document.getElementById('nama_pasien') as HTMLInputElement;
-                            nama_pasien.value = "";
+        this.onResetFormObat();
+    }
 
-                            const no_rekam_medis = document.getElementById('no_rekam_medis') as HTMLInputElement;
-                            no_rekam_medis.value = "";
+    handleChangeDropdownResep(args: any): void {
+        const itemData = args.itemData;
 
-                            const keluhan = document.getElementById('keluhan') as HTMLInputElement;
-                            keluhan.innerHTML = "";
+        this.nama_obat.setValue(itemData.nama_obat);
+        this.keterangan_pemakaian.setValue(itemData.keterangan_pemakaian);
+        this.kandungan_obat.setValue(itemData.kandungan_obat);
+        this.unit_amount.setValue(itemData.harga_jual);
+    }
 
-                            this.PathFoto = "";
+    handleClickListResep(item: any, index: number): void {
+        this.SelectedListResep = item;
 
-                            this.FilterDialogPasien.onResetResult();
-                        });
-                };
-            });
+        this.SelectedListResepIndex = index;
+
+        const elem = document.getElementById('cardListResep' + index) as HTMLElement;
+
+        this.ListResep.forEach((item, i) => {
+            const el = document.getElementById('cardListResep' + i) as HTMLElement;
+
+            if (i != index) {
+                if (el.classList.contains('resepSelected')) {
+                    el.classList.remove('resepSelected');
+                }
+            } else {
+                elem.classList.add('resepSelected')
+            }
+        });
+    }
+
+    onSaveInsertUpdateResep(FormInsertUpdateResep: any): void {
+        FormInsertUpdateResep.id_register = this.SelectedIdRegister;
+        this.ListResep.push(FormInsertUpdateResep);
+
+        this.modalRef?.hide();
+    }
+
+    onDeleteResep(index: any): void {
+        this.ListResep.splice(index, 1);
+    }
+
+    onResetFormObat(): void {
+        this.id_obat.setValue(0);
+        this.nama_obat.setValue('');
+        this.qty_obat.setValue(0);
+        this.keterangan_pemakaian.setValue("");
+        this.kandungan_obat.setValue("");
+        this.unit_amount.setValue(0);
+        this.total_amount.setValue(0);
     }
 
     get id_setup_tarif(): AbstractControl { return this.FormInsertUpdateTarif.get('id_setup_tarif') as AbstractControl };
@@ -351,4 +476,12 @@ export class TreatmentComponent implements OnInit {
     get pelaksana_tindakan(): FormArray {
         return this.FormInsertUpdateTarif.get('pelaksana_tindakan') as FormArray
     }
+
+    get id_obat(): AbstractControl { return this.FormInsertUpdateResep.get('id_obat') as AbstractControl };
+    get nama_obat(): AbstractControl { return this.FormInsertUpdateResep.get('nama_obat') as AbstractControl };
+    get qty_obat(): AbstractControl { return this.FormInsertUpdateResep.get('qty_obat') as AbstractControl };
+    get keterangan_pemakaian(): AbstractControl { return this.FormInsertUpdateResep.get('keterangan_pemakaian') as AbstractControl };
+    get kandungan_obat(): AbstractControl { return this.FormInsertUpdateResep.get('kandungan_obat') as AbstractControl };
+    get unit_amount(): AbstractControl { return this.FormInsertUpdateResep.get('unit_amount') as AbstractControl };
+    get total_amount(): AbstractControl { return this.FormInsertUpdateResep.get('total_amount') as AbstractControl };
 }

@@ -93,7 +93,9 @@ export class PelayananPasienComponent implements OnInit, AfterViewInit {
                 { field: 'no_antrian', headerName: 'NO. ANTRIAN', },
                 {
                     field: 'tgl_admisi', headerName: 'TGL. ADMISI',
-                    cellRenderer: (data: any) => { return this.utilityService.onFormatDate(data, 'Do/MM/yyyy') }
+                    cellRenderer: (data: any) => {
+                        return this.utilityService.onFormatDate(data.value, 'Do/MM/yyyy');
+                    }
                 },
                 { field: 'no_rekam_medis', headerName: 'NO. REKAM MEDIS', },
                 { field: 'no_register', headerName: 'NO. REGISTER', },

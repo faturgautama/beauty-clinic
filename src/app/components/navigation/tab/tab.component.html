@@ -1,6 +1,6 @@
 <div class="row mb-3 align-items-center">
     <!-- Tab Header -->
-    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 px-0">
+    <div class="{{ TabClass }} px-0">
         <button *ngFor="let item of tabItem$ | async" [id]="'btn'+item.headerComponent.id"
             class="btn {{ activeTab === item ? 'btn-orange' : 'btn-hijau-tua' }} text-white btnTabHeader" type="button"
             (click)="handleSelectTab(item, item.headerComponent.id)">
@@ -12,7 +12,7 @@
     </div>
 
     <!-- Action Button -->
-    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 text-end">
+    <div class="{{ ButtonClass }} text-end">
         <app-action-button [ActionButton]="activeTab?.headerComponent?.ActionButton"
             (onClickActionButton)="handleClickActionButton($event)">
         </app-action-button>

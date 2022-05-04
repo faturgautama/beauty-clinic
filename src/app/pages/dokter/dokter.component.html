@@ -1,0 +1,469 @@
+<app-base-layout>
+    <div class="row">
+        <!-- Card Pencarian Pasien -->
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+            <div class="card shadow-sm">
+                <div class=" card-header bg-abu">
+                    <p class="modal-title">Pasien Information</p>
+                </div>
+                <div class="card-body" style="height:100%; overflow-y: auto;">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5 mb-3">
+                            <div class="card border-0 shadow-sm" style="height: 8.5rem;">
+                                <div class="card-body p-0 bg-abu">
+                                    <img *ngIf="PathFoto !== ''" [src]="PathFoto" alt="foto_pasien"
+                                        style="height: 8.5rem; width: 100%;">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Nama Pasien -->
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                            <app-form-label [Caption]="'Nama Pasien'"></app-form-label>
+                            <div class="input-group input-group-sm mb-0">
+                                <input id="nama_pasien" type="text" class="form-control" readonly>
+                                <span class="input-group-text bg-hijau-tua border-0 cursor-pointer"
+                                    style="border-top-right-radius: 0.2rem; border-bottom-right-radius: 0.2rem;  "
+                                    id="SearchPasien" (click)="FilterDialogPasien.onOpenFilterDialog()">
+                                    <i class="fas fa-search fa-xs text-white"></i>
+                                </span>
+
+                                <app-filter-dialog #FilterDialogPasien [FilterDialogProp]="FilterDialogProp"
+                                    (onChooseResult)="handleChooseFilterDialogPasien($event)">
+                                </app-filter-dialog>
+                            </div>
+                        </div>
+
+                        <!-- No. Rekam Medis -->
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                            <app-form-label [Caption]="'No. Rekam Medis'"></app-form-label>
+                            <input id="no_rekam_medis" type="text" class="form-control form-select-sm" readonly>
+                        </div>
+
+                        <!-- Keluhan -->
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                            <app-form-label [Caption]="'Keluhan'"></app-form-label>
+                            <textarea id="keluhan" type="text" class="form-control form-select-sm" readonly rows="3">
+                            </textarea>
+                        </div>
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-grid gap-2">
+                            <button class="btn btn-primary btn-sm" type="button">
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab - Tab -->
+        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+            <app-tab #TabRef (onClickActionButton)="handleClickActionButton($event)"
+                [TabClass]="'col-lg-8 col-md-8 col-sm-8 col-xs-8'"
+                [ButtonClass]="'col-lg-4 col-md-4 col-sm-4 col-xs-4'">
+                <!-- Riwayat Pemeriksaan -->
+                <app-tab-item>
+                    <app-tab-header [id]="'riwayat_pasien'" [ActionButton]="onSetActionButton('riwayat_pasien')">
+                        Riwayat
+                    </app-tab-header>
+                    <app-tab-body>
+                        <div class="row h-100">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 h-100">
+                                <div class="card shadow-sm h-100">
+                                    <div class="card-header bg-abu">
+                                        <p class="modal-title">
+                                            List Riwayat Pelayanan Pasien
+                                        </p>
+                                    </div>
+                                    <div class="card-body h-100" style="overflow-y: auto;">
+                                        <div class="row">
+                                            <div *ngFor="let item of ListRiwayat; let i = index;"
+                                                class="col-lg-12 col-md-12 col-sm-12 col-xs-12 px-0 mb-2 cursor-pointer"
+                                                (click)="handleClickListRiwayat(item, i)">
+                                                <div [id]="'cardListTreatment' + i" class="card border-0 shadow-sm">
+                                                    <div class="card-body p-2">
+                                                        <p class="text-hijau-tua mb-1 fw-bold">
+                                                            {{ item.tgl_admisi | date: 'dd MMM yyyy' }}
+                                                        </p>
+                                                        <p class="text-hijau-tua mb-1">
+                                                            No. Register : {{ item.no_register }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </app-tab-body>
+                </app-tab-item>
+
+                <!-- Input Treatment -->
+                <app-tab-item>
+                    <app-tab-header [id]="'treatment_pasien'" [ActionButton]="onSetActionButton('treatment_pasien')">
+                        Input Treatment
+                    </app-tab-header>
+                    <app-tab-body>
+                        <div class="row h-100">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 h-100">
+                                <div class="card shadow-sm h-100">
+                                    <div class="card-header bg-abu">
+                                        <p class="modal-title">
+                                            Add Treatment
+                                        </p>
+                                    </div>
+                                    <div class="card-body h-100" style="overflow-y: auto;">
+                                        <div class="row">
+                                            <div *ngFor="let item of ListTreatment; let i = index;"
+                                                class="col-lg-12 col-md-12 col-sm-12 col-xs-12 px-0 mb-2 cursor-pointer"
+                                                (click)="handleClickListTreatment(item, i)">
+                                                <div [id]="'cardListTreatment' + i" class="card border-0 shadow-sm">
+                                                    <div class="card-body p-2">
+                                                        <h5 class="text-hijau-tua mb-1 fw-bold">
+                                                            {{ item.nama_setup_tarif | titlecase }}
+                                                        </h5>
+                                                        <p class="text-hijau-tua mb-1">
+                                                            {{ item.qty }} @ {{ item.nominal_tarif | currency: 'Rp. ' }}
+                                                            = {{ item.subtotal
+                                                            | currency: 'Rp. ' }}
+                                                        </p>
+                                                        <p class="text-hitam mb-0">
+                                                            Dokter {{ item.nama_dokter | titlecase }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </app-tab-body>
+                </app-tab-item>
+
+                <!-- Input Obat -->
+                <app-tab-item>
+                    <app-tab-header [id]="'resep_pasien'" [ActionButton]="onSetActionButton('resep_pasien')">
+                        Input Obat
+                    </app-tab-header>
+                    <app-tab-body>
+                        <div class="row h-100">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 h-100">
+                                <div class="card shadow-sm h-100">
+                                    <div class="card-header bg-abu">
+                                        <p class="modal-title">
+                                            Daftar Obat
+                                        </p>
+                                    </div>
+                                    <div class="card-body h-100" style="overflow-y: auto;">
+                                        <div class="row">
+                                            <div *ngFor="let item of ListResep; let i = index;"
+                                                class="col-lg-12 col-md-12 col-sm-12 col-xs-12 px-0 mb-2 cursor-pointer"
+                                                (click)="handleClickListResep(item, i)">
+                                                <div [id]="'cardListResep' + i" class="card border-0 shadow-sm">
+                                                    <div class="card-body p-2">
+                                                        <h5 class="text-hijau-tua mb-1 fw-bold">
+                                                            {{ item.nama_obat | titlecase }}
+                                                        </h5>
+                                                        <p class="text-hijau-tua mb-1">
+                                                            {{ item.qty }} @ {{ item.unit_amount | currency: 'Rp. ' }}
+                                                        </p>
+                                                        <p class="text-hitam mb-0">
+                                                            {{ item.total_amount | currency: 'Rp. ' }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </app-tab-body>
+                </app-tab-item>
+            </app-tab>
+        </div>
+    </div>
+
+    <!-- Modal Riwayat -->
+    <ng-template #ModalRiwayat>
+        <div class="modal-header py-2 bg-abu">
+            <h4 class="modal-title pull-left">
+                Detail Resep & Treatment Pasien
+            </h4>
+            <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+                <span aria-hidden="true" class="visually-hidden">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <!-- Riwayat Treatment -->
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Riwayat Treatment</h5>
+                        </div>
+                        <div class="card-body p-0" style="height: 10rem;">
+                            <app-grid #GridDetailTreatmentComp [GridAttributes]="GridDetailTreatmentAttributes">
+                            </app-grid>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Riwayat Resep -->
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Riwayat Resep</h5>
+                        </div>
+                        <div class="card-body p-0" style="height: 10rem;">
+                            <app-grid #GridDetailResepComp [GridAttributes]="GridDetailResepAttributes">
+                            </app-grid>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer py-2">
+            <button type="button" class="btn btn-secondary btn-sm" (click)="modalRef?.hide()">
+                Close
+            </button>
+        </div>
+    </ng-template>
+
+    <!-- Modal Insert Update Tarif -->
+    <ng-template #ModalInsertUpdateTarif>
+        <div class="modal-header py-2 bg-abu">
+            <h4 class="modal-title pull-left">
+                Add Treatment
+            </h4>
+            <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+                <span aria-hidden="true" class="visually-hidden">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="FormInsertUpdateTarif">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <!-- Nama Tarif -->
+                        <div class="row mb-3">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <app-form-label [Caption]="'Nama Treatment'"></app-form-label>
+                                <ejs-dropdownlist [dataSource]="DropdownTarifDatasource" [fields]="DropdownTarifField"
+                                    [allowFiltering]="true" (change)="handleChangeDropdownTarif($event)"
+                                    formControlName="id_setup_tarif">
+                                </ejs-dropdownlist>
+                                <app-form-validator [Show]="id_setup_tarif.touched && id_setup_tarif.invalid"
+                                    [Caption]="'Nama Tarif Tidak Boleh Kosong'">
+                                </app-form-validator>
+                            </div>
+                        </div>
+
+                        <!-- Qty -->
+                        <div class="row mb-3">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <app-form-label [Caption]="'Qty'"></app-form-label>
+                                <ejs-numerictextbox formControlName="qty" [format]="'N2'" [showClearButton]="true"
+                                    [showSpinButton]="false"
+                                    (change)="subtotal.setValue(qty.value * nominal_tarif.value)">
+                                </ejs-numerictextbox>
+                                <app-form-validator [Show]="qty.touched && qty.invalid"
+                                    [Caption]="'Qty Tidak Boleh Kosong'">
+                                </app-form-validator>
+                            </div>
+                        </div>
+
+                        <!-- Nominal Tarif -->
+                        <div class="row mb-3">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <app-form-label [Caption]="'Harga Treatment'"></app-form-label>
+                                <ejs-numerictextbox formControlName="nominal_tarif" [format]="'N2'" [enabled]="false"
+                                    [showSpinButton]="false" [showClearButton]="false">
+                                </ejs-numerictextbox>
+                                <app-form-validator [Show]="nominal_tarif.touched && nominal_tarif.invalid"
+                                    [Caption]="'Harga Treatment Tidak Boleh Kosong'">
+                                </app-form-validator>
+                            </div>
+                        </div>
+
+                        <!-- Subtotal -->
+                        <div class="row mb-3">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <app-form-label [Caption]="'Subtotal'"></app-form-label>
+                                <ejs-numerictextbox formControlName="subtotal" [format]="'N2'" [enabled]="false"
+                                    [showSpinButton]="false" [showClearButton]="false">
+                                </ejs-numerictextbox>
+                            </div>
+                        </div>
+
+                        <!-- Nama Dokter -->
+                        <div class="row mb-0">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <app-form-label [Caption]="'Nama Dokter'"></app-form-label>
+                                <ejs-dropdownlist [dataSource]="DropdownDokterDatasource" [fields]="DropdownDokterField"
+                                    (change)="handleChangeDropdownDokter($event)" formControlName="id_dokter"
+                                    [showClearButton]="true">
+                                </ejs-dropdownlist>
+                                <app-form-validator [Show]="id_dokter.touched && id_dokter.invalid"
+                                    [Caption]="'Nama Dokter Tidak Boleh Kosong'">
+                                </app-form-validator>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <div class="card">
+                            <div class="card-header px-2 bg-abu">
+                                <div class="row align-items-center">
+                                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 ps-0">
+                                        <p class="card-title mb-0">
+                                            Pelaksana Treatment
+                                        </p>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 d-grid gap-2 ps-2 pe-0 ">
+                                        <span class="badge bg-success" (click)="handleAddPelaksanaTindakan()"
+                                            style="font-size: 14px">
+                                            <i class="fas fa-plus fa-sm"></i>
+                                        </span>
+                                    </div>
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 d-grid gap-2 ps-2 pe-0 ">
+                                        <span class="badge bg-warning" type="button" style="font-size: 14px"
+                                            (click)="handleRemovePelaksanaTindakan()">
+                                            <i class="fas fa-trash fa-sm"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body px-0 pt-2 pb-0">
+                                <div class="row" formArrayName="pelaksana_tindakan">
+                                    <div *ngFor="let item of FormPelaksanaTindakan.controls; let i = index"
+                                        [formGroupName]="i" class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-2 px-0">
+
+                                        <!-- Nama User -->
+                                        <div class="row mb-0">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <app-form-label [Caption]="'Nama Pelaksana'"></app-form-label>
+                                                <ejs-dropdownlist #DropdownUser [dataSource]="DropdownUserDatasource"
+                                                    [fields]="DropdownUserField" formControlName="id_user"
+                                                    (change)="handleChangeDropdownUser($event, i)">
+                                                </ejs-dropdownlist>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer py-2">
+            <button type="button" class="btn btn-secondary btn-sm" (click)="modalRef?.hide()">
+                Close
+            </button>
+            <button type="button" class="btn btn-primary btn-sm"
+                (click)="onSaveInsertUpdateTarif(FormInsertUpdateTarif.value)">
+                Add
+            </button>
+        </div>
+    </ng-template>
+
+    <!-- Modal Insert Update Resep -->
+    <ng-template #ModalInsertUpdateResep>
+        <div class="modal-header py-2 bg-abu">
+            <h4 class="modal-title pull-left">
+                Add Obat
+            </h4>
+            <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+                <span aria-hidden="true" class="visually-hidden">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="FormInsertUpdateResep">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <!-- Nama Obat -->
+                        <div class="row mb-3">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <app-form-label [Caption]="'Nama Obat'"></app-form-label>
+                                <ejs-dropdownlist [dataSource]="DropdownObatDatasource" [fields]="DropdownObatField"
+                                    (change)="handleChangeDropdownResep($event)" formControlName="id_obat">
+                                </ejs-dropdownlist>
+                                <app-form-validator [Show]="id_obat.touched && id_obat.invalid"
+                                    [Caption]="'Nama Obat Tidak Boleh Kosong'">
+                                </app-form-validator>
+                            </div>
+                        </div>
+
+                        <!-- Cara Pakai -->
+                        <div class="row mb-3">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <app-form-label [Caption]="'Cara Pakai Obat'"></app-form-label>
+                                <input type="text" class="form-control form-select-sm"
+                                    formControlName="keterangan_pemakaian" readonly>
+                            </div>
+                        </div>
+
+                        <!-- Kandungan Obat -->
+                        <div class="row mb-3">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <app-form-label [Caption]="'Kandungan Obat'"></app-form-label>
+                                <textarea type="text" class="form-control form-select-sm"
+                                    formControlName="kandungan_obat" rows="3">
+                                </textarea>
+                            </div>
+                        </div>
+
+                        <!-- Qty -->
+                        <div class="row mb-3">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <app-form-label [Caption]="'Qty Obat'"></app-form-label>
+                                <ejs-numerictextbox [format]="'N2'" [showClearButton]="false" [showSpinButton]="false"
+                                    formControlName="qty_obat"
+                                    (change)="total_amount.setValue(qty_obat.value * unit_amount.value)">
+                                </ejs-numerictextbox>
+                                <app-form-validator [Show]="qty_obat.touched && qty_obat.invalid"
+                                    [Caption]="'Qty Obat Tidak Boleh Kosong'">
+                                </app-form-validator>
+                            </div>
+                        </div>
+
+                        <!-- Unit Amount -->
+                        <div class="row mb-3">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <app-form-label [Caption]="'Harga Obat'"></app-form-label>
+                                <ejs-numerictextbox [format]="'N2'" [showClearButton]="false" [showSpinButton]="false"
+                                    formControlName="unit_amount" [enabled]="false"
+                                    (change)="total_amount.setValue(qty.value * unit_amount.value)">
+                                </ejs-numerictextbox>
+                                <app-form-validator [Show]="qty.touched && qty.invalid"
+                                    [Caption]="'Qty Obat Tidak Boleh Kosong'">
+                                </app-form-validator>
+                            </div>
+                        </div>
+
+                        <!-- Total Amount -->
+                        <div class="row mb-0">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <app-form-label [Caption]="'Subtotal'"></app-form-label>
+                                <ejs-numerictextbox [format]="'N2'" [showClearButton]="false" [showSpinButton]="false"
+                                    formControlName="total_amount" [enabled]="false">
+                                </ejs-numerictextbox>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer py-2">
+            <button type="button" class="btn btn-secondary btn-sm" (click)="modalRef?.hide()">
+                Close
+            </button>
+            <button type="button" class="btn btn-primary btn-sm"
+                (click)="onSaveInsertUpdateResep(FormInsertUpdateResep.value)">
+                Add
+            </button>
+        </div>
+    </ng-template>
+</app-base-layout>

@@ -17,6 +17,10 @@ export class TabComponent implements OnInit, AfterContentInit, AfterContentCheck
 
     activeTab?: TabItemComponent;
 
+    @Input('TabClass') TabClass = "col-lg-6 col-md-6 col-sm-6 col-xs-6";
+
+    @Input('ButtonClass') ButtonClass = "col-lg-6 col-md-6 col-sm-6 col-xs-6";
+
     @Output('onGetSelectedTab') onGetSelectedTab = new EventEmitter();
 
     @Input('ShowHeader') ShowHeader: boolean = true;

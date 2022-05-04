@@ -1,6 +1,7 @@
 import { formatNumber } from '@angular/common';
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import { DropDownListComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { FilterDialogComponent, FilterDialogProp } from 'src/app/components/navigation/filter-dialog/filter-dialog.component';
@@ -77,6 +78,7 @@ export class BillingComponent implements OnInit {
     FormUpdateDetailTreatment!: FormGroup;
 
     constructor(
+        private router: Router,
         private formBuilder: FormBuilder,
         private resepService: ResepService,
         private bsModalService: BsModalService,
@@ -205,8 +207,6 @@ export class BillingComponent implements OnInit {
                     resep: resep
                 };
 
-                console.log(this.DetailDatasource);
-
                 this.handleChangePaymentMethodState('cash');
 
                 this.onCountTotalAmount(result.data.informasi_pasien, this.DetailDatasource.tdmk, this.DetailDatasource.resep);
@@ -291,6 +291,10 @@ export class BillingComponent implements OnInit {
         this.handleChangePaymentMethodState('cash');
     }
 
+    handleNavigateToTreatment(data: IPasienForBillingModel): void {
+        this.router.navigate(['input-treatment', data.no_register])
+    }
+
     onEditDetailTreatment(data: DetailTindakanBillingModel, index: number): void {
         this.SelectedDetailTreatment = data;
         this.SelectedDetailTreatmentIndex = index;
@@ -341,6 +345,10 @@ export class BillingComponent implements OnInit {
         // this.DetailDatasource.tdmk[index].status_bayar = state;
 
         // this.onCountTotalAmount(this.SelectedDataBilling.informasi_pasien, this.DetailDatasource.tdmk, this.DetailDatasource.resep);
+    }
+
+    handleNavigateToResep(data: IPasienForBillingModel): void {
+        this.router.navigate(['input-resep', data.no_register])
     }
 
     onChangeStateDetailResep(data: DetailResepBillingModel, index: number, state: boolean): void {

@@ -95,7 +95,7 @@ export class PendaftaranPasienComponent implements OnInit, AfterViewInit {
                 { field: 'no_identitas', headerName: 'NO. IDENTIAS', },
                 { field: 'no_rekam_medis', headerName: 'NO. REKAM MEDIS', },
                 { field: 'full_name', headerName: 'NAMA PASIEN', },
-                { field: 'tgl_lahir', headerName: 'TGL. LAHIR', cellRenderer: (data: any) => { return this.utilityService.onFormatDate(data, 'Do/MM/yyyy') } },
+                { field: 'tgl_lahir', headerName: 'TGL. LAHIR', cellRenderer: (data: any) => { return this.utilityService.onFormatDate(data.value, 'Do/MM/yyyy') } },
                 { field: 'gender', headerName: 'GENDER', },
                 { field: 'alamat_lengkap', headerName: 'ALAMAT', },
                 { field: 'no_hp_1', headerName: 'NO. HANDPHONE', },

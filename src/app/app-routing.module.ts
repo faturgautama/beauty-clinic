@@ -8,6 +8,7 @@ import { HistoryBilingComponent } from './pages/billing/history-biling/history-b
 import { InputBukaKasirComponent } from './pages/billing/input-buka-kasir/input-buka-kasir.component';
 import { InputTutupKasirComponent } from './pages/billing/input-tutup-kasir/input-tutup-kasir.component';
 import { ValidasiTutupKasirComponent } from './pages/billing/validasi-tutup-kasir/validasi-tutup-kasir.component';
+import { DokterComponent } from './pages/dokter/dokter.component';
 import { InputResepComponent } from './pages/farmasi/input-resep/input-resep.component';
 import { DetailObatComponent } from './pages/laporan/detail-obat/detail-obat.component';
 import { DetailPendapatanComponent } from './pages/laporan/detail-pendapatan/detail-pendapatan.component';
@@ -48,8 +49,10 @@ const routes: Routes = [
     { path: 'pasien/pelayanan-pasien', canActivate: [AuthGuard], component: PelayananPasienComponent, data: { title: 'Pelayanan Pasien' } },
     { path: 'pasien/riwayat-pelayanan', canActivate: [AuthGuard], component: RekamMedisPasienComponent, data: { title: 'Riwayat Pelayanan' } },
     { path: 'input-treatment', canActivate: [AuthGuard], component: TreatmentComponent, data: { title: 'Treatment Pasien' } },
+    { path: 'input-treatment/:no_register', canActivate: [AuthGuard], component: TreatmentComponent, data: { title: 'Treatment Pasien' } },
     { path: 'history-treatment', canActivate: [AuthGuard], component: HistoryTreatmentComponent, data: { title: 'History Treatment Pasien' } },
     { path: 'input-resep', canActivate: [AuthGuard], component: InputResepComponent, data: { title: 'Resep Pasien' } },
+    { path: 'input-resep/:no_register', canActivate: [AuthGuard], component: InputResepComponent, data: { title: 'Resep Pasien' } },
     { path: 'billing', canActivate: [AuthGuard], component: BillingComponent, data: { title: 'Pembayaran Billing' } },
     { path: 'billing/history', canActivate: [AuthGuard], component: HistoryBilingComponent, data: { title: 'History Billing' } },
     { path: 'input-buka-kasir', canActivate: [AuthGuard], component: InputBukaKasirComponent, data: { title: 'Buka Kasir' } },
@@ -63,6 +66,7 @@ const routes: Routes = [
     { path: 'laporan/detail-pendapatan', canActivate: [AuthGuard], component: DetailPendapatanComponent, data: { title: 'Detail Pendapatan' } },
     { path: 'laporan/fee-dokter', canActivate: [AuthGuard], component: FeeDokterComponent, data: { title: 'Fee Dokter' } },
     { path: 'laporan/fee-bc', canActivate: [AuthGuard], component: FeeBcComponent, data: { title: 'Fee Beautician' } },
+    { path: 'dokter', canActivate: [AuthGuard], component: DokterComponent, data: { title: 'Dokter' } },
 ];
 
 @NgModule({

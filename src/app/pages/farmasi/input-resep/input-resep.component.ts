@@ -1,10 +1,12 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ActionButtonModel } from 'src/app/components/navigation/action-button/action-button.component';
 import { FilterDialogComponent, FilterDialogProp } from 'src/app/components/navigation/filter-dialog/filter-dialog.component';
 import { IGetAdmisiPasienModel } from 'src/app/model/pelayanan-pasien.model';
 import { ISetupObatModel } from 'src/app/model/setup-obat.model';
+import { PelayananPasienService } from 'src/app/services/pelayanan-pasien/pelayanan-pasien.service';
 import { PendaftaranPasienService } from 'src/app/services/pendaftaran-pasien/pendaftaran-pasien.service';
 import { ResepService } from 'src/app/services/resep/resep.service';
 import { SetupObatService } from 'src/app/services/setup-obat/setup-obat.service';
@@ -51,11 +53,14 @@ export class InputResepComponent implements OnInit {
     DropdownObatField: Object = { text: 'nama_obat', value: 'id_obat' };
 
     constructor(
+        private router: Router,
         private formBuilder: FormBuilder,
+        private activatedRoute: ActivatedRoute,
         private bsModalService: BsModalService,
         private utilityService: UtilityService,
         private inputResepService: ResepService,
         private setupObatService: SetupObatService,
+        private pelayananPasienService: PelayananPasienService,
         private pendaftaranPasienService: PendaftaranPasienService,
     ) { }
 
@@ -91,6 +96,37 @@ export class InputResepComponent implements OnInit {
                 this.DropdownObatDatasource = result.data;
             });
 
+        this.onGetRoutingData();
+    }
+
+    onGetRoutingData(): void {
+        this.activatedRoute.paramMap.subscribe((result) => {
+            let no_register = result.get('no_register');
+
+            if (no_register) {
+                let body = [
+                    {
+                        "columnName": "tp.no_register",
+                        "filter": "like",
+                        "searchText": no_register,
+                        "searchText2": ""
+                    }
+                ];
+
+                this.pelayananPasienService.onGetAllAdmisiPasienByDynamicFilter(body)
+                    .subscribe((result) => {
+                        if (result.data.length) {
+                            this.handleChooseFilterDialogPasien(result.data[0]);
+                        }
+                    });
+
+                this.ActionButton.push(
+                    {
+                        id: 'billing', icon: 'fas fa-chevron-left', caption: 'Back to Billing'
+                    }
+                );
+            }
+        })
     }
 
     handleClickActionButton(button: ActionButtonModel): void {
@@ -103,6 +139,9 @@ export class InputResepComponent implements OnInit {
                 break;
             case 'save':
                 this.onSubmitResep(this.ListResep);
+                break;
+            case 'billing':
+                this.router.navigateByUrl('billing');
                 break;
             default:
                 break;

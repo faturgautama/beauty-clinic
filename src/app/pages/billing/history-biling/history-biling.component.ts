@@ -79,14 +79,14 @@ export class HistoryBilingComponent implements OnInit, AfterViewInit {
                 { field: 'no_register', headerName: 'NO. REGISTER', },
                 {
                     field: 'time_inputed', headerName: 'TGL. INVOICE',
-                    cellRenderer: (data: any) => { return this.utilityService.onFormatDate(data, 'Do/MM/yyyy') }
+                    cellRenderer: (data: any) => { return this.utilityService.onFormatDate(data.value, 'Do/MM/yyyy') }
                 },
                 { field: 'no_rekam_medis', headerName: 'NO. REKAM MEDIS', },
                 { field: 'nama_pasien', headerName: 'NAMA PASIEN', },
                 { field: 'nama_dokter', headerName: 'NAMA DOKTER', },
                 {
                     field: 'time_closed_bill', headerName: 'TGL. TUTUP KASIR',
-                    cellRenderer: (data: any) => { return this.utilityService.onFormatDate(data, 'Do/MM/yyyy') }
+                    cellRenderer: (data: any) => { return this.utilityService.onFormatDate(data.value, 'Do/MM/yyyy') }
                 },
             ],
             dataSource: []

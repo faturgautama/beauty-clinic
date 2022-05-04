@@ -68,6 +68,7 @@ import { DetailPendapatanComponent } from './pages/laporan/detail-pendapatan/det
 import { FeeDokterComponent } from './pages/laporan/fee-dokter/fee-dokter.component';
 import { FeeBcComponent } from './pages/laporan/fee-bc/fee-bc.component';
 import { FilterSingleComponent } from './components/navigation/filter-single/filter-single.component';
+import { DokterComponent } from './pages/dokter/dokter.component';
 
 @NgModule({
     declarations: [
@@ -126,6 +127,7 @@ import { FilterSingleComponent } from './components/navigation/filter-single/fil
         FeeDokterComponent,
         FeeBcComponent,
         FilterSingleComponent,
+        DokterComponent,
     ],
     imports: [
         CommonModule,
