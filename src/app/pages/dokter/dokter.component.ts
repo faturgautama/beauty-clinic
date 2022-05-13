@@ -14,6 +14,7 @@ import { ISetupTarifModel } from 'src/app/model/setup-tarif.model';
 import { ISetupUserModel } from 'src/app/model/setup-user.model';
 import { PelayananPasienService } from 'src/app/services/pelayanan-pasien/pelayanan-pasien.service';
 import { PendaftaranPasienService } from 'src/app/services/pendaftaran-pasien/pendaftaran-pasien.service';
+import { ResepService } from 'src/app/services/resep/resep.service';
 import { SetupDokterService } from 'src/app/services/setup-dokter/setup-dokter.service';
 import { SetupObatService } from 'src/app/services/setup-obat/setup-obat.service';
 import { SetupRoleService } from 'src/app/services/setup-role/setup-role.service';
@@ -94,6 +95,7 @@ export class DokterComponent implements OnInit {
         private formBuilder: FormBuilder,
         private bsModalService: BsModalService,
         private utilityService: UtilityService,
+        private inputResepService: ResepService,
         private treatmentService: TreatmentService,
         private setupRoleService: SetupRoleService,
         private setupUserService: SetupUserService,
@@ -409,7 +411,8 @@ export class DokterComponent implements OnInit {
 
     handleOpenModalInsertUpdateResep(): void {
         this.modalRef = this.bsModalService.show(this.ModalInsertUpdateResep, {
-            backdrop: 'static'
+            backdrop: 'static',
+            class: 'modal-lg'
         });
 
         this.onResetFormObat();
@@ -463,6 +466,38 @@ export class DokterComponent implements OnInit {
         this.kandungan_obat.setValue("");
         this.unit_amount.setValue(0);
         this.total_amount.setValue(0);
+    }
+
+    onSubmitInsertPelayananDokter(id_register: number, item_transaksi: any[], item_resep: any[]): void {
+        this.treatmentService.onPostSaveWithResep(id_register, item_transaksi, item_resep)
+            .subscribe((result) => {
+                if (result.responseResult) {
+                    this.utilityService.onShowCustomAlert('success', 'Success', 'Data Berhasil Disimpan')
+                        .then(() => {
+                            this.inputResepService.onPrintResep(this.SelectedIdRegister);
+                            this.onResetData();
+                        })
+                }
+            });
+    }
+
+    onResetData(): void {
+        this.SelectedIdRegister = 0;
+
+        this.PathFoto = "";
+
+        const nama_pasien = document.getElementById('nama_pasien') as HTMLInputElement;
+        nama_pasien.value = "";
+
+        const no_rekam_medis = document.getElementById('no_rekam_medis') as HTMLInputElement;
+        no_rekam_medis.value = "";
+
+        const keluhan = document.getElementById('keluhan') as HTMLInputElement;
+        keluhan.innerHTML = "";
+
+        this.ListRiwayat = [];
+        this.ListTreatment = [];
+        this.ListResep = [];
     }
 
     get id_setup_tarif(): AbstractControl { return this.FormInsertUpdateTarif.get('id_setup_tarif') as AbstractControl };

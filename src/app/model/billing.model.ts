@@ -115,6 +115,7 @@ export interface PaymentDetail {
     id_payment_method: number
     payment_method?: string
     id_payment_method_detail: number
+    kurang_bayar?: number
     jumlah_bayar: number
     id_voucher: number
     id_bank_payment: number
@@ -195,6 +196,7 @@ export interface HistoryObat {
 }
 
 export interface HistoryPayment {
+    id_payment_method?: number
     payment_method: string
     jumlah_bayar: number
 }

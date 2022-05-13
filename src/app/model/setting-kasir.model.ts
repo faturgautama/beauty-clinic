@@ -1,3 +1,4 @@
+import { HistoryPayment, Payment, PaymentDetail } from "./billing.model"
 import { HttpResponseModel } from "./http-request.model"
 
 export interface IRiwayatModalKasirModel {
@@ -43,6 +44,12 @@ export interface RekapPaymentKasir {
 export interface IInsertTutupKasirModel {
     keterangan_tutup_kasir: string
     rekap_payment_kasir: RekapPaymentKasir[]
+}
+
+export interface IInsertTutupKasirSpesialModel {
+    keterangan_tutup_kasir: string
+    selisih: number
+    kelebihan: number
 }
 
 export interface IHistoryTutupKasirModel {
@@ -92,4 +99,22 @@ export class GetHistoryValidasiTutupKasirModel implements HttpResponseModel {
     responseResult!: boolean
     message!: string
     data!: IHistoryTutupKasirModel[]
+}
+
+export interface IRekapPendapatanKasirSpesialModel {
+    id_invoice: number
+    nomor_invoice: string
+    id_register: number
+    no_rekam_medis: string
+    nama_pasien: string
+    tgl_invoice: string
+    total_amount: number
+    paid_amount: number
+    payment_detail: HistoryPayment[]
+}
+
+export class GetRekapPendapatanKasirSpesialModel implements HttpResponseModel {
+    responseResult!: boolean
+    message!: string;
+    data!: IRekapPendapatanKasirSpesialModel[]
 }

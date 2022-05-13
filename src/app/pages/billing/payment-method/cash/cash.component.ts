@@ -21,6 +21,7 @@ export class CashComponent implements OnInit {
             id_payment_method: [1, []],
             payment_method: ['CASH'],
             id_payment_method_detail: [0, []],
+            kurang_bayar: [0, []],
             jumlah_bayar: [0, []],
             id_voucher: [0, []],
             id_bank_payment: [0, []],
@@ -37,6 +38,14 @@ export class CashComponent implements OnInit {
 
     onSubmitPayment(FormPaymentMethod: any): void {
         if (this.SisaKurangBayar > 0) {
+            if (FormPaymentMethod.jumlah_bayar < this.SisaKurangBayar) {
+                FormPaymentMethod.kurang_bayar = FormPaymentMethod.jumlah_bayar;
+            };
+
+            if (FormPaymentMethod.jumlah_bayar > this.SisaKurangBayar) {
+                FormPaymentMethod.kurang_bayar = this.SisaKurangBayar;
+            };
+
             this.onSendPaymentCash.emit(FormPaymentMethod);
             this.onResetForm();
         }
@@ -48,6 +57,7 @@ export class CashComponent implements OnInit {
 
     get id_payment_method(): AbstractControl { return this.FormPaymentMethod.get('id_payment_method') as AbstractControl }
     get id_payment_method_detail(): AbstractControl { return this.FormPaymentMethod.get('id_payment_method_detail') as AbstractControl }
+    get kurang_bayar(): AbstractControl { return this.FormPaymentMethod.get('kurang_bayar') as AbstractControl }
     get jumlah_bayar(): AbstractControl { return this.FormPaymentMethod.get('jumlah_bayar') as AbstractControl }
     get id_voucher(): AbstractControl { return this.FormPaymentMethod.get('id_voucher') as AbstractControl }
     get id_bank_payment(): AbstractControl { return this.FormPaymentMethod.get('id_bank_payment') as AbstractControl }

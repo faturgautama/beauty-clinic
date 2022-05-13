@@ -35,4 +35,12 @@ export class TreatmentService {
     onPostUpdateBC(body: DetailPelaksanaTreatmentModel): Observable<HttpResponseModel> {
         return this.httpRequestService.defaultPostRequest(this.API.UPDATE_BC, body);
     }
+
+    onPostSaveWithResep(id_register: number, item_transaksi: any[], item_resep: any[]): Observable<HttpResponseModel> {
+        return this.httpRequestService.defaultPostRequest(this.API.INSERT_WITH_RESEP, {
+            id_register: id_register,
+            item_transaksi: item_transaksi,
+            item_resep: item_resep
+        });
+    }
 }

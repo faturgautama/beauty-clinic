@@ -19,6 +19,9 @@ import { TreatmentService } from 'src/app/services/treatment/treatment.service';
 import { UtilityService } from 'src/app/services/utility/utility.service';
 import * as API_CONFIG from '../../api';
 import { CashComponent } from './payment-method/cash/cash.component';
+import { CreditCardComponent } from './payment-method/credit-card/credit-card.component';
+import { DebitCardComponent } from './payment-method/debit-card/debit-card.component';
+import { QrisComponent } from './payment-method/qris/qris.component';
 
 @Component({
     selector: 'app-billing',
@@ -59,9 +62,9 @@ export class BillingComponent implements OnInit {
     PaymentDetailState: 'cash' | 'qris' | 'debit_card' | 'credit_card' = 'cash';
 
     @ViewChild('CashComp') CashComp!: CashComponent;
-    @ViewChild('QRComp') QRComp!: CashComponent;
-    @ViewChild('DebitCardComp') DebitCardComp!: CashComponent;
-    @ViewChild('CreditCardComp') CreditCardComp!: CashComponent;
+    @ViewChild('QRComp') QRComp!: QrisComponent;
+    @ViewChild('DebitCardComp') DebitCardComp!: DebitCardComponent;
+    @ViewChild('CreditCardComp') CreditCardComp!: CreditCardComponent;
 
     ListPayment: PaymentDetail[] = [];
 
@@ -398,7 +401,6 @@ export class BillingComponent implements OnInit {
 
     onReceivePaymentMethod(FormPaymentMethod: PaymentDetail): void {
         this.ListPayment.push(FormPaymentMethod);
-
         this.onCountPaymentMethod(this.ListPayment);
     }
 
@@ -429,6 +431,17 @@ export class BillingComponent implements OnInit {
             keterangan: '',
             pembayar: nama_pasien.value
         };
+
+        this.ListPayment.filter((item) => {
+            if (item.payment_method == 'CASH') {
+                let isKurangBayarEqualJumlahPayment = item.kurang_bayar == payment.jumlah_payment;
+                let isKurangBayarLebihKecilJumlahBayar = item.kurang_bayar ? item.kurang_bayar < item.jumlah_bayar : false;
+
+                if (isKurangBayarEqualJumlahPayment && isKurangBayarLebihKecilJumlahBayar) {
+                    item.jumlah_bayar = item.kurang_bayar ? item.kurang_bayar : item.jumlah_bayar;
+                };
+            }
+        });
 
         const body: IInsertBillingModel = {
             trans_header: this.FormTransHeader.value,

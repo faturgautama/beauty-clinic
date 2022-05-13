@@ -11,13 +11,12 @@
             <form [formGroup]="FormTutupKasir">
                 <div class="row">
                     <!-- Payment Rekap -->
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                    <!-- <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                         <div class="card">
                             <div class="card-header bg-abu">
                                 <h4 class="card-title mb-0">Rekap Pendapatan Kasir</h4>
                             </div>
                             <div class="card-body px-2 pb-1">
-                                <!-- Jumlah Penerimaan -->
                                 <div *ngFor="let item of ListPayment; let i = index"
                                     class="row mb-2 align-items-center">
                                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
@@ -45,15 +44,83 @@
                                 </div>
                             </div>
                         </div>
+                    </div> -->
+
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <div class="card" style="height: calc(100vh - 11rem);">
+                            <div class="card-header bg-abu">
+                                <h5 class="card-title mb-0">Rekap Pendapatan</h5>
+                            </div>
+                            <div class="card-body p-2 h-100" style="overflow-y: auto;">
+                                <ul class="list-group border-0">
+                                    <li *ngFor="let item of ListRekap" class="list-group-item rounded shadow-sm mb-3"
+                                        style="border: 1px dashed var(--bs-gray-500);">
+                                        <div class="row">
+                                            <div
+                                                class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex justify-content-between px-0 mb-2">
+                                                <p class="text-hijau-tua fw-bold mb-0"> {{ item.nama_pasien }} </p>
+                                                <p class="mb-0" style="color:var(--bs-gray-600)">
+                                                    {{ item.tgl_invoice | date: 'dd MMM yyyy' }}
+                                                </p>
+                                            </div>
+                                            <div
+                                                class="col-lg-12 col-md-12 col-sm-12 col-xs-12 px-0 mb-2 d-flex justify-content-between">
+                                                <p class="text-black mb-0"> {{ item.nomor_invoice }} </p>
+                                                <p class="text-hijau-tua fw-bold mb-0">
+                                                    {{ item.paid_amount | currency: 'Rp. ' }}
+                                                </p>
+                                            </div>
+                                            <div
+                                                class="col-lg-12 col-md-12 col-sm-12 col-xs-12 px-0 pt-1 border-top mb-1">
+                                                <div *ngFor="let payment of item.payment_detail" class="row mt-1">
+                                                    <div
+                                                        class="col-lg-12 col-md-12 col-sm-12 col-xs-12 d-flex justify-content-between px-0">
+                                                        <p class="text-black mb-0" style="font-style: italic;">
+                                                            {{ payment.payment_method }}
+                                                        </p>
+                                                        <p class="text-hijau-tua mb-0">
+                                                            {{ payment.jumlah_bayar | currency: 'Rp. ' }}
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Keterangan -->
-                    <div class=" col-lg-6 col-md-6 col-sm-6 col-xs-6 pt-5">
-                        <app-form-label [Caption]="'Keterangan'"></app-form-label>
-                        <textarea class="form-control" formControlName="keterangan_tutup_kasir" rows="7"></textarea>
-                        <app-form-validator [Show]="keterangan_tutup_kasir.touched && keterangan_tutup_kasir.invalid"
-                            [Caption]="'Keterangan Tidak Boleh Kosong'">
-                        </app-form-validator>
+                    <div class=" col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <div class="row">
+                            <!-- Kelebihan -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                                <app-form-label [Caption]="'Kelebihan'"></app-form-label>
+                                <ejs-numerictextbox [min]="0" formControlName="kelebihan" [showClearButton]="false"
+                                    [showSpinButton]="false">
+                                </ejs-numerictextbox>
+                            </div>
+
+                            <!-- Selisih -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-3">
+                                <app-form-label [Caption]="'Selisih'"></app-form-label>
+                                <ejs-numerictextbox [min]="0" formControlName="selisih" [showClearButton]="false"
+                                    [showSpinButton]="false">
+                                </ejs-numerictextbox>
+                            </div>
+
+                            <!-- Keterangan -->
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-0">
+                                <app-form-label [Caption]="'Keterangan'"></app-form-label>
+                                <textarea class="form-control" formControlName="keterangan_tutup_kasir" rows="3">
+                                </textarea>
+                                <app-form-validator
+                                    [Show]="keterangan_tutup_kasir.touched && keterangan_tutup_kasir.invalid"
+                                    [Caption]="'Keterangan Tidak Boleh Kosong'">
+                                </app-form-validator>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
             </form>

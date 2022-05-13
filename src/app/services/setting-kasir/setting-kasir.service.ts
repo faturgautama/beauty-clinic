@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpResponseModel } from 'src/app/model/http-request.model';
-import { GetDetailPendapatanKasirModel, GetHistoryModalKasirModel, GetHistoryTutupKasirModel, GetHistoryValidasiTutupKasirModel, IInsertBukaKasirModel, IInsertTambahModalKasirModel, IInsertTutupKasirModel, IValidasiTutupKasirModel } from 'src/app/model/setting-kasir.model';
+import { GetDetailPendapatanKasirModel, GetHistoryModalKasirModel, GetHistoryTutupKasirModel, GetHistoryValidasiTutupKasirModel, GetRekapPendapatanKasirSpesialModel, IInsertBukaKasirModel, IInsertTambahModalKasirModel, IInsertTutupKasirModel, IInsertTutupKasirSpesialModel, IValidasiTutupKasirModel } from 'src/app/model/setting-kasir.model';
 import * as API_CONFIG from '../../api';
 import { HttpRequestService } from '../http-request/http-request.service';
 
@@ -49,8 +49,16 @@ export class SettingKasirService {
         return this.httpRequestService.defaultGetRequest(this.API.TUTUP_KASIR_HISTORY);
     }
 
+    onGetPendapatanKasirSpesial(): Observable<GetRekapPendapatanKasirSpesialModel> {
+        return this.httpRequestService.defaultGetRequest(this.API.TUTUP_KASIR_GET_REKAP_SPESIAL);
+    }
+
     onPostTutupKasir(body: IInsertTutupKasirModel): Observable<HttpResponseModel> {
         return this.httpRequestService.defaultPostRequest(this.API.TUTUP_KASIR_INSERT, body);
+    }
+
+    onPostTutupKasirSpesial(body: IInsertTutupKasirSpesialModel): Observable<HttpResponseModel> {
+        return this.httpRequestService.defaultPostRequest(this.API.TUTUP_KASIR_INSERT_SPESIAL, body);
     }
 
     onPostCancelTutupKasir(id_saldo_kasir: number): Observable<HttpResponseModel> {

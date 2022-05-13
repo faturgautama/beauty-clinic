@@ -4,8 +4,8 @@ import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { GridComponent, GridAttribute } from 'src/app/components/grid/grid.component';
 import { ActionButtonModel } from 'src/app/components/navigation/action-button/action-button.component';
-import { IInsertTutupKasirModel } from 'src/app/model/setting-kasir.model';
-import { PaymentMethod, SettingKasirService } from 'src/app/services/setting-kasir/setting-kasir.service';
+import { IInsertTutupKasirModel, IInsertTutupKasirSpesialModel, IRekapPendapatanKasirSpesialModel } from 'src/app/model/setting-kasir.model';
+import { SettingKasirService } from 'src/app/services/setting-kasir/setting-kasir.service';
 import { UtilityService } from 'src/app/services/utility/utility.service';
 
 @Component({
@@ -28,6 +28,8 @@ export class InputTutupKasirComponent implements OnInit {
     @ViewChild('ModalTutupKasir') ModalTutupKasir!: TemplateRef<any>;
 
     ListPayment: any[] = [];
+
+    ListRekap: IRekapPendapatanKasirSpesialModel[] = [];
 
     TotalPenerimaan: number = 0;
 
@@ -66,10 +68,23 @@ export class InputTutupKasirComponent implements OnInit {
 
         this.FormTutupKasir = this.formBuilder.group({
             keterangan_tutup_kasir: ["", [Validators.required]],
-            rekap_payment_kasir: [[], [Validators.required]]
+            selisih: [0, [Validators.required]],
+            kelebihan: [0, [Validators.required]],
+            // rekap_payment_kasir: [[], [Validators.required]]
         });
 
         this.onSetListPayment();
+
+        this.onGetRekap();
+    }
+
+    onGetRekap(): void {
+        this.settingKasirService.onGetPendapatanKasirSpesial()
+            .subscribe((result) => {
+                if (result.responseResult) {
+                    this.ListRekap = result.data;
+                }
+            });
     }
 
     handleClickActionButton(args: ActionButtonModel): void {
@@ -105,13 +120,19 @@ export class InputTutupKasirComponent implements OnInit {
         this.TotalPenerimaan = jumlah_pendapatan_kasir;
     }
 
-    onSubmitForm(FormTutupKasir: IInsertTutupKasirModel): void {
-        let parameter: IInsertTutupKasirModel = {
+    onSubmitForm(FormTutupKasir: IInsertTutupKasirSpesialModel): void {
+        // let parameter: IInsertTutupKasirModel = {
+        //     keterangan_tutup_kasir: FormTutupKasir.keterangan_tutup_kasir,
+        //     rekap_payment_kasir: this.ListPayment,
+        // };
+
+        let parameter: IInsertTutupKasirSpesialModel = {
             keterangan_tutup_kasir: FormTutupKasir.keterangan_tutup_kasir,
-            rekap_payment_kasir: this.ListPayment,
+            selisih: FormTutupKasir.selisih,
+            kelebihan: FormTutupKasir.kelebihan,
         };
 
-        this.settingKasirService.onPostTutupKasir(parameter)
+        this.settingKasirService.onPostTutupKasirSpesial(parameter)
             .subscribe((result) => {
                 if (result.responseResult) {
                     this.utilityService.onShowCustomAlert('success', 'Success', 'Tutup Kasir Berhasil Disimpan')
@@ -130,4 +151,6 @@ export class InputTutupKasirComponent implements OnInit {
     }
 
     get keterangan_tutup_kasir(): AbstractControl { return this.FormTutupKasir.get('keterangan_tutup_kasir') as AbstractControl };
+    get selisih(): AbstractControl { return this.FormTutupKasir.get('selisih') as AbstractControl };
+    get kelebihan(): AbstractControl { return this.FormTutupKasir.get('kelebihan') as AbstractControl };
 }

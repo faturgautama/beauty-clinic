@@ -83,7 +83,7 @@
             </div>
             <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 px-0">
                 <ejs-numerictextbox [format]="'N2'" formControlName="jumlah_bayar" [showClearButton]="false"
-                    [showSpinButton]="false" [value]="SisaKurangBayar"
+                    [showSpinButton]="false" [value]="SisaKurangBayar" [max]="SisaKurangBayar"
                     (keyup.enter)="onSubmitPayment(FormPaymentMethod.value)" [enabled]="SisaKurangBayar > 0">
                 </ejs-numerictextbox>
             </div>
