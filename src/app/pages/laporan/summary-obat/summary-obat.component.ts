@@ -4,6 +4,7 @@ import { GridComponent, GridAttribute } from 'src/app/components/grid/grid.compo
 import { ActionButtonModel } from 'src/app/components/navigation/action-button/action-button.component';
 import { FilterComponent, FilterModel, OffcanvasFilterModel } from 'src/app/components/navigation/filter/filter.component';
 import { LaporanService } from 'src/app/services/laporan/laporan.service';
+import { UtilityService } from 'src/app/services/utility/utility.service';
 import * as API_CONFIG from '../../../api';
 
 @Component({
@@ -24,7 +25,8 @@ export class SummaryObatComponent implements OnInit, AfterViewInit {
     GridHeaderAttributes!: GridAttribute;
 
     constructor(
-        private laporanService: LaporanService
+        private laporanService: LaporanService,
+        private utilityService: UtilityService,
     ) { }
 
     ngOnInit(): void {
@@ -78,7 +80,14 @@ export class SummaryObatComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit(): void {
         setTimeout(() => {
-            this.handleSearchFilter([]);
+            this.handleSearchFilter([
+                {
+                    columnName: 'ti.tgl_invoice',
+                    filter: 'between',
+                    searchText: this.utilityService.onFormatDate(new Date().setHours(0, 0, 0)),
+                    searchText2: this.utilityService.onFormatDate(new Date().setHours(23, 59, 59))
+                }
+            ]);
         }, 1);
     }
 

@@ -265,6 +265,10 @@
 
                                         </div>
                                         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 text-end">
+                                            <span class="badge bg-success cursor-pointer me-2" style="font-size: 14px;"
+                                                (click)="onEditDetailResep(item, i)">
+                                                <i class="fas fa-edit fa-sm"></i>
+                                            </span>
                                             <!-- *ngIf="item.status_bayar"  -->
                                             <span class="badge bg-warning cursor-pointer" style="font-size: 14px;"
                                                 (click)="onChangeStateDetailResep(item, i, false)">
@@ -276,6 +280,18 @@
                                                 (click)="onChangeStateDetailResep(item, i, true)">
                                                 <i class="fas fa-plus fa-sm"></i>
                                             </span> -->
+                                        </div>
+                                    </div>
+                                    <div class="row ">
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 ps-0">
+                                            <p class="text-hijau-tua mb-0 fw-bold">
+                                                Grand Total {{ item.total_bayar | currency: 'Rp. ' }}
+                                            </p>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 pe-0 text-end">
+                                            <p class="text-hijau-tua mb-0">
+                                                Diskon {{ item.diskon_nominal | currency: 'Rp. ' }}
+                                            </p>
                                         </div>
                                     </div>
                                 </li>
@@ -365,7 +381,7 @@
                     </div>
 
                     <!-- Credit Card -->
-                    <div class="row mb-0">
+                    <div class="row mb-3">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="radioPaymentMethod"
@@ -383,6 +399,29 @@
                                     <app-credit-card #CreditCardComp
                                         (onSendPaymentCreditCard)="onReceivePaymentMethod($event)">
                                     </app-credit-card>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Transfer -->
+                    <div class="row mb-0">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="radioPaymentMethod"
+                                    id="radioPaymentMethodTransfer"
+                                    (click)="handleChangePaymentMethodState('transfer')">
+                                <label for="radioPaymentMethodTransfer" class="form-label text-hijau-tua fw-bold">
+                                    Transfer
+                                </label>
+                            </div>
+                        </div>
+                        <div *ngIf="PaymentDetailState == 'transfer'" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <app-transfer #TransferComp
+                                        (onSendPaymentTransfer)="onReceivePaymentMethod($event)">
+                                    </app-transfer>
                                 </div>
                             </div>
                         </div>
@@ -544,6 +583,92 @@
             </button>
             <button type="button" class="btn btn-warning btn-sm"
                 (click)="onUpdateDetailTreatment(FormUpdateDetailTreatment.value)">
+                Update
+            </button>
+        </div>
+    </ng-template>
+
+    <!-- Modal Update Detail Resep -->
+    <ng-template #ModalUpdateDetailResep>
+        <div class="modal-header py-2 bg-abu">
+            <h4 class="modal-title pull-left">
+                Edit Diskon Resep
+            </h4>
+            <button type="button" class="btn-close close pull-right" aria-label="Close" (click)="modalRef?.hide()">
+                <span aria-hidden="true" class="visually-hidden">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="FormUpdateDetailResep">
+                <!-- Nama Obat -->
+                <div class="row mb-3">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <app-form-label [Caption]="'Nama Obat'"></app-form-label>
+                        <input class="form-control form-select-sm" type="text" formControlName="nama_obat" readonly>
+                    </div>
+                </div>
+
+                <!-- Qty & Unit Amount -->
+                <div class="row mb-3">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <app-form-label [Caption]="'Qty'"></app-form-label>
+                        <ejs-numerictextbox [format]="'N2'" [showClearButton]="false" [showSpinButton]="false"
+                            formControlName="qty" [enabled]="false">
+                        </ejs-numerictextbox>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <app-form-label [Caption]="'Harga Satuan'"></app-form-label>
+                        <ejs-numerictextbox [format]="'N2'" [showClearButton]="false" [showSpinButton]="false"
+                            formControlName="unit_amount" [enabled]="false">
+                        </ejs-numerictextbox>
+                    </div>
+                </div>
+
+                <!-- Subtotal -->
+                <div class="row mb-3">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <app-form-label [Caption]="'Subtotal'"></app-form-label>
+                        <ejs-numerictextbox [format]="'N2'" [showClearButton]="false" [showSpinButton]="false"
+                            formControlName="total_amount_resep" [enabled]="false">
+                        </ejs-numerictextbox>
+                    </div>
+                </div>
+
+                <!-- Diskon % & Diskon Rp -->
+                <div class="row mb-3">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <app-form-label [Caption]="'Diskon (%)'"></app-form-label>
+                        <ejs-numerictextbox [format]="'N2'" [showClearButton]="false" [showSpinButton]="false"
+                            [max]="100" formControlName="diskon_prosentase"
+                            (change)="handleChangeDiskonNominalResep($event)">
+                        </ejs-numerictextbox>
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                        <app-form-label [Caption]="'Diskon (Rp)'"></app-form-label>
+                        <ejs-numerictextbox [format]="'N2'" [showClearButton]="false" [showSpinButton]="false"
+                            formControlName="diskon_nominal" [enabled]="false">
+                        </ejs-numerictextbox>
+                    </div>
+                </div>
+
+                <!-- Grand Total -->
+                <div class="row mb-0">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <app-form-label [Caption]="'Grand Total'"></app-form-label>
+                        <ejs-numerictextbox [format]="'N2'" [showClearButton]="false" [showSpinButton]="false"
+                            formControlName="total_bayar" [enabled]="false">
+                        </ejs-numerictextbox>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer py-2">
+            <button type="button" class="btn btn-secondary btn-sm" (click)="modalRef?.hide()">
+                Close
+            </button>
+            <button type="button" class="btn btn-warning btn-sm"
+                (click)="onUpdateDetailResep(FormUpdateDetailResep.value)">
                 Update
             </button>
         </div>

@@ -98,7 +98,12 @@ export class DetailPendapatanComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit(): void {
         setTimeout(() => {
-            this.handleSearchFilter([]);
+            this.handleSearchFilter([{
+                columnName: 'ti.tgl_invoice',
+                filter: 'between',
+                searchText: new Date().toISOString(),
+                searchText2: new Date().toISOString()
+            }]);
         }, 1);
     }
 

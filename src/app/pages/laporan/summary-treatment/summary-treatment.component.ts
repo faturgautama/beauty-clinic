@@ -86,7 +86,14 @@ export class SummaryTreatmentComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit(): void {
         setTimeout(() => {
-            this.handleSearchFilter([]);
+            this.handleSearchFilter([
+                {
+                    columnName: 'ti.tgl_invoice',
+                    filter: 'between',
+                    searchText: this.utilityService.onFormatDate(new Date().setHours(0, 0, 0)),
+                    searchText2: this.utilityService.onFormatDate(new Date().setHours(23, 59, 59))
+                }
+            ]);
         }, 1);
     }
 

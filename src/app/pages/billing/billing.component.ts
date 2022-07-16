@@ -22,6 +22,7 @@ import { CashComponent } from './payment-method/cash/cash.component';
 import { CreditCardComponent } from './payment-method/credit-card/credit-card.component';
 import { DebitCardComponent } from './payment-method/debit-card/debit-card.component';
 import { QrisComponent } from './payment-method/qris/qris.component';
+import { TransferComponent } from './payment-method/transfer/transfer.component';
 
 @Component({
     selector: 'app-billing',
@@ -59,26 +60,30 @@ export class BillingComponent implements OnInit {
     ServicesTaxes: number = 0;
     GrandTotal: number = 0;
 
-    PaymentDetailState: 'cash' | 'qris' | 'debit_card' | 'credit_card' = 'cash';
+    PaymentDetailState: 'cash' | 'qris' | 'debit_card' | 'credit_card' | 'transfer' = 'cash';
 
     @ViewChild('CashComp') CashComp!: CashComponent;
     @ViewChild('QRComp') QRComp!: QrisComponent;
     @ViewChild('DebitCardComp') DebitCardComp!: DebitCardComponent;
     @ViewChild('CreditCardComp') CreditCardComp!: CreditCardComponent;
+    @ViewChild('TransferComp') TransferComp!: TransferComponent;
 
     ListPayment: PaymentDetail[] = [];
 
     KurangBayar: number = 0;
     TotalBayar: number = 0;
 
-    SelectedDetailTreatment!: DetailTindakanBillingModel;
-    SelectedDetailTreatmentIndex = 0;
-
     modalRef?: BsModalRef;
 
+    SelectedDetailTreatment!: DetailTindakanBillingModel;
+    SelectedDetailTreatmentIndex = 0;
     @ViewChild('ModalUpdateDetailTreatment') ModalUpdateDetailTreatment!: TemplateRef<any>;
-
     FormUpdateDetailTreatment!: FormGroup;
+
+    SelectedDetailResep!: DetailResepBillingModel;
+    SelectedDetailResepIndex = 0;
+    @ViewChild('ModalUpdateDetailResep') ModalUpdateDetailResep!: TemplateRef<any>;
+    FormUpdateDetailResep!: FormGroup;
 
     constructor(
         private router: Router,
@@ -154,6 +159,23 @@ export class BillingComponent implements OnInit {
             paid_amount: [0, []]
         });
 
+        this.FormUpdateDetailResep = this.formBuilder.group({
+            id_transaksi_obat: [0, []],
+            id_register: [0, []],
+            tgl_transaksi: ["", []],
+            id_obat: [0, []],
+            nama_obat: [true, []],
+            qty: [0, []],
+            status_bayar: ["", []],
+            total_amount_resep: [0, []],
+            total_amount: [0, []],
+            total_bayar: [0, []],
+            unit_amount: [0, []],
+            diskon_nominal: [0, []],
+            diskon_prosentase: [0, []],
+            paid_amount: [0, []]
+        });
+
         this.UserData = JSON.parse(localStorage.getItem('UserData') as any);
     }
 
@@ -202,6 +224,7 @@ export class BillingComponent implements OnInit {
                 const resep = result.data.resep.detail.map((item) => ({
                     ...item,
                     status_bayar: true,
+                    total_amount_resep: item.total_amount,
                     paid_amount: 0,
                 }));
 
@@ -220,25 +243,33 @@ export class BillingComponent implements OnInit {
         // !! Revisi tgl 19 April 2022
         // this.total_amount.setValue(total_tdmk + total_resep);
 
+        this.Diskon = 0;
+
         // ** Set Value for Diskon and Total TDMK
         let total_tdmk = 0;
         let total_tdmk_real = 0;
-        this.Diskon = 0;
+        let total_tdmk_for_count = 0;
         tdmk.filter((item: any) => {
             if (item.status_bayar) {
                 item.paid_amount = item.total_bayar;
                 total_tdmk += item.total_bayar;
                 total_tdmk_real += item.total_amount;
+                total_tdmk_for_count += (item.unit_amount * item.qty);
                 this.Diskon += item.diskon_nominal;
             }
         });
 
         // ** Set Value for Total Resep
         let total_resep = 0;
+        let total_resep_real = 0;
+        let total_resep_for_count = 0;
         resep.filter((item: any) => {
             if (item.status_bayar) {
                 item.paid_amount = item.total_bayar;
-                total_resep += item.total_amount
+                total_resep += item.total_bayar;
+                total_resep_real += item.total_amount;
+                total_resep_for_count += (item.unit_amount * item.qty);
+                this.Diskon += item.diskon_nominal;
             }
         });
 
@@ -247,7 +278,7 @@ export class BillingComponent implements OnInit {
 
         // !! Revisi tgl 19 April => total_tdmk hanya menghitung treatment yg ada
         // !! Treatment yg dihapus gak perlu dihitung lagi
-        this.total_amount.setValue(total_tdmk_real + total_resep);
+        this.total_amount.setValue(total_tdmk_for_count + total_resep_for_count);
 
         // ** Set Value for Total 1
         this.Total = this.total_amount.value;
@@ -294,6 +325,7 @@ export class BillingComponent implements OnInit {
         this.handleChangePaymentMethodState('cash');
     }
 
+    // ** Treatment Section
     handleNavigateToTreatment(data: IPasienForBillingModel): void {
         this.router.navigate(['input-treatment', data.no_register])
     }
@@ -350,8 +382,38 @@ export class BillingComponent implements OnInit {
         // this.onCountTotalAmount(this.SelectedDataBilling.informasi_pasien, this.DetailDatasource.tdmk, this.DetailDatasource.resep);
     }
 
+    // ** Resep Section
     handleNavigateToResep(data: IPasienForBillingModel): void {
         this.router.navigate(['input-resep', data.no_register])
+    }
+
+    onEditDetailResep(data: DetailResepBillingModel, index: number): void {
+        this.SelectedDetailResep = data;
+        this.SelectedDetailResepIndex = index;
+
+        this.modalRef = this.bsModalService.show(this.ModalUpdateDetailResep, {
+            backdrop: 'static',
+        });
+
+        this.FormUpdateDetailResep.setValue(data);
+    }
+
+    handleChangeDiskonNominalResep(args: any): void {
+        this.total_amount_obat.setValue(this.unit_amount_obat.value * this.qty_obat.value);
+
+        this.diskon_nominal_obat.setValue((this.unit_amount_obat.value * this.qty_obat.value) * args.value / 100);
+
+        this.total_bayar_obat.setValue(this.total_amount_obat.value - this.diskon_nominal_obat.value);
+    }
+
+    onUpdateDetailResep(data: DetailResepBillingModel): void {
+        this.DetailDatasource.resep[this.SelectedDetailResepIndex] = data;
+
+        this.modalRef?.hide();
+
+        this.Diskon += data.diskon_nominal as any;
+
+        this.onCountTotalAmount(this.SelectedDataBilling.informasi_pasien, this.DetailDatasource.tdmk, this.DetailDatasource.resep);
     }
 
     onChangeStateDetailResep(data: DetailResepBillingModel, index: number, state: boolean): void {
@@ -376,7 +438,7 @@ export class BillingComponent implements OnInit {
         // this.onCountTotalAmount(this.SelectedDataBilling.informasi_pasien, this.DetailDatasource.tdmk, this.DetailDatasource.resep);
     }
 
-    handleChangePaymentMethodState(state: 'cash' | 'qris' | 'debit_card' | 'credit_card'): void {
+    handleChangePaymentMethodState(state: 'cash' | 'qris' | 'debit_card' | 'credit_card' | 'transfer'): void {
         this.PaymentDetailState = state;
 
         setTimeout(() => {
@@ -392,6 +454,9 @@ export class BillingComponent implements OnInit {
                     break;
                 case ('credit_card'):
                     this.CreditCardComp.SisaKurangBayar = this.KurangBayar;
+                    break;
+                case ('transfer'):
+                    this.TransferComp.SisaKurangBayar = this.KurangBayar;
                     break;
                 default:
                     break;
@@ -517,4 +582,18 @@ export class BillingComponent implements OnInit {
     get diskon_prosentase(): AbstractControl { return this.FormUpdateDetailTreatment.get('diskon_prosentase') as AbstractControl };
     get total_bayar(): AbstractControl { return this.FormUpdateDetailTreatment.get('total_bayar') as AbstractControl };
     get paid_amount(): AbstractControl { return this.FormUpdateDetailTreatment.get('paid_amount') as AbstractControl };
+
+    get id_transaksi_obat(): AbstractControl { return this.FormUpdateDetailResep.get('id_transaksi_obat') as AbstractControl };
+    get tgl_transaksi(): AbstractControl { return this.FormUpdateDetailResep.get('tgl_transaksi') as AbstractControl };
+    get id_obat(): AbstractControl { return this.FormUpdateDetailResep.get('id_obat') as AbstractControl };
+    get nama_obat(): AbstractControl { return this.FormUpdateDetailResep.get('nama_obat') as AbstractControl };
+    get qty_obat(): AbstractControl { return this.FormUpdateDetailResep.get('qty') as AbstractControl };
+    get status_bayar_obat(): AbstractControl { return this.FormUpdateDetailResep.get('status_bayar') as AbstractControl };
+    get tgl_order_obat(): AbstractControl { return this.FormUpdateDetailResep.get('tgl_order') as AbstractControl };
+    get total_amount_obat(): AbstractControl { return this.FormUpdateDetailResep.get('total_amount_resep') as AbstractControl };
+    get unit_amount_obat(): AbstractControl { return this.FormUpdateDetailResep.get('unit_amount') as AbstractControl };
+    get diskon_nominal_obat(): AbstractControl { return this.FormUpdateDetailResep.get('diskon_nominal') as AbstractControl };
+    get diskon_prosentase_obat(): AbstractControl { return this.FormUpdateDetailResep.get('diskon_prosentase') as AbstractControl };
+    get total_bayar_obat(): AbstractControl { return this.FormUpdateDetailResep.get('total_bayar') as AbstractControl };
+    get paid_amount_obat(): AbstractControl { return this.FormUpdateDetailResep.get('paid_amount') as AbstractControl };
 }

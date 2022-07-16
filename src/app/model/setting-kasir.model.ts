@@ -113,8 +113,17 @@ export interface IRekapPendapatanKasirSpesialModel {
     payment_detail: HistoryPayment[]
 }
 
+export interface IRekapPaymentMethodSpesialModel {
+    id_payment_method: number
+    payment_method: string
+    jumlah_bayar: number
+}
+
 export class GetRekapPendapatanKasirSpesialModel implements HttpResponseModel {
     responseResult!: boolean
     message!: string;
-    data!: IRekapPendapatanKasirSpesialModel[]
+    data!: {
+        rekap_payment_method: IRekapPaymentMethodSpesialModel[];
+        daftar_invoice: IRekapPendapatanKasirSpesialModel[];
+    }
 }

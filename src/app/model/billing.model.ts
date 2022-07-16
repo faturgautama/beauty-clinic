@@ -61,8 +61,10 @@ export interface DetailResepBillingModel {
     qty: number
     unit_amount: number
     total_amount: number
-    status_bayar: boolean
+    diskon_prosentase?: number
     diskon_nominal?: number
+    total_bayar: number
+    status_bayar: string
 }
 
 export interface IDataBilingModel {

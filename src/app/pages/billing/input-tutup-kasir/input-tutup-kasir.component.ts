@@ -73,8 +73,6 @@ export class InputTutupKasirComponent implements OnInit {
             // rekap_payment_kasir: [[], [Validators.required]]
         });
 
-        this.onSetListPayment();
-
         this.onGetRekap();
     }
 
@@ -82,7 +80,8 @@ export class InputTutupKasirComponent implements OnInit {
         this.settingKasirService.onGetPendapatanKasirSpesial()
             .subscribe((result) => {
                 if (result.responseResult) {
-                    this.ListRekap = result.data;
+                    this.ListRekap = result.data.daftar_invoice;
+                    this.ListPayment = result.data.rekap_payment_method;
                 }
             });
     }
@@ -95,13 +94,6 @@ export class InputTutupKasirComponent implements OnInit {
             default:
                 break;
         }
-    }
-
-    onSetListPayment(): void {
-        this.ListPayment = this.settingKasirService.onGetPaymentMethod();
-        this.ListPayment.filter((item) => {
-            item['jumlah_penerimaan'] = 0;
-        });
     }
 
     handleChangeJumlahPenerimaan(args: any, index: number): void {
@@ -146,7 +138,6 @@ export class InputTutupKasirComponent implements OnInit {
     onResetForm(): void {
         this.FormTutupKasir.reset();
         this.keterangan_tutup_kasir.setValue("");
-        this.onSetListPayment();
         this.TotalPenerimaan = 0;
     }
 

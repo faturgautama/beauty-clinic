@@ -19,8 +19,8 @@ export interface FilterModel {
     filterBy?: string;
     columnName: string;
     filter: 'like' | 'equal' | 'between';
-    searchText: string;
-    searchText2: string;
+    searchText: any;
+    searchText2: any;
 }
 
 @Component({
@@ -85,6 +85,8 @@ export class FilterComponent implements OnInit {
 
         let endDate = this.utilityService.onFormatDate(args.endDate?.setHours(23, 59, 59));
         this.searchText2.setValue(endDate);
+
+        console.log(this.searchText.value, this.searchText2.value);
     }
 
     onResetFormFilter(): void {
@@ -105,6 +107,7 @@ export class FilterComponent implements OnInit {
     }
 
     handleSearchFilter(FilterArray: FilterModel[]): void {
+        console.log(FilterArray);
         this.onSearchFilter.emit(FilterArray);
         setTimeout(() => {
             this.handleCloseFilter();

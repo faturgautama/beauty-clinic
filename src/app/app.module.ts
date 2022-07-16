@@ -69,6 +69,7 @@ import { FeeDokterComponent } from './pages/laporan/fee-dokter/fee-dokter.compon
 import { FeeBcComponent } from './pages/laporan/fee-bc/fee-bc.component';
 import { FilterSingleComponent } from './components/navigation/filter-single/filter-single.component';
 import { DokterComponent } from './pages/dokter/dokter.component';
+import { TransferComponent } from './pages/billing/payment-method/transfer/transfer.component';
 
 @NgModule({
     declarations: [
@@ -128,6 +129,7 @@ import { DokterComponent } from './pages/dokter/dokter.component';
         FeeBcComponent,
         FilterSingleComponent,
         DokterComponent,
+        TransferComponent,
     ],
     imports: [
         CommonModule,
